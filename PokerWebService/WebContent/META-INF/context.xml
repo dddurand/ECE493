@@ -1,0 +1,15 @@
+<Context>
+        
+<Resource name="jdbc/DatabaseUofA" auth="Container" type="javax.sql.DataSource"
+factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
+maxActive="100" maxIdle="30" maxWait="10000"
+username="dddurand" password="TWdXO2rK" driverClassName="com.mysql.jdbc.Driver"
+url="jdbc:mysql://mysqlsrv.ece.ualberta.ca:14000/AndroidPoker"/>
+
+<Resource name="jdbc/DatabaseHome" auth="Container" type="javax.sql.DataSource"
+factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
+maxActive="100" maxIdle="30" maxWait="10000"
+username="dddurand" password="asdfasdf" driverClassName="com.mysql.jdbc.Driver"
+url="jdbc:mysql://localhost:14000/AndroidPoker"/>
+  
+</Context>
