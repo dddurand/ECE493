@@ -9,7 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
+import database.ResponseObject;
+import database.DatabaseInterface.DatabaseInterfaceException;
+
 import services.AuthenticationService;
+import services.SecureService;
+import services.ServiceFactory;
 
 /**
  * Servlet implementation class RegisterServlet
@@ -30,16 +37,32 @@ public class RegisterServlet extends ConfigHttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		AuthenticationService authService = new AuthenticationService();
-		String postData = this.getPostData(request);
-		String result = authService.register(postData);
+		String message;
+		ServiceFactory factory = new ServiceFactory();
 		
-		response.setContentType("text/html");
+		try {
+			String data = this.getPostData(request);
+			SecureService service = factory.getService(this);
+			message = service.unsecuredProcess(data);
+		} catch (DatabaseInterfaceException e) {
+			Gson gson = new Gson();
+			ResponseObject responseMsg = new ResponseObject(false, e.getMessage());
+			message = gson.toJson(responseMsg, ResponseObject.class);
+		}
 		
-		Writer writer = response.getWriter();
-		writer.write("<html>");
-		writer.write(result);
-		writer.write("</html>");
+		this.outputMessage(response, message);
+		
+		
+		//		AuthenticationService authService = new AuthenticationService();
+//		String postData = this.getPostData(request);
+//		String result = authService.register(postData);
+//		
+//		response.setContentType("text/html");
+//		
+//		Writer writer = response.getWriter();
+//		writer.write("<html>");
+//		writer.write(result);
+//		writer.write("</html>");
 	}
 
 }

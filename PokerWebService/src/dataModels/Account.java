@@ -15,7 +15,8 @@ public class Account {
 	private String password;
 	private String authenticationToken;
 	
-
+	private transient String ecryptedPassword;
+	private transient boolean hasEncryptedPassword;
 	private transient PasswordUtil passUtil;
 	
 	
@@ -33,9 +34,21 @@ public class Account {
 	 * @param username Username of the account
 	 * @param password Password of the account
 	 */
-	public Account(String username, String password)
+	public Account(String username, String password, boolean isEncryptedPassword)
 	{
 		this.username = username;
+		
+		if(isEncryptedPassword)
+		{
+			this.ecryptedPassword = password;
+			this.hasEncryptedPassword = true;
+		}
+		else
+		{
+			this.password = password;
+			this.hasEncryptedPassword = false;
+		}
+					
 		this.password = password;
 		passUtil = new PasswordUtil();
 	}
@@ -46,13 +59,27 @@ public class Account {
 	 * @param password Password of the account
 	 * @param authToken Current AuthToken for the account
 	 */
-	public Account(String username, String password, String authToken)
+	public Account(String username, String password, String authToken, boolean isEncryptedPassword)
 	{
 		this.username = username;
-		this.password = password;
 		this.authenticationToken = authToken;
 		passUtil = new PasswordUtil();
+		
+		if(isEncryptedPassword)
+		{
+			this.ecryptedPassword = password;
+			this.hasEncryptedPassword = true;
+		}
+		else
+		{
+			this.password = password;
+			this.hasEncryptedPassword = false;
+		}
+		
+		
 	}
+	
+	
 	
 	/**
 	 * Generic Constructor
@@ -94,15 +121,33 @@ public class Account {
 	 * @return
 	 */
 	public String getEncyptedPassword() {
-		return passUtil.encrypt(password);
+		if(hasEncryptedPassword)
+			return ecryptedPassword;
+		else 
+		{
+			this.hasEncryptedPassword = true;
+			this.ecryptedPassword = passUtil.encrypt(this.password);
+		}
+		
+		return this.ecryptedPassword;
+			
 	}
 
 	/**
 	 * Sets the password for the account
 	 * @param password Password for the account
 	 */
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPassword(String password, boolean isEncryptedPassword) {
+		if(isEncryptedPassword)
+		{
+			this.ecryptedPassword = password;
+			this.hasEncryptedPassword = true;
+		}
+		else
+		{
+			this.password = password;
+			this.hasEncryptedPassword = false;
+		}
 	}
 
 	/**
@@ -135,15 +180,14 @@ public class Account {
 	       
 	       String otherUsername = accountOther.getUsername();
 	       
-	       String otherPassword = accountOther.getPassword();
-	       otherPassword = passUtil.encrypt(otherPassword);
+	       String otherPassword = accountOther.getEncyptedPassword();
 	       
 	       String otherAuthToken = accountOther.getAuthenticationToken();
 	       
 	       if(!isEqualUsername(username,otherUsername))
 	    	   return false;
 	    	   
-	       if(!isEqualString(password,otherPassword))
+	       if(!isEqualString(this.getEncyptedPassword(),otherPassword))
 	    	   return false;
 	       
 	       if(!isEqualString(authenticationToken,otherAuthToken))
@@ -166,14 +210,15 @@ public class Account {
 	public boolean compareLogin(Account otherAccount)
 	{
 	       String otherUsername = otherAccount.getUsername();
-	       String otherPassword = otherAccount.getPassword();
-		
-	       otherPassword = passUtil.encrypt(otherPassword);
+	       String otherPassword = otherAccount.getEncyptedPassword();
 	       
 		 if(!isEqualUsername(username,otherUsername))
 	    	   return false;
 	    	   
-	       if(!isEqualString(password,otherPassword))
+		 String pass1 = this.getEncyptedPassword();
+		 String pass2 = otherPassword;
+		 
+	       if(!isEqualString(this.getEncyptedPassword(),otherPassword))
 	    	   return false;
 
 		return true;

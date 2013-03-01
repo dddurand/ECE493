@@ -75,7 +75,7 @@ public class DatabaseInterface {
             	String authToken = resultSet.getString("auth_token");	
             	
             	prepStat.close();
-            	return new Account(user, pass, authToken);
+            	return new Account(user, pass, authToken, true);
             }
 			
 			prepStat.close();

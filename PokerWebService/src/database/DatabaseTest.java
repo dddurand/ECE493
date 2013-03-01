@@ -107,7 +107,7 @@ public class DatabaseTest {
             message+= "Password BAD: " + passUtil.compare(pass, "asdfasdfasdfasdf") + "<br/><br/>";
 
             
-            Account account = new Account("bob", "is", "coolio.");
+            Account account = new Account("bob", "is", "coolio.", false);
             Gson gson = new Gson();
             String json = gson.toJson(account, Account.class);
             message+= json + "<br/><br/>";

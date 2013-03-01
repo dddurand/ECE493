@@ -2,11 +2,20 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
+import database.ResponseObject;
+import database.DatabaseInterface.DatabaseInterfaceException;
+
+import services.SecureService;
+import services.ServiceFactory;
 import util.ServletConfiguration;
 
 /**
@@ -57,6 +66,14 @@ public class ConfigHttpServlet extends HttpServlet {
 		}
 		
 		return builder.toString();
+	}
+	
+	protected void outputMessage(HttpServletResponse response, String message) throws IOException
+	{
+		
+		Writer writer = response.getWriter();
+		response.setContentType("text/html");
+		writer.write(message);
 	}
 	
 }

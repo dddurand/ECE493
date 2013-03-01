@@ -182,13 +182,13 @@ public class AuthenticationService {
 		{
 			Account account = gson.fromJson(requestData, Account.class);
 			
-			if(account.getUsername().trim().isEmpty())
+			if(account.getUsername().isEmpty())
 			{
 				ResponseObject response = new ResponseObject(false, "Invalid Username Provided");
 				return gson.toJson(response, ResponseObject.class);
 			}
 			
-			if(account.getPassword().trim().isEmpty())
+			if(account.getPassword().isEmpty())
 			{
 				ResponseObject response = new ResponseObject(false, "Invalid Password Provided");
 				return gson.toJson(response, ResponseObject.class);
