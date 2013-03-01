@@ -19,7 +19,7 @@ public class ServletConfiguration {
 	/*
 	 * Parameter Names
 	 */
-	private static final String PARAM_LOCATION = "location";
+	private static final String PARAM_DATABASE_NAME = "database";
 	private static final String PARAM_DEBUG = "debug";
 	
 	/*
@@ -88,8 +88,8 @@ public class ServletConfiguration {
 	 */
 	private static void processParameter(String param, String value)
 	{
-		if(param.equals(PARAM_LOCATION))
-			processLocation(param, value);
+		if(param.equals(PARAM_DATABASE_NAME))
+			processDatabaseName(param, value);
 		else if(param.equals(PARAM_DEBUG))
 			processDebug(param, value);
 	}
@@ -102,14 +102,14 @@ public class ServletConfiguration {
 	 * @param param Parameter Name
 	 * @param value Parameter String Value
 	 */
-	private static void processLocation(String param, String value)
+	private static void processDatabaseName(String param, String value)
 	{
 		if(value.equals(LOCATION_UNI))
-			paramTable.put(param, Location.UNIVERSITY);
+			paramTable.put(param, Database.UNIVERSITY);
 		else if(value.equals(LOCATION_HOME))
-			paramTable.put(param, Location.HOME);
+			paramTable.put(param, Database.HOME);
 		else//Redundant, but for readability
-			paramTable.put(param, Location.HOME);
+			paramTable.put(param, Database.HOME);
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class ServletConfiguration {
 	 * @author dddurand
 	 *
 	 */
-	public enum Location {
+	public enum Database {
 		HOME, UNIVERSITY
 	}
 	
@@ -145,9 +145,9 @@ public class ServletConfiguration {
 	 * Retrieves the location parameter.
 	 * @return Location Value
 	 */
-	public static Location getLocation()
+	public static Database getDatabase()
 	{
-		return (Location) paramTable.get(PARAM_LOCATION);
+		return (Database) paramTable.get(PARAM_DATABASE_NAME);
 	}
 	
 	/**

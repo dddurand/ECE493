@@ -4,7 +4,7 @@
 factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
 maxActive="100" maxIdle="30" maxWait="10000"
 username="dddurand" password="TWdXO2rK" driverClassName="com.mysql.jdbc.Driver"
-url="jdbc:mysql://mysqlsrv.ece.ualberta.ca:14000/AndroidPoker"/>
+url="jdbc:mysql://mysqlsrv.ece.ualberta.ca:14000/ece493grp2"/>
 
 <Resource name="jdbc/DatabaseHome" auth="Container" type="javax.sql.DataSource"
 factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"

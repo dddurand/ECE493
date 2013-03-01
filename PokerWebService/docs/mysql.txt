@@ -1,0 +1,2 @@
+mysql -u dddurand -p -h mysqlsrv.ece.ualberta.ca -P 14000
+

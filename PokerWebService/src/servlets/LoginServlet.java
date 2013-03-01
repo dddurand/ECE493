@@ -17,7 +17,8 @@ import services.AuthenticationService;
  * Provides login functionality.
  * 
  */
-@WebServlet("/LoginServlet")
+//@WebServlet("/LoginServlet")
+@WebServlet("/")
 public class LoginServlet extends ConfigHttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -39,8 +40,13 @@ public class LoginServlet extends ConfigHttpServlet {
 		AuthenticationService authService = new AuthenticationService();
 		String message = authService.testDatabaseConnection();
 		
+		response.setContentType("text/html");
+		
 		Writer writer = response.getWriter();
+		writer.write("<html>");
 		writer.write(message);
+		writer.write("</html>");
+		
 		
 	}
 
@@ -48,7 +54,17 @@ public class LoginServlet extends ConfigHttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
+		AuthenticationService authService = new AuthenticationService();
+		String postData = this.getPostData(request);
+		String result = authService.login(postData);
+		
+		response.setContentType("text/html");
+		
+		Writer writer = response.getWriter();
+		writer.write("<html>");
+		writer.write(result);
+		writer.write("</html>");
 	}
 
 }

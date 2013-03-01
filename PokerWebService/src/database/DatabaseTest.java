@@ -4,7 +4,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Random;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -13,7 +12,11 @@ import javax.sql.DataSource;
 
 import util.PasswordUtil;
 import util.ServletConfiguration;
-import util.ServletConfiguration.Location;
+import util.ServletConfiguration.Database;
+
+import com.google.gson.Gson;
+
+import dataModels.Account;
 
 /**
  * Garbage Test File
@@ -37,10 +40,10 @@ public class DatabaseTest {
             message+= "Getting Datasource...<br/>";
             DataSource dataSource;
             
-            if(ServletConfiguration.getLocation() == Location.UNIVERSITY)
+            if(ServletConfiguration.getDatabase() == Database.UNIVERSITY)
             	dataSource = (DataSource)envContext.lookup("jdbc/DatabaseUofA");
             
-            else if(ServletConfiguration.getLocation() == Location.HOME)
+            else if(ServletConfiguration.getDatabase() == Database.HOME)
             	dataSource = (DataSource)envContext.lookup("jdbc/DatabaseHome");
             
             else
@@ -55,13 +58,13 @@ public class DatabaseTest {
             String timezone = String.valueOf(connection.isValid(5));
             message+= "Valid Connection: <br/>" + timezone+"<br/><br/>";
             
-            Random random = new Random();
+            //Random random = new Random();
             
-            String insertSQL = "INSERT INTO user_table (username, password) VALUES (?,?);";
-            CallableStatement insertStatement = connection.prepareCall(insertSQL);
-            insertStatement.setString(1, "TestUser"+random.nextLong());
-            insertStatement.setString(2, "Password"+random.nextLong());
-            insertStatement.execute();
+//            String insertSQL = "INSERT INTO user_table (username, password) VALUES (?,?);";
+//            CallableStatement insertStatement = connection.prepareCall(insertSQL);
+//            insertStatement.setString(1, "TestUser"+random.nextLong());
+//            insertStatement.setString(2, "Password"+random.nextLong());
+//            insertStatement.execute();
             
             String sql = "select * from user_table";
             CallableStatement statement = connection.prepareCall(sql);
@@ -74,7 +77,8 @@ public class DatabaseTest {
             {
             	String user = set.getString("username");
             	String pass = set.getString("password");
-            	message+= "<b>User:</b> " + user + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Password:</b> "+ pass + "</br>";
+            	String auth = set.getString("auth_token");
+            	message+= "<b>User:</b> " + user + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Password:</b> "+ pass + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Auth:</b> "+ auth +"</br>";
             	
             }
             message+="<br/>";
@@ -83,9 +87,9 @@ public class DatabaseTest {
             
             message+= "<b>Parameters:<b> <br/>";
             
-            Location location = ServletConfiguration.getLocation();
+            Database location = ServletConfiguration.getDatabase();
             message+= "Location: ";
-            if(location == ServletConfiguration.Location.UNIVERSITY)
+            if(location == ServletConfiguration.Database.UNIVERSITY)
             	message+="UNI<br/><br/>";
             else
             	message+="HOME<br/><br/>";
@@ -100,10 +104,18 @@ public class DatabaseTest {
 
             message+= "Password MATCH: " + passUtil.compare(pass, passUtil.encrypt(pass)) + "<br/>";
             message+= "Password BAD: " + passUtil.compare(pass, passUtil.encrypt(pass+" ")) + "<br/>";
-            message+= "Password BAD: " + passUtil.compare(pass, "asdfasdfasdfasdf") + "<br/>";
+            message+= "Password BAD: " + passUtil.compare(pass, "asdfasdfasdfasdf") + "<br/><br/>";
+
             
+            Account account = new Account("bob", "is", "coolio.");
+            Gson gson = new Gson();
+            String json = gson.toJson(account, Account.class);
+            message+= json + "<br/><br/>";
             
-            
+           Account account2 = gson.fromJson(json, Account.class);
+           
+           message+= "Equal JSON Conversion: " + account2.exactCompare(account);
+           
             
         } 
          catch (NamingException e) 

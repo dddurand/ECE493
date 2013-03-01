@@ -1,0 +1,21 @@
+1. Setup Apache httpd
+(Done by ECE IT)
+
+2. Setup Tomcat
+Download, extract to /usr/tomcat7
+
+3. Setup Proxy
+http://tomcat.apache.org/tomcat-7.0-doc/proxy-howto.html#Apache_2.0_Proxy_Support
+
+In httpd.conf in /etc/httpd/conf/httpd.conf(depending on install)
+Uncomment if not already so: LoadModule proxy_module  {path-to-modules}/mod_proxy.so
+
+Add for each servlet(note: port depends on tomcat settings):
+ProxyPass         /SERLVETNAME  http://localhost:8080/SERLVETNAME
+ProxyPassReverse  /SERLVETNAME  http://localhost:8080/SERLVETNAME
+
+In /usr/tomcat7/conf/server.xml
+Add: 
+<Connector port="8080" ...
+              proxyName="ServletConnector"
+              proxyPort="80"/>

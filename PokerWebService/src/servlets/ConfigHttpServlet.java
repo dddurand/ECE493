@@ -1,7 +1,11 @@
 package servlets;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 
 import util.ServletConfiguration;
 
@@ -25,5 +29,34 @@ public class ConfigHttpServlet extends HttpServlet {
 		 super.init();
 		 ServletConfiguration.loadContext(this.getServletContext());
      }
+	
+	/**
+	 * Retrieves the data provided in a post request.
+	 * This function should only be called for getPost requests.
+	 * 
+	 * @param request getPost Request
+	 * @return Data provided in a Post HttpServletRequest.
+	 * 
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected String getPostData(HttpServletRequest request) 
+										throws ServletException, IOException 
+	{
+
+		BufferedReader reader = request.getReader();
+		
+		StringBuilder builder = new StringBuilder();
+		char[] charBuffer = new char[500];
+		while(true)
+		{
+			int charsRead = reader.read(charBuffer);
+			if(charsRead < 0) break;
+			builder.append(charBuffer, 0, charsRead);
+			
+		}
+		
+		return builder.toString();
+	}
 	
 }
