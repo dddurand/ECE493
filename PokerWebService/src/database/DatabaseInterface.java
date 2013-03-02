@@ -14,6 +14,8 @@ import javax.sql.DataSource;
 import util.ServletConfiguration;
 import util.ServletConfiguration.Database;
 import dataModels.Account;
+import dataModels.Game;
+import dataModels.MiscGameData;
 
 
 /**
@@ -204,6 +206,17 @@ public class DatabaseInterface {
 		return dataSource;
 	}
 
+	public void saveGame(Account account, Game game)
+	{
+		
+	}
+	
+	public void saveMiscData(Account account, MiscGameData game)
+	{
+		
+	}
+	
+	
 	
 	/**
 	 * Centralizes all Exceptions caused by DatabaseInterface.

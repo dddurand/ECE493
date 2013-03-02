@@ -3,6 +3,7 @@ package services;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import dataModels.UploadData;
 import database.DatabaseInterface;
 import database.ResponseObject;
 import database.DatabaseInterface.DatabaseInterfaceException;
@@ -11,6 +12,7 @@ import servlets.ConfigHttpServlet;
 import servlets.LoginServlet;
 import servlets.LogoutServlet;
 import servlets.RegisterServlet;
+import servlets.UploadServlet;
 
 /**
  * A class that acts as a factory of SecureService objects. The factory builds
@@ -35,7 +37,7 @@ public class ServiceFactory {
 	 */
 	public enum ServletType
 	{
-		LOGIN, LOGOUT, REGISTER, UNKNOWN
+		LOGIN, LOGOUT, REGISTER, UPLOAD, UNKNOWN
 	}
 	
 	/**
@@ -76,6 +78,8 @@ public class ServiceFactory {
 			return new LogoutDelegate(gson, dbInterface);
 		case REGISTER:
 			return new RegisterDelegate(gson, dbInterface);
+		case UPLOAD:
+			return new UploadDelegate(gson, dbInterface);
 		default:
 			return new ServiceDelegate(gson, dbInterface);
 		}
@@ -100,6 +104,10 @@ public class ServiceFactory {
 		case REGISTER:
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
 			break;
+			
+		case UPLOAD:
+			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
+			gsonBuilder.registerTypeAdapter(UploadData.class, new UploadData.UploadDataDeserializer());
 		default:
 			break;
 		}
@@ -120,6 +128,8 @@ public class ServiceFactory {
 			return ServletType.LOGOUT;
 		else if(servlet instanceof RegisterServlet)
 			return ServletType.REGISTER;
+		else if(servlet instanceof UploadServlet)
+			return ServletType.UPLOAD;
 		else
 			return ServletType.UNKNOWN;
 	}

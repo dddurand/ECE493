@@ -1,0 +1,151 @@
+{
+	"username":"asdf",
+	"authenticationToken":"019f27e2-61b5-4046-a9c7-ecbb3c10295f",
+	"games": [{
+		"gameID": 1,
+		"gameActions": [{
+			"action": "START",
+			"pot": 12,
+			"hand": "DA;S2",
+			"communityCards": ""
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"hand": "DA;S2",
+			"communityCards": "CA"
+		},
+		{
+			"action": "CALL",
+			"pot": 12,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK"
+		},
+		{
+			"action": "RAISE",
+			"pot": 12,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST"
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "WIN",
+			"pot": 36,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "END",
+			"pot": 12,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		}]
+	},
+	{
+		"gameID": 2,
+		"gameActions": [{
+			"action": "START",
+			"pot": 1,
+			"hand": "DA;S2",
+			"communityCards": ""
+		},
+		{
+			"action": "CHECK",
+			"pot": 2,
+			"hand": "DA;S2",
+			"communityCards": "CA"
+		},
+		{
+			"action": "CALL",
+			"pot": 3,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK"
+		},
+		{
+			"action": "RAISE",
+			"pot": 4,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST"
+		},
+		{
+			"action": "CHECK",
+			"pot": 5,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "WIN",
+			"pot": 6,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "END",
+			"pot": 7,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		}]
+	},
+	{
+		"gameID": 3,
+		"gameActions": [{
+			"action": "START",
+			"pot": 1,
+			"hand": "DA;S2",
+			"communityCards": ""
+		},
+		{
+			"action": "CHECK",
+			"pot": 11,
+			"hand": "DA;S2",
+			"communityCards": "CA"
+		},
+		{
+			"action": "CALL",
+			"pot": 111,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK"
+		},
+		{
+			"action": "RAISE",
+			"pot": 1111,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST"
+		},
+		{
+			"action": "CHECK",
+			"pot": 11111,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "WIN",
+			"pot": 111111,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "END",
+			"pot": 1111111,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		}]
+	}],
+	"miscDatas": [{
+		"name": "genMoney1",
+		"value": 1000000
+	},
+	{
+		"name": "genMoney2",
+		"value": 1000000
+	},
+	{
+		"name": "genMoney3",
+		"value": 1000000
+	}]
+}

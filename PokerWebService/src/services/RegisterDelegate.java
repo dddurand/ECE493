@@ -8,7 +8,7 @@ import database.DatabaseInterface.DatabaseInterfaceException;
 import database.ResponseObject;
 
 /**
- * The ServiceDelegate that deals with the process of creating new accounts.
+ * The ServiceDelegate extension that deals with the process of creating new accounts.
  * 
  * @author dddurand
  *
@@ -19,17 +19,20 @@ public class RegisterDelegate extends ServiceDelegate{
 		super(gson, dbInterface);
 	}
 
+	/**
+	 * The process used to generate a new account for the webservice
+	 */
 	@Override
 	public String unsecureProcess(Account account, String postData)
 			throws DatabaseInterfaceException {
 			
-			if(account.getUsername().isEmpty())
+			if(account.getUsername() == null || account.getUsername().isEmpty())
 			{
 				ResponseObject response = new ResponseObject(false, "Invalid Username Provided");
 				return gson.toJson(response, ResponseObject.class);
 			}
 			
-			if(account.getPassword().isEmpty())
+			if(account.getPassword() == null || account.getPassword().isEmpty())
 			{
 				ResponseObject response = new ResponseObject(false, "Invalid Password Provided");
 				return gson.toJson(response, ResponseObject.class);
