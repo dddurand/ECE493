@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.Writer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,17 +8,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
-import database.ResponseObject;
-import database.DatabaseInterface.DatabaseInterfaceException;
-
-import services.AuthenticationService;
 import services.SecureService;
 import services.ServiceFactory;
 
+import com.google.gson.Gson;
+
+import database.DatabaseInterface.DatabaseInterfaceException;
+import database.ResponseObject;
+
 /**
  * Servlet implementation class LogoutServlet
+ * 
+ * The Servlet takes in a valid username, and auth token,
+ * and invalidates the authentication token. This effectively
+ * logs out the user. An error occurs if the username/auth token is invalid.
+ * 
  */
 @WebServlet("/LogoutServlet")
 public class LogoutServlet extends ConfigHttpServlet {
@@ -51,22 +54,7 @@ public class LogoutServlet extends ConfigHttpServlet {
 			message = gson.toJson(responseMsg, ResponseObject.class);
 		}
 		
-		this.outputMessage(response, message);
-		
-		
-		
-		
-//		AuthenticationService authService = new AuthenticationService();
-//		String postData = this.getPostData(request);
-//		String result = authService.logout(postData);
-//		
-//		response.setContentType("text/html");
-//		
-//		Writer writer = response.getWriter();
-//		writer.write("<html>");
-//		writer.write(result);
-//		writer.write("</html>");
-		
+		this.outputMessage(response, message);	
 	}
 
 }

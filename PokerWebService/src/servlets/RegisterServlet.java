@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.Writer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,17 +8,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
-import database.ResponseObject;
-import database.DatabaseInterface.DatabaseInterfaceException;
-
-import services.AuthenticationService;
 import services.SecureService;
 import services.ServiceFactory;
 
+import com.google.gson.Gson;
+
+import database.DatabaseInterface.DatabaseInterfaceException;
+import database.ResponseObject;
+
 /**
  * Servlet implementation class RegisterServlet
+ * 
+ * This Servlet takes in a username and password, and generates
+ * a new account. If the username already exists, or cannot be created
+ * an error is returned.
+ * 
+ * Input: {"username":"asdf","password":"asdf"}
+ * Output: {"Success":"TRUE","Message":"TRUE","AuthenticationToken":"019f27e2-61b5-4046-a9c7-ecbb3c10295f"}
  */
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends ConfigHttpServlet {
@@ -51,18 +56,6 @@ public class RegisterServlet extends ConfigHttpServlet {
 		}
 		
 		this.outputMessage(response, message);
-		
-		
-		//		AuthenticationService authService = new AuthenticationService();
-//		String postData = this.getPostData(request);
-//		String result = authService.register(postData);
-//		
-//		response.setContentType("text/html");
-//		
-//		Writer writer = response.getWriter();
-//		writer.write("<html>");
-//		writer.write(result);
-//		writer.write("</html>");
 	}
 
 }

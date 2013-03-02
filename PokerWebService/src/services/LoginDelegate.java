@@ -9,12 +9,28 @@ import database.DatabaseInterface;
 import database.ResponseObject;
 import database.DatabaseInterface.DatabaseInterfaceException;
 
+/**
+ * The ServiceDelegate extension that deals with the process of loggin in users,
+ * through the generation of new authentication tokens.
+ * 
+ * @author dddurand
+ *
+ */
 public class LoginDelegate extends ServiceDelegate{
 
+	/**
+	 * General Constructor
+	 * 
+	 * @param gson
+	 * @param dbInterface
+	 */
 	public LoginDelegate(Gson gson, DatabaseInterface dbInterface) {
 		super(gson, dbInterface);
 	}
 
+	/**
+	 * Starts the process of logging in the provided account.
+	 */
 	@Override
 	public String applyLoginProcess(Account account, String postData)
 			throws DatabaseInterfaceException {

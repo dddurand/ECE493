@@ -8,6 +8,14 @@ import database.DatabaseInterface;
 import database.ResponseObject;
 import database.DatabaseInterface.DatabaseInterfaceException;
 
+/**
+ * The main logic for authentication to the web service. Other than the logic for
+ * authentication, the work done by the service is determined by the the delegate
+ * provided at creation.
+ * 
+ * @author dddurand
+ *
+ */
 public class SecureService {
 
 	private ServiceDelegate service;
@@ -15,6 +23,13 @@ public class SecureService {
 	private Gson gson;
 	private DatabaseInterface dbInterface;
 	
+	/**
+	 * General Constructor
+	 * 
+	 * @param delegate The workhorse of the function, providing the main functionality.
+	 * @param gson The object to serialize/deserialize JSON
+	 * @param dbInterface The main interface to the database
+	 */
 	public SecureService(ServiceDelegate delegate, Gson gson, DatabaseInterface dbInterface)
 	{
 		this.service = delegate;
@@ -22,11 +37,20 @@ public class SecureService {
 		this.dbInterface = dbInterface;
 	}
 	
+	/**
+	 * Getter for the GSON object
+	 * 
+	 * @return
+	 */
 	protected Gson getGson()
 	{
 		return this.gson;
 	}
 	
+	/**
+	 * Getter for the databaseInterface
+	 * @return
+	 */
 	protected DatabaseInterface getdbInterface()
 	{
 		return this.dbInterface;
@@ -52,13 +76,13 @@ public class SecureService {
 				Account account = gson.fromJson(postData, Account.class);
 				
 				//empty username
-				if(account.getUsername().isEmpty() || account.getUsername()==null)
+				if(account == null || account.getUsername()==null || account.getUsername().isEmpty())
 				{
 					return generateError("Invalid username");
 				}
 				
 				//empty auth token
-				if(account.getAuthenticationToken().isEmpty() || account.getAuthenticationToken()==null)
+				if(account.getAuthenticationToken()==null || account.getAuthenticationToken().isEmpty())
 				{
 					return generateError("Invalid auth token");
 				}
@@ -84,7 +108,7 @@ public class SecureService {
 					//Invalid username/password combo
 					else
 					{
-						return generateInvalidLoginError();
+						return generateInvalidAuthError();
 					}
 				}
 				
@@ -117,14 +141,16 @@ public class SecureService {
 			//Load account from post data
 			Account account = gson.fromJson(postData, Account.class);
 			
+			
+			
 			//empty username
-			if(account.getUsername().isEmpty() || account.getUsername()==null)
+			if(account == null || account.getUsername()==null || account.getUsername().isEmpty())
 			{
 				return generateError("Invalid username");
 			}
 			
 			//empty password
-			if(account.getPassword().isEmpty() || account.getPassword()==null)
+			if(account.getPassword()==null || account.getPassword().isEmpty())
 			{
 				return generateError("Invalid password");
 			}
@@ -163,12 +189,24 @@ public class SecureService {
 		}
 	}
 	
+	/**
+	 * Does not explicitly checks for any auth verification.
+	 * The call is simply passed on to the delegate, once the account
+	 * provided is determined.
+	 * 
+	 * @param postData Data passed to the web service.
+	 * @return
+	 */
 	public final String unsecuredProcess(String postData)
 	{
 		try
 		{
 			//Load account from post data
 			Account account = gson.fromJson(postData, Account.class);
+			
+			if(account == null) return generateError("Invalid Username Provided");
+			
+			
 			return this.service.unsecureProcess(account, postData);
 			
 		} catch (DatabaseInterfaceException e) {
@@ -180,26 +218,48 @@ public class SecureService {
 		}
 	}
 	
+	/**
+	 * Returns the error for the case when a username has no matching account
+	 * @return
+	 */
 	private String generateUsernameNotFoundError()
 	{
 		return generateError("The provided username is not registered.");
 	}
 	
+	/**
+	 * Returns the error when a username/password pair is invalid.
+	 * @return
+	 */
 	private String generateInvalidLoginError()
 	{
 		return generateError("Invalid Login.");
 	}
 	
+	/**
+	 * Returns the error used when an username/auth is invalid.
+	 * @return
+	 */
 	private String generateInvalidAuthError()
 	{
 		return generateError("The provided username is not registered.");
 	}
 	
+	/**
+	 * Returns the error used when the data provided is invalid.
+	 * @return
+	 */
 	protected String generateInvalidDataError()
 	{
 		return generateError("Invalid post data.");
 	}
 	
+	/**
+	 * Returns and error
+	 * 
+	 * @param message
+	 * @return
+	 */
 	protected String generateError(String message)
 	{
 		ResponseObject response = new ResponseObject(false, message);

@@ -9,20 +9,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
-import database.ResponseObject;
-import database.DatabaseInterface.DatabaseInterfaceException;
-
 import services.AuthenticationService;
 import services.SecureService;
 import services.ServiceFactory;
 
+import com.google.gson.Gson;
+
+import database.DatabaseInterface.DatabaseInterfaceException;
+import database.ResponseObject;
+
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class RegisterServlet
  * 
- * Provides login functionality.
+ * This Servlet takes in a username and password, and generates
+ * an authentication token. If an invalid username/password pair is given
+ * and error is returned.
  * 
+ * Input: {"username":"asdf","password":"asdf"}
+ * Output: {"Success":"TRUE","Message":"TRUE","AuthenticationToken":"019f27e2-61b5-4046-a9c7-ecbb3c10295f"}
  */
 //@WebServlet("/LoginServlet")
 @WebServlet("/")
@@ -75,17 +79,6 @@ public class LoginServlet extends ConfigHttpServlet {
 		}
 		
 		this.outputMessage(response, message);
-		
-//		AuthenticationService authService = new AuthenticationService();
-//		String postData = this.getPostData(request);
-//		String result = authService.login(postData);
-//		
-//		response.setContentType("text/html");
-//		
-//		Writer writer = response.getWriter();
-//		writer.write("<html>");
-//		writer.write(result);
-//		writer.write("</html>");
 	}
 
 }

@@ -8,6 +8,12 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+/**
+ * The object used to generate the JSON response from a webservice call.
+ * 
+ * @author dddurand
+ *
+ */
 public class ResponseObject {
 
 	public final static String SUCCESS = "TRUE";

@@ -7,6 +7,12 @@ import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
 import database.ResponseObject;
 
+/**
+ * The ServiceDelegate that deals with the process of creating new accounts.
+ * 
+ * @author dddurand
+ *
+ */
 public class RegisterDelegate extends ServiceDelegate{
 
 	public RegisterDelegate(Gson gson, DatabaseInterface dbInterface) {
