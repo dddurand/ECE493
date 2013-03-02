@@ -29,13 +29,12 @@ public class LogoutDelegate extends ServiceDelegate{
 	/**
 	 * The process that invalidates the current account's auth token.
 	 */
-	@Override
-	public String unsecureProcess(Account account, String postData)
+	 @Override
+	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
-		
-		dbInterface.invalidateAuth(account.getUsername());
-		ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS);
-		return gson.toJson(response, ResponseObject.class);
+		 dbInterface.invalidateAuth(postAccount.getUsername());
+			ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS);
+			return gson.toJson(response, ResponseObject.class);
 	}
 
 }

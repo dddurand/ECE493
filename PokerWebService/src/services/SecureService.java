@@ -242,7 +242,7 @@ public class SecureService {
 	 */
 	private String generateInvalidAuthError()
 	{
-		return generateError("The provided username is not registered.");
+		return generateError("The provided authtoken and username is invalid.");
 	}
 	
 	/**

@@ -1,0 +1,195 @@
+REGISTER - http://<SERVER>:8080/PokerWebService/RegisterServlet
+	{"username":"asdf","password":"asdf"}
+
+	Ex: Success
+	=> {"Success":"TRUE","Message":"TRUE"}
+
+	EX: Failure
+	=> {"Success":"FALSE","Message":"Username already in use."}
+
+LOGIN- http://<SERVER>:8080/PokerWebService/LoginServlet
+	{"username":"asdf","password":"asdf"}
+
+	Ex:Success
+	=>{"Success":"TRUE","Message":"TRUE","AuthenticationToken":"7f3ff095-bf82-4188-87b3-7b6dfab435b1"}
+
+	Ex: Failure
+	=>{"Success":"FALSE","Message":"Invalid Login."}
+
+UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
+
+	{
+		"username":"asdf",
+		"authenticationToken":"7f3ff095-bf82-4188-87b3-7b6dfab435b1",
+		"games": [{
+			"gameID": 1,
+			"gameActions": [{
+				"action": "START",
+				"pot": 12,
+				"hand": "DA;S2",
+				"communityCards": ""
+			},
+			{
+				"action": "CHECK",
+				"pot": 12,
+				"hand": "DA;S2",
+				"communityCards": "CA"
+			},
+			{
+				"action": "CALL",
+				"pot": 12,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK"
+			},
+			{
+				"action": "RAISE",
+				"pot": 12,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST"
+			},
+			{
+				"action": "CHECK",
+				"pot": 12,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			},
+			{
+				"action": "WIN",
+				"pot": 36,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			},
+			{
+				"action": "END",
+				"pot": 12,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			}]
+		},
+		{
+			"gameID": 2,
+			"gameActions": [{
+				"action": "START",
+				"pot": 1,
+				"hand": "DA;S2",
+				"communityCards": ""
+			},
+			{
+				"action": "CHECK",
+				"pot": 2,
+				"hand": "DA;S2",
+				"communityCards": "CA"
+			},
+			{
+				"action": "CALL",
+				"pot": 3,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK"
+			},
+			{
+				"action": "RAISE",
+				"pot": 4,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST"
+			},
+			{
+				"action": "CHECK",
+				"pot": 5,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			},
+			{
+				"action": "WIN",
+				"pot": 6,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			},
+			{
+				"action": "END",
+				"pot": 7,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			}]
+		},
+		{
+			"gameID": 3,
+			"gameActions": [{
+				"action": "START",
+				"pot": 1,
+				"hand": "DA;S2",
+				"communityCards": ""
+			},
+			{
+				"action": "CHECK",
+				"pot": 11,
+				"hand": "DA;S2",
+				"communityCards": "CA"
+			},
+			{
+				"action": "CALL",
+				"pot": 111,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK"
+			},
+			{
+				"action": "RAISE",
+				"pot": 1111,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST"
+			},
+			{
+				"action": "CHECK",
+				"pot": 11111,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			},
+			{
+				"action": "WIN",
+				"pot": 111111,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			},
+			{
+				"action": "END",
+				"pot": 1111111,
+				"hand": "DA;S2",
+				"communityCards": "CA;HK;ST;D9"
+			}]
+		}],
+		"miscDatas": [{
+			"name": "genMoney1",
+			"value": 1000000
+		},
+		{
+			"name": "genMoney2",
+			"value": 1000000
+		},
+		{
+			"name": "genMoney3",
+			"value": 1000000
+		}]
+	}
+
+
+	Success
+	{
+		"Success": "TRUE",
+		"Message": "Upload Results",
+		"game_success_uploads": ["1","2","3"], (NOTE THESE ARE THE GAME IDS)
+		"misc_success_uploads": [0,1,2]         (NOTE THESE ARE THE POSITIONS THAT THEY WHERE SENT)
+	}
+	
+	ex: Failure
+	{"Success":"FALSE","Message":"The provided authtoken and username is invalid."}
+	
+LOGOUT: http://<SERVLET>:8080/PokerWebService/LogoutServlet
+	{
+		"username":"asdf",
+		"authenticationToken":"7f3ff095-bf82-4188-87b3-7b6dfab435b1",
+	}
+
+	Success:
+	{"Success":"TRUE","Message":"TRUE"}
+	
+	ex: Failure:
+	{"Success":"FALSE","Message":"The provided authtoken and username is invalid."}
