@@ -15,6 +15,7 @@ public class Account {
 	private String password;
 	private String authenticationToken;
 	
+	private transient int accountID;
 	private transient String ecryptedPassword;
 	private transient boolean hasEncryptedPassword;
 	private transient PasswordUtil passUtil;
@@ -79,8 +80,44 @@ public class Account {
 		
 	}
 	
+	/**
+	 * Generic Constructor
+	 * @param username Username of the account
+	 * @param password Password of the account
+	 * @param authToken Current AuthToken for the account
+	 */
+	public Account(int accountID, String username, String password, String authToken, boolean isEncryptedPassword)
+	{
+		this.accountID = accountID;
+		this.username = username;
+		this.authenticationToken = authToken;
+		passUtil = new PasswordUtil();
+		
+		if(isEncryptedPassword)
+		{
+			this.ecryptedPassword = password;
+			this.hasEncryptedPassword = true;
+		}
+		else
+		{
+			this.password = password;
+			this.hasEncryptedPassword = false;
+		}
+		
+		
+	}
 	
 	
+	
+	
+	public int getAccountID() {
+		return accountID;
+	}
+
+	public void setAccountID(int accountID) {
+		this.accountID = accountID;
+	}
+
 	/**
 	 * Generic Constructor
 	 * @param username Username of the account

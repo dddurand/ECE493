@@ -1,7 +1,9 @@
 package database;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -21,6 +23,8 @@ public class ResponseObject {
 	
 	private boolean success;
 	private String message;
+	private ArrayList<String> uploadGameSuccess;
+	private ArrayList<Integer> uploadMiscSuccess;
 	
 	private String authenticationToken;
 	
@@ -42,7 +46,39 @@ public class ResponseObject {
 		this.message = message;
 	}
 	
-	
+
+	/**
+	 * Getter for uploadGameSuccess
+	 * @return
+	 */
+	public ArrayList<String> getUploadGameSuccess() {
+		return uploadGameSuccess;
+	}
+
+	/**
+	 * Setter for uploadGameSuccess
+	 * @return
+	 */
+	public void setUploadGameSuccess(ArrayList<String> uploadGameSuccess) {
+		this.uploadGameSuccess = uploadGameSuccess;
+	}
+
+	/**
+	 * Getter for uploadMiscSuccess
+	 * @return
+	 */
+	public ArrayList<Integer> getUploadMiscSuccess() {
+		return uploadMiscSuccess;
+	}
+
+	/**
+	 * Setter for uploadMiscSuccess
+	 * @return
+	 */
+	public void setUploadMiscSuccess(ArrayList<Integer> miscUploadResults) {
+		this.uploadMiscSuccess = miscUploadResults;
+	}
+
 	/**'
 	 * Returns success parameter
 	 * @return
@@ -116,6 +152,8 @@ public class ResponseObject {
 			JsonObject jsonObject = new JsonObject();
 			String message = response.getMessage();
 			String authenticationToken = response.getAuthenticationToken();
+			ArrayList<String> gameResults = response.getUploadGameSuccess();
+			ArrayList<Integer> miscResults = response.getUploadMiscSuccess();
 			
 			if(response.isSuccess())
 				jsonObject.add("Success", new JsonPrimitive(SUCCESS));
@@ -128,6 +166,24 @@ public class ResponseObject {
 			if(authenticationToken!=null && !authenticationToken.isEmpty())
 				jsonObject.add("AuthenticationToken", new JsonPrimitive(authenticationToken));
 			
+			if(gameResults!= null && !gameResults.isEmpty())
+			{
+				JsonArray results = new JsonArray();
+				for(String gameID : gameResults)
+					results.add(new JsonPrimitive(gameID));
+				
+				jsonObject.add("game_success_uploads", results);
+					
+			}
+			
+			if(miscResults!= null && !miscResults.isEmpty())
+			{
+				JsonArray results = new JsonArray();
+				for(Integer position : miscResults)
+					results.add(new JsonPrimitive(position));
+				
+				jsonObject.add("misc_success_uploads", results);
+			}
 			
 			return jsonObject;
 		}

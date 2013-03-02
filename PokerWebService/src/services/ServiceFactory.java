@@ -12,6 +12,7 @@ import servlets.ConfigHttpServlet;
 import servlets.LoginServlet;
 import servlets.LogoutServlet;
 import servlets.RegisterServlet;
+import servlets.TestServlet;
 import servlets.UploadServlet;
 
 /**
@@ -37,7 +38,7 @@ public class ServiceFactory {
 	 */
 	public enum ServletType
 	{
-		LOGIN, LOGOUT, REGISTER, UPLOAD, UNKNOWN
+		LOGIN, LOGOUT, REGISTER, UPLOAD, UNKNOWN,TEST
 	}
 	
 	/**
@@ -80,6 +81,8 @@ public class ServiceFactory {
 			return new RegisterDelegate(gson, dbInterface);
 		case UPLOAD:
 			return new UploadDelegate(gson, dbInterface);
+		case TEST:
+			return new TestDelegate(gson, dbInterface);
 		default:
 			return new ServiceDelegate(gson, dbInterface);
 		}
@@ -106,6 +109,7 @@ public class ServiceFactory {
 			break;
 			
 		case UPLOAD:
+		case TEST:
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
 			gsonBuilder.registerTypeAdapter(UploadData.class, new UploadData.UploadDataDeserializer());
 		default:
@@ -130,6 +134,8 @@ public class ServiceFactory {
 			return ServletType.REGISTER;
 		else if(servlet instanceof UploadServlet)
 			return ServletType.UPLOAD;
+		else if(servlet instanceof TestServlet)
+			return ServletType.TEST;
 		else
 			return ServletType.UNKNOWN;
 	}
