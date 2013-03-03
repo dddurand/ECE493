@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainscreen_bg"
+    android:orientation="vertical"
+    tools:context=".MainScreen" >
+
+    <fragment
+        android:id="@+id/fragment1"
+        android:name="fragments.Login"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginLeft="300dp"
+        tools:layout="@layout/login_fragment" />
+
+</LinearLayout>
