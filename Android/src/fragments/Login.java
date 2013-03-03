@@ -7,19 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.bluetoothpoker.R;
 
 public class Login extends Fragment implements OnClickListener {
+	
+	private View view;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		//Load XML Layout
-		View view = inflater.inflate(R.layout.login_fragment,container, false);
-		//Set listener for button
+		//Load XML Layout into global variable
+		this.view = inflater.inflate(R.layout.login_fragment,container, false);
+		//Set listener for imagebutton
 		ImageButton b = (ImageButton) view.findViewById(R.id.imageButton1);
 		b.setOnClickListener(this);
 		
@@ -28,11 +31,12 @@ public class Login extends Fragment implements OnClickListener {
 	
 	//When imagebutton is pressed
 	public void loginButtonAction(){
-		
-		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-		alert.setTitle("Window Size");
-		alert.setMessage("Choose a new window size (odd number)");
-		alert.show();
+		//Get components from view
+		EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
+		EditText passwordField = (EditText) this.view.findViewById(R.id.passwordField);
+		//Get username and password
+		String user_string=userField.getText().toString();
+		String password_string=passwordField.getText().toString();
 	}
 
 	@Override
