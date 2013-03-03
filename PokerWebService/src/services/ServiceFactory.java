@@ -11,6 +11,7 @@ import database.DatabaseInterface.DatabaseInterfaceException;
 import servlets.ConfigHttpServlet;
 import servlets.LoginServlet;
 import servlets.LogoutServlet;
+import servlets.PersonalStatisticsServlet;
 import servlets.RegisterServlet;
 import servlets.TestServlet;
 import servlets.UploadServlet;
@@ -38,7 +39,7 @@ public class ServiceFactory {
 	 */
 	public enum ServletType
 	{
-		LOGIN, LOGOUT, REGISTER, UPLOAD, UNKNOWN,TEST
+		LOGIN, LOGOUT, REGISTER, UPLOAD, PERSONAL, UNKNOWN,TEST
 	}
 	
 	/**
@@ -81,6 +82,8 @@ public class ServiceFactory {
 			return new RegisterDelegate(gson, dbInterface);
 		case UPLOAD:
 			return new UploadDelegate(gson, dbInterface);
+		case PERSONAL:
+			return new PersonalStatisticsDelegate(gson, dbInterface);
 		case TEST:
 			return new TestDelegate(gson, dbInterface);
 		default:
@@ -108,6 +111,7 @@ public class ServiceFactory {
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
 			break;
 			
+		case PERSONAL:
 		case UPLOAD:
 		case TEST:
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
@@ -136,6 +140,8 @@ public class ServiceFactory {
 			return ServletType.UPLOAD;
 		else if(servlet instanceof TestServlet)
 			return ServletType.TEST;
+		else if(servlet instanceof PersonalStatisticsServlet)
+			return ServletType.PERSONAL;
 		else
 			return ServletType.UNKNOWN;
 	}

@@ -14,6 +14,7 @@ public class GameAction {
 
 	private PokerAction action;
 	private int pot;
+	private int bet;
 	private ArrayList<Card> hand;
 	private ArrayList<Card> communityCards;
 
@@ -25,15 +26,26 @@ public class GameAction {
 	/**
 	 * General Constructor
 	 */
-	public GameAction(PokerAction action, int pot, ArrayList<Card> hand, ArrayList<Card> communityCards)
+	public GameAction(PokerAction action, int pot, int bet, ArrayList<Card> hand, ArrayList<Card> communityCards)
 	{
 		this.action = action;
 		this.pot = pot;
 		this.hand = hand;
 		this.communityCards = communityCards;
+		this.bet = bet;
 	}
 	
 	
+	
+	
+	public int getBet() {
+		return bet;
+	}
+
+	public void setBet(int bet) {
+		this.bet = bet;
+	}
+
 	/**
 	 * action Getter
 	 * @return

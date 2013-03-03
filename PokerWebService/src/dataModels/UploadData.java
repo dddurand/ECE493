@@ -148,6 +148,7 @@ public class UploadData {
 				throw new JsonParseException("Invalid game action");
 
 			int pot = actionObject.get("pot").getAsInt();
+			int bet = actionObject.get("bet").getAsInt();
 			String hand = actionObject.get("hand").getAsString();
 			String comm = actionObject.get("communityCards").getAsString();
 
@@ -159,7 +160,7 @@ public class UploadData {
 			ArrayList<Card> handList = Card.generateCards(hand);
 			ArrayList<Card> commList = Card.generateCards(comm);
 
-			GameAction action = new GameAction(pokerAction, pot, handList, commList);
+			GameAction action = new GameAction(pokerAction, pot, bet, handList, commList);
 
 			return action;
 		}

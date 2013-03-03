@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import dataModels.Account;
 import dataModels.Game;
 import dataModels.MiscGameData;
+import dataModels.PersonalStatistics;
 import dataModels.UploadData;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
@@ -89,8 +90,18 @@ public class UploadDelegate extends ServiceDelegate{
 			} 
 			catch(DatabaseInterfaceException e) { }
 		}
+		
+		this.updateRankings(account);
 
 		return gameUploadResults;
+	}
+	
+	private void updateRankings(Account account) throws DatabaseInterfaceException
+	{
+		PersonalStatistics stats = new PersonalStatistics(account, dbInterface);
+		int deltaMoney = stats.deltaMoney();
+		
+		dbInterface.updateUsersDeltaMoney(account, deltaMoney);
 	}
 
 }

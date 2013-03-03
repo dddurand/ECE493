@@ -20,93 +20,107 @@ UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 
 	{
 		"username":"asdf",
-		"authenticationToken":"7f3ff095-bf82-4188-87b3-7b6dfab435b1",
+		"authenticationToken":"0bfd863f-e9cd-492d-a497-fa9e388ff62e",
 		"games": [{
 			"gameID": 1,
 			"gameActions": [{
 				"action": "START",
-				"pot": 12,
+				"pot": 122,
+				"bet": 20,
 				"hand": "DA;S2",
 				"communityCards": ""
 			},
 			{
 				"action": "CHECK",
 				"pot": 12,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA"
 			},
 			{
 				"action": "CALL",
 				"pot": 12,
+				"bet": 22,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK"
 			},
 			{
 				"action": "RAISE",
 				"pot": 12,
+				"bet": 23,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST"
 			},
 			{
 				"action": "CHECK",
 				"pot": 12,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			},
 			{
 				"action": "WIN",
 				"pot": 36,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			},
 			{
 				"action": "END",
-				"pot": 12,
+				"pot": 36,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			}]
 		},
 		{
 			"gameID": 2,
-			"gameActions": [{
+			"gameActions":[{
 				"action": "START",
-				"pot": 1,
+				"pot": 123,
+				"bet": 20,
 				"hand": "DA;S2",
 				"communityCards": ""
 			},
 			{
 				"action": "CHECK",
-				"pot": 2,
+				"pot": 12,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA"
 			},
 			{
 				"action": "CALL",
-				"pot": 3,
+				"pot": 12,
+				"bet": 22,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK"
 			},
 			{
 				"action": "RAISE",
-				"pot": 4,
+				"pot": 12,
+				"bet": 23,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST"
 			},
 			{
 				"action": "CHECK",
-				"pot": 5,
+				"pot": 12,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			},
 			{
 				"action": "WIN",
-				"pot": 6,
+				"pot": 36,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			},
 			{
 				"action": "END",
-				"pot": 7,
+				"pot": 36,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			}]
@@ -115,43 +129,50 @@ UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 			"gameID": 3,
 			"gameActions": [{
 				"action": "START",
-				"pot": 1,
+				"pot": 124,
+				"bet": 20,
 				"hand": "DA;S2",
 				"communityCards": ""
 			},
 			{
 				"action": "CHECK",
-				"pot": 11,
+				"pot": 12,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA"
 			},
 			{
 				"action": "CALL",
-				"pot": 111,
+				"pot": 12,
+				"bet": 22,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK"
 			},
 			{
 				"action": "RAISE",
-				"pot": 1111,
+				"pot": 12,
+				"bet": 23,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST"
 			},
 			{
 				"action": "CHECK",
-				"pot": 11111,
+				"pot": 12,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			},
 			{
 				"action": "WIN",
-				"pot": 111111,
+				"pot": 36,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			},
 			{
 				"action": "END",
-				"pot": 1111111,
+				"pot": 36,
+				"bet": 0,
 				"hand": "DA;S2",
 				"communityCards": "CA;HK;ST;D9"
 			}]

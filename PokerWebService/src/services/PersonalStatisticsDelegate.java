@@ -5,27 +5,27 @@ import com.google.gson.Gson;
 import dataModels.Account;
 import dataModels.PersonalStatistics;
 import database.DatabaseInterface;
-import database.DatabaseInterface.DatabaseInterfaceException;
 import database.ResponseObject;
-
+import database.DatabaseInterface.DatabaseInterfaceException;
 
 /**
- * This delegate deals with processing and storing the provided game data into the database.
+ * This delegate facilitates the creation of the personal statistics from the
+ * data contained in the database.
  * 
  * @author dddurand
  *
  */
-public class TestDelegate extends ServiceDelegate{
+public class PersonalStatisticsDelegate extends ServiceDelegate {
 
-	/**
-	 * General Constructor
-	 * @param gson
-	 * @param dbInterface
-	 */
-	public TestDelegate(Gson gson, DatabaseInterface dbInterface) {
+	public PersonalStatisticsDelegate(Gson gson, DatabaseInterface dbInterface) {
 		super(gson, dbInterface);
+		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Processes data in the database into a series of person statistics
+	 * 
+	 */
 	@Override
 	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
@@ -39,7 +39,5 @@ public class TestDelegate extends ServiceDelegate{
 		return gson.toJson(response, ResponseObject.class);
 
 	}
-
-
 
 }

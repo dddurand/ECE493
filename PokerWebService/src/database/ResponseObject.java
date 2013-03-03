@@ -10,6 +10,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import dataModels.PersonalStatistics;
+
 /**
  * The object used to generate the JSON response from a webservice call.
  * 
@@ -25,6 +27,8 @@ public class ResponseObject {
 	private String message;
 	private ArrayList<String> uploadGameSuccess;
 	private ArrayList<Integer> uploadMiscSuccess;
+	private PersonalStatistics personalStatistics;
+	
 	
 	private String authenticationToken;
 	
@@ -130,10 +134,30 @@ public class ResponseObject {
 	public void setAuthenticationToken(String authenticationToken) {
 		this.authenticationToken = authenticationToken;
 	}
+	
+	/**
+	 * Getter for personal stats
+	 * 
+	 * @return
+	 */
+	public PersonalStatistics getPersonalStatistics() {
+		return personalStatistics;
+	}
+
+	/**
+	 * Setter for personal stats
+	 * 
+	 * @return
+	 */
+	public void setPersonalStatistics(PersonalStatistics personalStatistics) {
+		this.personalStatistics = personalStatistics;
+	}
 
 
-	
-	
+
+
+
+
 
 	/**
 	 * GSON Serializer for the ResponseObject
@@ -154,6 +178,7 @@ public class ResponseObject {
 			String authenticationToken = response.getAuthenticationToken();
 			ArrayList<String> gameResults = response.getUploadGameSuccess();
 			ArrayList<Integer> miscResults = response.getUploadMiscSuccess();
+			PersonalStatistics personalStatistics = response.getPersonalStatistics();
 			
 			if(response.isSuccess())
 				jsonObject.add("Success", new JsonPrimitive(SUCCESS));
@@ -184,6 +209,14 @@ public class ResponseObject {
 				
 				jsonObject.add("misc_success_uploads", results);
 			}
+			
+			if(personalStatistics != null)
+			{
+				JsonElement element = context.serialize(personalStatistics);
+				jsonObject.add("personal_statistics", element);
+			}
+			
+			
 			
 			return jsonObject;
 		}
