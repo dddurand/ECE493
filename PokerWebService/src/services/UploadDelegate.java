@@ -8,6 +8,7 @@ import dataModels.Account;
 import dataModels.Game;
 import dataModels.MiscGameData;
 import dataModels.PersonalStatistics;
+import dataModels.TimeframeFilter;
 import dataModels.UploadData;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
@@ -98,10 +99,10 @@ public class UploadDelegate extends ServiceDelegate{
 	
 	private void updateRankings(Account account) throws DatabaseInterfaceException
 	{
-		PersonalStatistics stats = new PersonalStatistics(account, dbInterface);
+		PersonalStatistics stats = new PersonalStatistics(account, dbInterface, new TimeframeFilter());
 		int deltaMoney = stats.deltaMoney();
 		
-		dbInterface.updateUsersDeltaMoney(account, deltaMoney);
+		dbInterface.updateUsersDeltaMoney(account, deltaMoney, new TimeframeFilter());
 	}
 
 }

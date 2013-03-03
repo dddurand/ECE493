@@ -40,6 +40,7 @@ delimiter $$
 CREATE TABLE `games` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gameUUID` varchar(45) NOT NULL,
+  `date_uploaded` date NOT NULL,
   PRIMARY KEY (`id`,`gameUUID`),
   UNIQUE KEY `gameUUID_UNIQUE` (`gameUUID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8$$
@@ -52,6 +53,7 @@ CREATE TABLE `misc_data` (
   `accountID` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
   `value` blob NOT NULL,
+  `date_uploaded` date NOT NULL,
   PRIMARY KEY (`id`,`accountID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8$$
 

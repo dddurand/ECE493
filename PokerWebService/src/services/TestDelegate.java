@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 
 import dataModels.Account;
 import dataModels.PersonalStatistics;
+import dataModels.TimeframeFilter;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
-import database.ResponseObject;
 
 
 /**
@@ -30,13 +30,13 @@ public class TestDelegate extends ServiceDelegate{
 	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
 
-		PersonalStatistics stat = new PersonalStatistics(postAccount, dbInterface);
-		stat.generateAllStatistics();
 
-		ResponseObject response = new ResponseObject(true, "SUCCESS");
-		response.setPersonalStatistics(stat);
+		TimeframeFilter filter = gson.fromJson(postData, TimeframeFilter.class);
+		
+		PersonalStatistics stat = new PersonalStatistics(postAccount, dbInterface, filter);
+		int money = stat.getMoneyGenerate();
 
-		return gson.toJson(response, ResponseObject.class);
+		return ""+money;
 
 	}
 

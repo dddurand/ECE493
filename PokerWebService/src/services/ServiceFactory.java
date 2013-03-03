@@ -3,6 +3,7 @@ package services;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import dataModels.TimeframeFilter;
 import dataModels.UploadData;
 import database.DatabaseInterface;
 import database.ResponseObject;
@@ -116,6 +117,7 @@ public class ServiceFactory {
 		case TEST:
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
 			gsonBuilder.registerTypeAdapter(UploadData.class, new UploadData.UploadDataDeserializer());
+			gsonBuilder.registerTypeAdapter(TimeframeFilter.class, new TimeframeFilter.TimeframeFilterDeserializer());
 		default:
 			break;
 		}

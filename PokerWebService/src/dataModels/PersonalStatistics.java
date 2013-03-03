@@ -17,6 +17,7 @@ public class PersonalStatistics {
 
 	private transient DatabaseInterface dbInterface;
 	private transient Account account;
+	private transient TimeframeFilter filter;
 	
 	private int totalDollarsBetOnCalls;
 	private int totalDollarsBetOnBets;
@@ -58,10 +59,11 @@ public class PersonalStatistics {
 	 * @param account
 	 * @param dbInterface
 	 */
-	public PersonalStatistics(Account account, DatabaseInterface dbInterface)
+	public PersonalStatistics(Account account, DatabaseInterface dbInterface, TimeframeFilter filter)
 	{
 		this.dbInterface = dbInterface;
 		this.account = account;
+		this.filter = filter;
 	}
 	
 	/**
@@ -130,7 +132,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.SUM, 
 													NumerableActionColumn.BET, 
-													PokerAction.CALL, false);
+													PokerAction.CALL, false, filter);
 	}
 	
 	/**
@@ -144,7 +146,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.SUM, 
 													NumerableActionColumn.BET, 
-													PokerAction.BET, false);
+													PokerAction.BET, false, filter);
 	}
 	
 	/**
@@ -158,7 +160,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.SUM, 
 													NumerableActionColumn.BET, 
-													PokerAction.RAISE, false);
+													PokerAction.RAISE, false, filter);
 	}
 	
 	/**
@@ -172,7 +174,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.SUM, 
 													NumerableActionColumn.BET, 
-													PokerAction.RERAISE, false);
+													PokerAction.RERAISE, false, filter);
 	}
 	
 	/**
@@ -186,7 +188,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 				NumerableActionOperation.SUM, 
 				NumerableActionColumn.BET, 
-				null, false);
+				null, false, filter);
 	}
 	
 	/**
@@ -200,7 +202,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.BET, 
-													PokerAction.CALL, true);
+													PokerAction.CALL, true, filter);
 	}
 	
 	/**
@@ -214,7 +216,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.BET, 
-													PokerAction.BET, true);
+													PokerAction.BET, true, filter);
 	}
 	
 	/**
@@ -228,7 +230,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.BET, 
-													PokerAction.RAISE, true);
+													PokerAction.RAISE, true, filter);
 	}
 	
 	/**
@@ -242,7 +244,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.BET, 
-													PokerAction.RERAISE, true);
+													PokerAction.RERAISE, true, filter);
 	}
 	
 	/**
@@ -256,7 +258,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.BET, 
-													null, true);
+													null, true, filter);
 	}
 	
 	/**
@@ -267,7 +269,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfBets() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.BET, account);
+		return dbInterface.getGameActionsCount(PokerAction.BET, account, filter);
 	}
 	
 	/**
@@ -278,7 +280,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfChecks() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.CHECK, account);
+		return dbInterface.getGameActionsCount(PokerAction.CHECK, account, filter);
 	}
 	
 	/**
@@ -289,7 +291,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfCalls() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.CALL, account);
+		return dbInterface.getGameActionsCount(PokerAction.CALL, account, filter);
 	}
 	
 	/**
@@ -300,7 +302,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfFolds() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.FOLD, account);
+		return dbInterface.getGameActionsCount(PokerAction.FOLD, account, filter);
 	}
 	
 	/**
@@ -311,7 +313,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfRaise() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.RAISE, account);
+		return dbInterface.getGameActionsCount(PokerAction.RAISE, account, filter);
 	}
 	
 	/**
@@ -322,7 +324,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfReRaise() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.RERAISE, account);
+		return dbInterface.getGameActionsCount(PokerAction.RERAISE, account, filter);
 	}
 	
 	/**
@@ -333,7 +335,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfPotsWon() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.WIN, account);
+		return dbInterface.getGameActionsCount(PokerAction.WIN, account, filter);
 	}
 	
 	/**
@@ -344,7 +346,7 @@ public class PersonalStatistics {
 	 */
 	public int getTotalNumberOfPotsLoss() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGameActionsCount(PokerAction.LOSS, account);
+		return dbInterface.getGameActionsCount(PokerAction.LOSS, account, filter);
 	}
 	
 	/**
@@ -358,7 +360,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.CHECK, true);
+													PokerAction.CHECK, true, filter);
 	}
 	
 	/**
@@ -372,7 +374,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.CALL, true);
+													PokerAction.CALL, true, filter);
 	}
 	
 	/**
@@ -386,7 +388,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.BET, true);
+													PokerAction.BET, true, filter);
 	}
 	
 	/**
@@ -400,7 +402,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.RAISE, true);
+													PokerAction.RAISE, true, filter);
 	}
 	
 	/**
@@ -414,7 +416,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.RERAISE, true);
+													PokerAction.RERAISE, true, filter);
 	}
 	
 	/**
@@ -428,7 +430,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.FOLD, true);
+													PokerAction.FOLD, true, filter);
 	}
 	
 	/**
@@ -442,7 +444,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.WIN, true);
+													PokerAction.WIN, true, filter);
 	}
 	
 	/**
@@ -456,7 +458,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.AVG, 
 													NumerableActionColumn.POT, 
-													PokerAction.LOSS, true);
+													PokerAction.LOSS, true, filter);
 	}
 	
 	/**
@@ -470,7 +472,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.SUM, 
 													NumerableActionColumn.POT, 
-													PokerAction.WIN, true);
+													PokerAction.WIN, true, filter);
 	}
 	
 	/**
@@ -484,7 +486,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.SUM, 
 													NumerableActionColumn.POT, 
-													PokerAction.LOSS, true);
+													PokerAction.LOSS, true, filter);
 	}
 	
 	/**
@@ -498,7 +500,7 @@ public class PersonalStatistics {
 		return dbInterface.getGameActionsTypedNum(account, 
 													NumerableActionOperation.SUM, 
 													NumerableActionColumn.POT, 
-													PokerAction.FOLD, true);
+													PokerAction.FOLD, true, filter);
 	}
 	
 	/**
@@ -530,7 +532,7 @@ public class PersonalStatistics {
 	 */
 	public int getMoneyGenerate() throws DatabaseInterfaceException
 	{
-		return dbInterface.getMoneyGenerated(account);
+		return dbInterface.getMoneyGenerated(account, filter);
 	}
 	
 	/**
@@ -541,7 +543,7 @@ public class PersonalStatistics {
 	 */
 	public int getGamesPlayed() throws DatabaseInterfaceException
 	{
-		return dbInterface.getGamesPlayed(account);
+		return dbInterface.getGamesPlayed(account, filter);
 	}
 	
 	/**

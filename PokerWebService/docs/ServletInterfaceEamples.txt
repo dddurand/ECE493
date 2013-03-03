@@ -19,8 +19,9 @@ LOGIN- http://<SERVER>:8080/PokerWebService/LoginServlet
 UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 
 	{
-		"username":"asdf",
-		"authenticationToken":"0bfd863f-e9cd-492d-a497-fa9e388ff62e",
+		 "timeframe": "DAY",
+		"username":"asdf2",
+		"authenticationToken":"fda5e7cd-702a-47bc-9ef8-71488d7e1d0b",
 		"games": [{
 			"gameID": 1,
 			"gameActions": [{
@@ -59,7 +60,7 @@ UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 				"communityCards": "CA;HK;ST;D9"
 			},
 			{
-				"action": "WIN",
+				"action": "LOSS",
 				"pot": 36,
 				"bet": 0,
 				"hand": "DA;S2",
@@ -178,39 +179,191 @@ UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 			}]
 		}],
 		"miscDatas": [{
-			"name": "genMoney1",
+			"name": "MoneyGenerated",
 			"value": 1000000
 		},
 		{
-			"name": "genMoney2",
+			"name": "MoneyGenerated",
 			"value": 1000000
 		},
 		{
-			"name": "genMoney3",
+			"name": "MoneyGenerated",
 			"value": 1000000
 		}]
 	}
-
-
-	Success
+	
+PersonalStatisticsServlet: http://<SERVER>:8080/PokerWebService/PersonalStatisticsServlet
+	
 	{
-		"Success": "TRUE",
-		"Message": "Upload Results",
-		"game_success_uploads": ["1","2","3"], (NOTE THESE ARE THE GAME IDS)
-		"misc_success_uploads": [0,1,2]         (NOTE THESE ARE THE POSITIONS THAT THEY WHERE SENT)
-	}
-	
-	ex: Failure
-	{"Success":"FALSE","Message":"The provided authtoken and username is invalid."}
-	
-LOGOUT: http://<SERVLET>:8080/PokerWebService/LogoutServlet
+     "timeframe": "DAY",
+	"username":"asdf2",
+	"authenticationToken":"fda5e7cd-702a-47bc-9ef8-71488d7e1d0b",
+	"games": [{
+		"gameID": 1,
+		"gameActions": [{
+			"action": "START",
+			"pot": 122,
+			"bet": 20,
+			"hand": "DA;S2",
+			"communityCards": ""
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA"
+		},
+		{
+			"action": "CALL",
+			"pot": 12,
+			"bet": 22,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK"
+		},
+		{
+			"action": "RAISE",
+			"pot": 12,
+			"bet": 23,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST"
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "LOSS",
+			"pot": 36,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "END",
+			"pot": 36,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		}]
+	},
 	{
-		"username":"asdf",
-		"authenticationToken":"7f3ff095-bf82-4188-87b3-7b6dfab435b1",
-	}
-
-	Success:
-	{"Success":"TRUE","Message":"TRUE"}
-	
-	ex: Failure:
-	{"Success":"FALSE","Message":"The provided authtoken and username is invalid."}
+		"gameID": 2,
+		"gameActions":[{
+			"action": "START",
+			"pot": 123,
+			"bet": 20,
+			"hand": "DA;S2",
+			"communityCards": ""
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA"
+		},
+		{
+			"action": "CALL",
+			"pot": 12,
+			"bet": 22,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK"
+		},
+		{
+			"action": "RAISE",
+			"pot": 12,
+			"bet": 23,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST"
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "WIN",
+			"pot": 36,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "END",
+			"pot": 36,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		}]
+	},
+	{
+		"gameID": 3,
+		"gameActions": [{
+			"action": "START",
+			"pot": 124,
+			"bet": 20,
+			"hand": "DA;S2",
+			"communityCards": ""
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA"
+		},
+		{
+			"action": "CALL",
+			"pot": 12,
+			"bet": 22,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK"
+		},
+		{
+			"action": "RAISE",
+			"pot": 12,
+			"bet": 23,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST"
+		},
+		{
+			"action": "CHECK",
+			"pot": 12,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "WIN",
+			"pot": 36,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		},
+		{
+			"action": "END",
+			"pot": 36,
+			"bet": 0,
+			"hand": "DA;S2",
+			"communityCards": "CA;HK;ST;D9"
+		}]
+	}],
+	"miscDatas": [{
+		"name": "MoneyGenerated",
+		"value": 1000000
+	},
+	{
+		"name": "MoneyGenerated",
+		"value": 1000000
+	},
+	{
+		"name": "MoneyGenerated",
+		"value": 1000000
+	}]
+}
