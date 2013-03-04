@@ -10,6 +10,11 @@ import fragments.OfflineMode;
 
 public class MainScreen extends Activity {
 	
+	public final static int LOGIN_SCREEN = 0;
+	public final static int OFFLINE_SCREEN = 1;
+	public final static int ONLINE_SCREEN = 2;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,14 +28,8 @@ public class MainScreen extends Activity {
 			if (savedInstanceState != null) {
 				return;
 			}
-
-			// Create an instance of ExampleFragment
-			Login firstFragment = new Login();
-
-			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.add(R.id.fragment_container, firstFragment);
-			transaction.commit();
+			
+			this.switchFragment(MainScreen.LOGIN_SCREEN);
 		}
 	}
 
@@ -41,14 +40,29 @@ public class MainScreen extends Activity {
 		return true;
 	}
 	
-	public void switchFragment() {
-		//change fragment to offline mode
-		Fragment offlineFragment = new OfflineMode();
+	public void switchFragment(int screen) {
+		Fragment newFragment;
 		
+		//Set the fragment object appropriately
+		switch (screen) {
+		
+		case MainScreen.LOGIN_SCREEN:
+			newFragment = new Login();
+			break;
+		
+		case MainScreen.OFFLINE_SCREEN:
+			newFragment = new OfflineMode();
+			break;
+			
+		default: newFragment = new Login(); 
+		
+		}
+		//Change the fragment
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		
-		transaction.replace(R.id.fragment_container, offlineFragment);
-		transaction.addToBackStack(null);
+		transaction.replace(R.id.fragment_container, newFragment);
+		//If changed to the login screen, then it doesn't need to be added to the backstack
+		if (screen!=MainScreen.LOGIN_SCREEN) transaction.addToBackStack(null);
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		
 		transaction.commit();

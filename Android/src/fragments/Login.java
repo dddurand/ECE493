@@ -58,7 +58,7 @@ public class Login extends Fragment implements OnClickListener {
 			
 		/*****Offline mode button action***/
 		case R.id.offlineButton:
-			((MainScreen) getActivity()).switchFragment();
+			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
 			break;
 		
 		/*****Regster button action***/
