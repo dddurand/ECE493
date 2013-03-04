@@ -19,7 +19,7 @@ public class Login extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+		 
 		//Load XML Layout into global variable
 		this.view = inflater.inflate(R.layout.login_fragment,container, false);
 		
