@@ -14,22 +14,30 @@ public final class R {
         public static final int ic_accept_login_icon=0x7f020000;
         public static final int ic_launcher=0x7f020001;
         public static final int ic_login_icon=0x7f020002;
-        public static final int ic_password_icon=0x7f020003;
-        public static final int mainscreen_bg=0x7f020004;
+        public static final int ic_offline_icon=0x7f020003;
+        public static final int ic_password_icon=0x7f020004;
+        public static final int ic_register_icon=0x7f020005;
+        public static final int mainscreen_bg=0x7f020006;
     }
     public static final class id {
-        public static final int checkBox1=0x7f070005;
-        public static final int fragment1=0x7f070000;
-        public static final int imageButton1=0x7f070006;
-        public static final int login_icon=0x7f070001;
-        public static final int menu_settings=0x7f070007;
-        public static final int passwordField=0x7f070004;
-        public static final int password_icon=0x7f070003;
-        public static final int usernameField=0x7f070002;
+        public static final int buttons_helper=0x7f070008;
+        public static final int checkBox1=0x7f070006;
+        public static final int fragment_container=0x7f070000;
+        public static final int imageButton1=0x7f070007;
+        public static final int imageView1=0x7f07000b;
+        public static final int login_icon=0x7f070002;
+        public static final int menu_settings=0x7f07000c;
+        public static final int offlineButton=0x7f07000a;
+        public static final int passwordField=0x7f070005;
+        public static final int password_icon=0x7f070004;
+        public static final int registerButton=0x7f070009;
+        public static final int screen_middle=0x7f070001;
+        public static final int usernameField=0x7f070003;
     }
     public static final class layout {
         public static final int activity_main_screen=0x7f030000;
         public static final int login_fragment=0x7f030001;
+        public static final int offline_fragment=0x7f030002;
     }
     public static final class menu {
         public static final int activity_main_screen=0x7f060000;

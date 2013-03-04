@@ -6,13 +6,12 @@
     android:orientation="vertical"
     tools:context=".MainScreen" >
 
-    <fragment
-        android:id="@+id/fragment1"
-        android:name="fragments.Login"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:layout_marginLeft="300dp"
-        tools:layout="@layout/login_fragment" />
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="300dp" >
+
+    </FrameLayout>
 
 </LinearLayout>
