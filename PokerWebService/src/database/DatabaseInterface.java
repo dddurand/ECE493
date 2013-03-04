@@ -41,6 +41,7 @@ public class DatabaseInterface {
 
 	
 	private Connection dbConnection;
+	private PasswordUtil passUtil;
 	
 	/**
 	 * General constructor
@@ -52,6 +53,7 @@ public class DatabaseInterface {
 		try{
 			DataSource dataSource = this.getDataSource();
 			dbConnection = dataSource.getConnection();
+			passUtil = new PasswordUtil();
 		} 
 		catch (NamingException e)
 		{
@@ -87,8 +89,6 @@ public class DatabaseInterface {
             	String user = resultSet.getString("username");
             	byte[] pass = resultSet.getBytes("password");	
             	String authToken = resultSet.getString("auth_token");	
-            	
-            	PasswordUtil passUtil = new PasswordUtil();
             	
             	String password = passUtil.getStringFromBytes(pass);
             	
