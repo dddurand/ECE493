@@ -1,6 +1,7 @@
 package services;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 import dataModels.Account;
@@ -120,6 +121,10 @@ public class SecureService {
 			{
 				return generateInvalidDataError();
 			}
+			catch (JsonParseException e)
+			{
+				return generateInvalidDataError();
+			}
 	}
 	
 	/**
@@ -187,6 +192,10 @@ public class SecureService {
 		{
 			return generateInvalidDataError();
 		}
+		catch (JsonParseException e)
+		{
+			return generateInvalidDataError();
+		}
 	}
 	
 	/**
@@ -213,6 +222,10 @@ public class SecureService {
 			return generateError(e.getMessage());
 		}
 		catch (JsonSyntaxException e)
+		{
+			return generateInvalidDataError();
+		}
+		catch (JsonParseException e)
 		{
 			return generateInvalidDataError();
 		}

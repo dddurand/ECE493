@@ -19,6 +19,7 @@ LOGIN- http://<SERVER>:8080/PokerWebService/LoginServlet
 UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 
 	{
+		 "timeframe": "DAY",
 		"username":"asdf2",
 		"authenticationToken":"fda5e7cd-702a-47bc-9ef8-71488d7e1d0b",
 		"games": [{

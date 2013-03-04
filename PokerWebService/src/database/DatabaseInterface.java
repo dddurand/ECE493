@@ -1,5 +1,6 @@
 package database;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import util.PasswordUtil;
 import util.ServletConfiguration;
 import util.ServletConfiguration.Database;
 import dataModels.Account;
@@ -83,11 +85,15 @@ public class DatabaseInterface {
             {
 				int id = resultSet.getInt("id");
             	String user = resultSet.getString("username");
-            	String pass = resultSet.getString("password");	
+            	byte[] pass = resultSet.getBytes("password");	
             	String authToken = resultSet.getString("auth_token");	
             	
+            	PasswordUtil passUtil = new PasswordUtil();
+            	
+            	String password = passUtil.getStringFromBytes(pass);
+            	
             	prepStat.close();
-            	return new Account(id, user, pass, authToken, true);
+            	return new Account(id, user, password, authToken, true);
             }
 			
 			prepStat.close();
@@ -170,7 +176,7 @@ public class DatabaseInterface {
 			CallableStatement prepStat = dbConnection.prepareCall(insertAccountSQL);
 
 			prepStat.setString(1, account.getUsername());
-			prepStat.setString(2, account.getEncyptedPassword());
+			prepStat.setBytes(2, account.getEncyptedPassword().getBytes());
 
 			prepStat.execute();
 			
