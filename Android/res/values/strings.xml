@@ -6,5 +6,6 @@
     <string name="menu_settings">Settings</string>
     <string name="username">Username</string>
     <string name="remember_me_str">Remember Me</string>
+    <string name="offlineUserHint">Temp. Name</string>
 
 </resources>

@@ -4,10 +4,31 @@
     android:layout_height="match_parent" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/newOfflineUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@android:drawable/ic_media_play" />
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_register_icon"
+        android:padding="9dp" />
+
+    <EditText
+        android:id="@+id/offlineUsernameTextField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/newOfflineUserName"
+        android:hint="@string/offlineUserHint"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/offlineUsernameTextField"
+        android:layout_toRightOf="@id/offlineUsernameTextField" />
 
 </RelativeLayout>
