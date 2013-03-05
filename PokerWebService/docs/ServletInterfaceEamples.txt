@@ -191,10 +191,96 @@ UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 		}]
 	}
 	
+	SUCCESS:
+	{"Success":"TRUE","Message":"Upload Results","game_success_uploads":["1","2","3"],"misc_success_uploads":[0,1,2]}
+	
 PersonalStatisticsServlet: http://<SERVER>:8080/PokerWebService/PersonalStatisticsServlet
 	
 	{
-     "timeframe": "DAY",
+     "timeframe": "DAY",(Defaults to "ALL")
 	"username":"asdf2",
 	"authenticationToken":"fda5e7cd-702a-47bc-9ef8-71488d7e1d0b",
+	}
+
+	SUCCESSS:
+
+	{
+		"Success": "TRUE",
+		"Message": "SUCCESS",
+		"personal_statistics": {
+			"totalDollarsBetOnCalls": 66,
+			"totalDollarsBetOnBets": 0,
+			"totalDollarsBetOnRaises": 69,
+			"totalDollarsBetOnReRaises": 0,
+			"totalDollarsBet": 195,
+			"avgDollarsBetOnCalls": 22,
+			"avgDollarsBetOnBets": 0,
+			"avgDollarsBetOnRaises": 23,
+			"avgDollarsBetOnReRaises": 0,
+			"totalNumberOfBets": 0,
+			"totalNumberOfChecks": 6,
+			"totalNumberOfCalls": 3,
+			"totalNumberOfFolds": 0,
+			"totalNumberOfRaise": 3,
+			"totalNumberOfReRaise": 0,
+			"totalNumberOfPotsWon": 2,
+			"totalNumberOfPotsLoss": 1,
+			"totalNumberOfPots": 3,
+			"avgPotOnChecks": 12,
+			"avgPotOnCalls": 12,
+			"avgPotOnBets": 0,
+			"avgPotOnRaises": 12,
+			"avgPotOnReRaises": 0,
+			"avgPotOnFolds": 0,
+			"avgPotOnWins": 36,
+			"avgPotOnLoses": 36,
+			"totalDollarsWon": 72,
+			"totalDollarsLoss": 36,
+			"totalDollarsFolded": 0,
+			"winPercentage": 66.66666666666666,
+			"moneyGenerated": 0,
+			"gamesPlayed": 3,
+			"netMoney": 36,
+			"avgBet": 21,
+			"netMoneyRanking": 2
+		}
+	}
+	
+RankingStatisticsServlet: http://<SERVER>:8080/PokerWebService/RakingStatisticsServlet
+	
+	{
+	"skip":1,(Number of position to skip- ex start at #5 position)
+	"max":2,   (Max number to return)
+	"rank_type":"net_money" (or "optimality" - defaults to net_money)
+    "timeframe": "DAY",
+	"username":"asdf2",
+	"authenticationToken":"fda5e7cd-702a-47bc-9ef8-71488d7e1d0b",
+	}
+	
+	SUCCESS:
+	{
+	"Success": "TRUE",
+	"Message": "Ranking Results",
+	"ranked_statistics": [{
+		"position": 2,
+		"username": "asdf",
+		"rankValue": 0.0
+	},
+	{
+		"position": 3,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	}]
 }
+	
+LOGOUT- http://<SERVER>:8080/PokerWebService/LogoutServlet
+	{
+		"username": "asdf2",
+		"authenticationToken": "fda5e7cd-702a-47bc-9ef8-71488d7e1d0b"
+	}
+
+	Ex:Success
+	=>{"Success":"TRUE","Message":"TRUE"}
+
+	Ex: Failure
+	=>{"Success":"FALSE","Message":"Invalid Login."}

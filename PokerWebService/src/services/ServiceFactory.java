@@ -3,7 +3,7 @@ package services;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import dataModels.TimeframeFilter;
+import dataModels.Filter;
 import dataModels.UploadData;
 import database.DatabaseInterface;
 import database.ResponseObject;
@@ -13,6 +13,7 @@ import servlets.ConfigHttpServlet;
 import servlets.LoginServlet;
 import servlets.LogoutServlet;
 import servlets.PersonalStatisticsServlet;
+import servlets.RankingStatisticsServlet;
 import servlets.RegisterServlet;
 import servlets.TestServlet;
 import servlets.UploadServlet;
@@ -40,7 +41,7 @@ public class ServiceFactory {
 	 */
 	public enum ServletType
 	{
-		LOGIN, LOGOUT, REGISTER, UPLOAD, PERSONAL, UNKNOWN,TEST
+		LOGIN, LOGOUT, REGISTER, UPLOAD, PERSONAL, RANKING, UNKNOWN,TEST
 	}
 	
 	/**
@@ -85,6 +86,8 @@ public class ServiceFactory {
 			return new UploadDelegate(gson, dbInterface);
 		case PERSONAL:
 			return new PersonalStatisticsDelegate(gson, dbInterface);
+		case RANKING:
+			return new RankingStatisticsDelegate(gson, dbInterface);
 		case TEST:
 			return new TestDelegate(gson, dbInterface);
 		default:
@@ -111,13 +114,14 @@ public class ServiceFactory {
 		case REGISTER:
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
 			break;
-			
+		
+		case RANKING:
 		case PERSONAL:
 		case UPLOAD:
 		case TEST:
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
 			gsonBuilder.registerTypeAdapter(UploadData.class, new UploadData.UploadDataDeserializer());
-			gsonBuilder.registerTypeAdapter(TimeframeFilter.class, new TimeframeFilter.TimeframeFilterDeserializer());
+			gsonBuilder.registerTypeAdapter(Filter.class, new Filter.FilterDeserializer());
 		default:
 			break;
 		}
@@ -144,6 +148,8 @@ public class ServiceFactory {
 			return ServletType.TEST;
 		else if(servlet instanceof PersonalStatisticsServlet)
 			return ServletType.PERSONAL;
+		else if(servlet instanceof RankingStatisticsServlet)
+			return ServletType.RANKING;
 		else
 			return ServletType.UNKNOWN;
 	}

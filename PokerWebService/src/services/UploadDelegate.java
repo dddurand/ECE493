@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 
 import dataModels.Account;
+import dataModels.Filter;
 import dataModels.Game;
 import dataModels.MiscGameData;
 import dataModels.PersonalStatistics;
-import dataModels.TimeframeFilter;
-import dataModels.TimeframeFilter.TimeFrame;
+import dataModels.Filter.TimeFrame;
 import dataModels.UploadData;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
@@ -33,6 +33,10 @@ public class UploadDelegate extends ServiceDelegate{
 		super(gson, dbInterface);
 	}
 
+	/**
+	 * Process that facilitates the actual processing and storing of the data.
+	 * 
+	 */
 	@Override
 	public String applyAuthProcess(Account account, String postData)
 			throws DatabaseInterfaceException {
@@ -61,6 +65,14 @@ public class UploadDelegate extends ServiceDelegate{
 
 	}
 
+	/**
+	 * Handles the processing and storing of the misc data
+	 * 
+	 * @param account The account to upload the misc data for.
+	 * @param miscDatas The data to be processed and stored.
+	 * @return The position of the misc data that was successfully uploaded.
+	 * @throws DatabaseInterfaceException
+	 */
 	private ArrayList<Integer> uploadMiscData(Account account, ArrayList<MiscGameData> miscDatas) throws DatabaseInterfaceException
 	{
 		ArrayList<Integer> miscUploadResults = new ArrayList<Integer>();
@@ -80,6 +92,16 @@ public class UploadDelegate extends ServiceDelegate{
 
 		return miscUploadResults;
 	}
+	
+	/**
+	 * Facilitates the processing and storing of the game data.
+	 * This function also triggers an update to the ranking for the current user.
+	 * 
+	 * @param account The account to tie game data to.
+	 * @param games The game data to be stored.
+	 * @return List of game id's that were successfully updated.
+	 * @throws DatabaseInterfaceException
+	 */
 	private ArrayList<String> uploadGameData(Account account, ArrayList<Game> games) throws DatabaseInterfaceException
 	{
 		ArrayList<String> gameUploadResults = new ArrayList<String>();
@@ -100,15 +122,22 @@ public class UploadDelegate extends ServiceDelegate{
 		return gameUploadResults;
 	}
 	
+	/**
+	 * A function that causes all the ranking information to be updated for the current used.
+	 * This function is only called after new data has been processed, in order to be more efficient.
+	 * 
+	 * @param account
+	 * @throws DatabaseInterfaceException
+	 */
 	private void updateRankings(Account account) throws DatabaseInterfaceException
 	{
 		
 		for (TimeFrame timeFrame : TimeFrame.values()) {
-			TimeframeFilter filter = new TimeframeFilter(timeFrame.getValue());
+			Filter filter = new Filter(timeFrame.getValue());
 			PersonalStatistics stats = new PersonalStatistics(account, dbInterface, filter);
-			int deltaMoney = stats.deltaMoney();
+			int netMoney = stats.getNetMoney();
 			
-			dbInterface.updateUsersDeltaMoney(account, deltaMoney, filter);
+			dbInterface.updateUsersNetMoney(account, netMoney, filter);
 		}
 		
 		

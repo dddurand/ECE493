@@ -11,6 +11,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import dataModels.PersonalStatistics;
+import dataModels.RankingStatistics;
 
 /**
  * The object used to generate the JSON response from a webservice call.
@@ -28,6 +29,7 @@ public class ResponseObject {
 	private ArrayList<String> uploadGameSuccess;
 	private ArrayList<Integer> uploadMiscSuccess;
 	private PersonalStatistics personalStatistics;
+	private RankingStatistics rankingStatistics;
 	
 	
 	private String authenticationToken;
@@ -50,6 +52,23 @@ public class ResponseObject {
 		this.message = message;
 	}
 	
+	/**
+	 * Ranking Stats Getter
+	 * 
+	 * @return
+	 */
+	public RankingStatistics getRankingStatistics() {
+		return rankingStatistics;
+	}
+
+	/**
+	 * Ranking Statistics Setter
+	 * 
+	 * @param rankingStatistics
+	 */
+	public void setRankingStatistics(RankingStatistics rankingStatistics) {
+		this.rankingStatistics = rankingStatistics;
+	}
 
 	/**
 	 * Getter for uploadGameSuccess
@@ -153,12 +172,6 @@ public class ResponseObject {
 		this.personalStatistics = personalStatistics;
 	}
 
-
-
-
-
-
-
 	/**
 	 * GSON Serializer for the ResponseObject
 	 * @author dddurand
@@ -179,6 +192,7 @@ public class ResponseObject {
 			ArrayList<String> gameResults = response.getUploadGameSuccess();
 			ArrayList<Integer> miscResults = response.getUploadMiscSuccess();
 			PersonalStatistics personalStatistics = response.getPersonalStatistics();
+			RankingStatistics rankingStatistics = response.getRankingStatistics();
 			
 			if(response.isSuccess())
 				jsonObject.add("Success", new JsonPrimitive(SUCCESS));
@@ -216,6 +230,13 @@ public class ResponseObject {
 				jsonObject.add("personal_statistics", element);
 			}
 			
+			if(rankingStatistics != null)
+			{
+				JsonElement rankedDataElement = context.serialize(rankingStatistics.getRankedData());
+				JsonElement myRankedDataElement = context.serialize(rankingStatistics.getMyRankData());
+				jsonObject.add("ranked_statistics", rankedDataElement);
+				jsonObject.add("my_ranked_statistics", myRankedDataElement);
+			}
 			
 			
 			return jsonObject;

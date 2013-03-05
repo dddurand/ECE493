@@ -37,11 +37,20 @@ public class GameAction {
 	
 	
 	
-	
+	/**
+	 * Returns the size of bet for the given action
+	 * 
+	 * @return
+	 */
 	public int getBet() {
 		return bet;
 	}
 
+	/**
+	 * Set the bet for the given action
+	 * 
+	 * @param bet
+	 */
 	public void setBet(int bet) {
 		this.bet = bet;
 	}

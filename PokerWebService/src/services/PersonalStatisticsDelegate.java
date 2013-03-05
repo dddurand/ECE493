@@ -3,11 +3,11 @@ package services;
 import com.google.gson.Gson;
 
 import dataModels.Account;
+import dataModels.Filter;
 import dataModels.PersonalStatistics;
-import dataModels.TimeframeFilter;
 import database.DatabaseInterface;
-import database.ResponseObject;
 import database.DatabaseInterface.DatabaseInterfaceException;
+import database.ResponseObject;
 
 /**
  * This delegate facilitates the creation of the personal statistics from the
@@ -31,7 +31,7 @@ public class PersonalStatisticsDelegate extends ServiceDelegate {
 	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
 
-		TimeframeFilter filter = gson.fromJson(postData, TimeframeFilter.class);
+		Filter filter = gson.fromJson(postData, Filter.class);
 		
 		PersonalStatistics stat = new PersonalStatistics(postAccount, dbInterface, filter);
 		stat.generateAllStatistics();
@@ -42,5 +42,4 @@ public class PersonalStatisticsDelegate extends ServiceDelegate {
 		return gson.toJson(response, ResponseObject.class);
 
 	}
-
 }

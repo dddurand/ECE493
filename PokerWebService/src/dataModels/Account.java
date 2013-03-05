@@ -107,13 +107,20 @@ public class Account {
 		
 	}
 	
-	
-	
-	
+	/**
+	 * Retrieves the user's account ID
+	 * 
+	 * @return
+	 */
 	public int getAccountID() {
 		return accountID;
 	}
 
+	/**
+	 * Updates the accounts current account ID
+	 * 
+	 * @param accountID
+	 */
 	public void setAccountID(int accountID) {
 		this.accountID = accountID;
 	}
@@ -251,9 +258,6 @@ public class Account {
 	       
 		 if(!isEqualUsername(username,otherUsername))
 	    	   return false;
-	    	   
-		 String pass1 = this.getEncyptedPassword();
-		 String pass2 = otherPassword;
 		 
 	       if(!isEqualString(this.getEncyptedPassword(),otherPassword))
 	    	   return false;

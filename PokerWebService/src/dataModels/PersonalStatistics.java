@@ -1,6 +1,7 @@
 package dataModels;
 
 import dataModels.GameAction.PokerAction;
+import dataModels.RankingStatistics.RankedDataRow;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
 import database.DatabaseInterface.NumerableActionColumn;
@@ -17,7 +18,7 @@ public class PersonalStatistics {
 
 	private transient DatabaseInterface dbInterface;
 	private transient Account account;
-	private transient TimeframeFilter filter;
+	private transient Filter filter;
 	
 	/**
 	 * Used in JSON Output
@@ -57,6 +58,8 @@ public class PersonalStatistics {
 	@SuppressWarnings("unused")
 	private int totalNumberOfPotsLoss;
 	@SuppressWarnings("unused")
+	private int totalNumberOfPots;
+	@SuppressWarnings("unused")
 	private int avgPotOnChecks;
 	@SuppressWarnings("unused")
 	private int avgPotOnCalls;
@@ -85,18 +88,18 @@ public class PersonalStatistics {
 	@SuppressWarnings("unused")
 	private int gamesPlayed;
 	@SuppressWarnings("unused")
-	private int deltaMoney;
+	private int netMoney;
 	@SuppressWarnings("unused")
 	private int avgBet;
 	@SuppressWarnings("unused")
-	private int deltaMoneyRanking;
+	private int netMoneyRanking;
 	
 	/**
 	 * General Constructor
 	 * @param account
 	 * @param dbInterface
 	 */
-	public PersonalStatistics(Account account, DatabaseInterface dbInterface, TimeframeFilter filter)
+	public PersonalStatistics(Account account, DatabaseInterface dbInterface, Filter filter)
 	{
 		this.dbInterface = dbInterface;
 		this.account = account;
@@ -142,9 +145,40 @@ public class PersonalStatistics {
 		winPercentage = getWinPercentage();
 		moneyGenerated = getMoneyGenerate();
 		gamesPlayed = getGamesPlayed();
-		deltaMoney = deltaMoney();
-		deltaMoneyRanking = getDeltaMoneyRank();
+		netMoney = getNetMoney();
+		netMoneyRanking = getNetMoneyRank();
 		avgBet = getAvgBet();
+		totalNumberOfPots = getTotalNumberOfPots();
+	}
+	
+	public RankedDataRow getMyRating() throws DatabaseInterfaceException
+	{
+		RankedDataRow dataRow;
+		
+		if(filter.getRankType() == Filter.RankType.NET_MONEY)
+		{
+			int netMoney = this.getNetMoney();
+			int netMoneyRank = this.getNetMoneyRank();
+			dataRow = new RankedDataRow(netMoneyRank, account.getUsername(), netMoney);
+		}
+		else
+		{
+			double optimality = this.getOptimality();
+			int optimalityRating = this.getOptimalityRanking();
+			dataRow = new RankedDataRow(optimalityRating, account.getUsername(), optimality);
+		}
+		
+		return dataRow;	
+	}
+	
+	public double getOptimality()
+	{
+		return 0;
+	}
+	
+	public int getOptimalityRanking()
+	{
+		return 1;
 	}
 	
 	/**
@@ -153,9 +187,9 @@ public class PersonalStatistics {
 	 * @return
 	 * @throws DatabaseInterfaceException
 	 */
-	public int getDeltaMoneyRank() throws DatabaseInterfaceException
+	public int getNetMoneyRank() throws DatabaseInterfaceException
 	{
-		return dbInterface.getUserDeltaMoneyRanking(account, filter);
+		return dbInterface.getUserNetMoneyRanking(account, filter);
 	}
 	
 	/**
@@ -527,7 +561,7 @@ public class PersonalStatistics {
 	}
 	
 	/**
-	 * Gets the total amount of money folded away
+	 * Gets the total amount of pots played in
 	 * 
 	 * @return
 	 * @throws DatabaseInterfaceException
@@ -548,8 +582,8 @@ public class PersonalStatistics {
 	 */
 	public double getWinPercentage() throws DatabaseInterfaceException
 	{
-		double denom = (double) (this.getTotalNumberOfFolds() + this.getTotalNumberOfPotsLoss());
-		double num = (double) this.getTotalDollarsWon();
+		double denom = (double) getTotalNumberOfPots();
+		double num = (double) this.getTotalNumberOfPotsWon();
 		
 		if(denom == 0 && num > 0)
 			return 100;
@@ -572,6 +606,11 @@ public class PersonalStatistics {
 		return dbInterface.getMoneyGenerated(account, filter);
 	}
 	
+	public int getTotalNumberOfPots() throws DatabaseInterfaceException
+	{
+		return (this.getTotalNumberOfFolds() + this.getTotalNumberOfPotsLoss()+this.getTotalNumberOfPotsWon());
+	}
+	
 	/**
 	 * Gets the total number of games played
 	 * 
@@ -589,7 +628,7 @@ public class PersonalStatistics {
 	 * @return
 	 * @throws DatabaseInterfaceException
 	 */
-	public int deltaMoney() throws DatabaseInterfaceException
+	public int getNetMoney() throws DatabaseInterfaceException
 	{
 		return this.getTotalDollarsWon() - this.getTotalDollarsFolded() - this.getTotalDollarsLoss() - getMoneyGenerate();
 	}

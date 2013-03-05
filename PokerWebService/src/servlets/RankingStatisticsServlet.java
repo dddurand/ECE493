@@ -16,17 +16,17 @@ import database.ResponseObject;
 import database.DatabaseInterface.DatabaseInterfaceException;
 
 /**
- * This servlet provided an auth'd user with a set of personal statistics based
- * on the game data they have uplaoded.
+ * This servlet returns a ranked list of users based on a provided ranking type, skip, max, and timeframe.
+ * 
  */
-@WebServlet("/PersonalStatisticsServlet")
-public class PersonalStatisticsServlet extends ConfigHttpServlet {
+@WebServlet("/RankingStatisticsServlet")
+public class RankingStatisticsServlet extends ConfigHttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PersonalStatisticsServlet() {
+    public RankingStatisticsServlet() {
         super();
         // TODO Auto-generated constructor stub
     }

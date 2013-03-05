@@ -17,11 +17,13 @@ import util.ServletConfiguration;
 import util.ServletConfiguration.Database;
 import dataModels.Account;
 import dataModels.Card;
+import dataModels.Filter;
 import dataModels.Game;
 import dataModels.GameAction;
+import dataModels.Filter.RankType;
 import dataModels.GameAction.PokerAction;
+import dataModels.RankingStatistics.RankedDataRow;
 import dataModels.MiscGameData;
-import dataModels.TimeframeFilter;
 
 
 /**
@@ -179,7 +181,7 @@ public class DatabaseInterface {
 			prepStat.setBytes(2, password);
 
 			prepStat.execute();
-			
+			prepStat.close();
 		} catch (SQLException e) {
 			throw new DatabaseInterfaceException("Unable to create account.", e);
 		}
@@ -402,7 +404,9 @@ public class DatabaseInterface {
 	 */
 	private int getGameDatabaseID(Game game) throws DatabaseInterfaceException
 	{
-		if(game == null) return -1;
+		int result = -1;
+		if(game == null) return result;
+		
 		
 		final String getGameIdSQL = "SELECT id FROM "+ "games" +
 				 " WHERE gameUUID = ?";
@@ -414,10 +418,12 @@ public class DatabaseInterface {
 			ResultSet set = prepStat.executeQuery();
 			
 			if(set.next())
-				return set.getInt(1);
+				result = set.getInt(1);
 			else
-				return -1;
+				result = -1;
 			
+			prepStat.close();
+			return result;
 			} catch (SQLException e) {
 				throw new DatabaseInterfaceException("Error retrieving game ID", e);
 			}
@@ -456,6 +462,7 @@ public class DatabaseInterface {
 		else
 			id = getGameDatabaseID(game);
 		
+		prepStat.close();
 		return id;
 		
 		} catch (SQLException e) {
@@ -465,30 +472,114 @@ public class DatabaseInterface {
 	}
 	
 	/**
-	 * Retrieves the ranking of a user based their delta money
+	 * Build the string SQL ranking query based on the provided user_rank_column, of either net_money or optimality,
+	 * and the timeframe parameters in the filter.
+	 * 
+	 * @param user_rank_column
+	 * @param filter
+	 * @return
+	 */
+	private String getRankingQuery(String user_rank_column, Filter filter)
+	{
+		String gameCount = " select count(Distinct gameID) from game_actions where accountID = ";
+		String columnName = user_rank_column+"_"+filter.getTimeFrame().getValue();
+		
+		//rank based on delta money, then if tied - number of more games
+		String rank = " ( SELECT COUNT(Distinct accountID) FROM " + USER_TABLE + " u2 JOIN game_actions ON u2.id = game_actions.accountID" +
+				//More delta money
+				" WHERE u2."+columnName+" > u1."+columnName+" " +
+				//more delta games
+				"or (u2."+columnName+" = u1."+columnName+" and ("+gameCount+"u2.id) > ("+gameCount+"u1.id) "+
+				//whoever registered first is the tie breaker
+				"or (u2."+columnName+" = u1."+columnName+" and ("+gameCount+"u2.id) = ("+gameCount+"u1.id) and u2.id < u1.id)) ) + 1 ";
+		
+		return rank;
+	}
+	
+	/**
+	 * Generates a ranked list of users based on the provided filter.
+	 * The filter contains the number of elements to skip, the max elements to return, the ranking type to use,
+	 * and the timeframe to be used.
+	 * 
+	 * @param filter The filter provides the limiting parameters for the query.
+	 * @return The list of RankedDataRow representing the ranked users list.
+	 * @throws DatabaseInterfaceException
+	 */
+	public ArrayList<RankedDataRow> getRankedUsers(Filter filter) throws DatabaseInterfaceException
+	{
+		ArrayList<RankedDataRow> rankedData = new ArrayList<RankedDataRow>();
+		
+		String order = getRankingQuery(filter.getRankType().getValue(), filter);
+		String columnName = filter.getRankType().getValue()+"_"+filter.getTimeFrame().getValue();
+		
+		
+		String rankSql = "SELECT u1.username, u1."+columnName+ " FROM "+ USER_TABLE+
+						  " u1 ORDER BY " + order + 
+						  " "+filter.getMaxSqlFilter() + filter.getSkipSqlFilter();
+		
+		try
+		{
+			CallableStatement prepStat = dbConnection.prepareCall(rankSql);
+			
+			
+			ResultSet set = prepStat.executeQuery();
+				
+			int position = filter.getSkip() + 1;
+			while(set.next())
+			{
+				String username = set.getString("username");
+				double value = set.getDouble(columnName);
+				
+				RankedDataRow temp = new RankedDataRow(position, username, value);
+				
+				rankedData.add(temp);
+				
+				position++;
+			}
+			
+			prepStat.close();
+
+			} catch (SQLException e) {
+				throw new DatabaseInterfaceException("Error building rank statistics", e);
+			}
+		
+		return rankedData;
+	}
+	
+	
+	
+	/**
+	 * Retrieves the ranking of a user based their NetMoney
 	 * 
 	 * @param account The account to get the ranking for.
+	 * @param filter The filter object that contains the limiting parameters for the query.
 	 * @return
 	 * @throws DatabaseInterfaceException
 	 */
-	public int getUserDeltaMoneyRanking(Account account, TimeframeFilter filter) throws DatabaseInterfaceException
+	public int getUserNetMoneyRanking(Account account, Filter filter) throws DatabaseInterfaceException
 	{
-		String columnName = "delta_money_"+filter.getTimeFrame().getValue();
-		String rank = "SELECT COUNT(Distinct accountID) FROM " + USER_TABLE + " u2 JOIN game_actions ON u2.id = game_actions.accountID WHERE u2."+columnName+" > u1."+columnName+" ";
-		String sql = "SELECT (("+rank+") + 1) FROM " + USER_TABLE + " u1 WHERE id=?;";
-		
+
+		String rank = getRankingQuery(RankType.NET_MONEY.getValue(), filter);
+		String sql = "SELECT ("+rank+") FROM " + USER_TABLE + " u1 WHERE id="+account.getAccountID()+";";
 		try
 		{
 			CallableStatement prepStat = dbConnection.prepareCall(sql);
 			
-			prepStat.setInt(1, account.getAccountID());
-			
 			ResultSet set = prepStat.executeQuery();
 			
 			if(set.next())
-				return set.getInt(1);
+				{
+				int value = set.getInt(1);
+				prepStat.close();
+				return value;
+				}
+				
 			else
+				{
+				prepStat.close();
 				throw new DatabaseInterfaceException("Error retrieving User Money ranking");
+				}
+				
 
 			} catch (SQLException e) {
 				throw new DatabaseInterfaceException("Error retrieving User Money ranking", e);
@@ -497,29 +588,98 @@ public class DatabaseInterface {
 	}
 	
 	/**
-	 * Updates the user's delta money. This storage is used to allow for more efficient ranking,
+	 * Retrieves the ranking of a user based their optimality
+	 * 
+	 * @param account The account to get the ranking for.
+	 * @return
+	 * @throws DatabaseInterfaceException
+	 */
+	public double getUserOptimalityRanking(Account account, Filter filter) throws DatabaseInterfaceException
+	{
+		String rank = getRankingQuery(RankType.OPTIMALITY.getValue(), filter);
+		String sql = "SELECT ("+rank+") FROM " + USER_TABLE + " u1 WHERE id="+account.getAccountID()+";";
+		try
+		{
+			CallableStatement prepStat = dbConnection.prepareCall(sql);
+
+			ResultSet set = prepStat.executeQuery();
+			
+			if(set.next())
+				{
+				double value = set.getDouble(1);
+				prepStat.close();
+				return value;
+				}
+				
+			else
+				{
+				prepStat.close();
+				throw new DatabaseInterfaceException("Error retrieving User Money ranking");
+				}
+				
+
+			} catch (SQLException e) {
+				throw new DatabaseInterfaceException("Error retrieving User Money ranking", e);
+			}
+		
+	}
+	
+	/**
+	 * Updates the user's net money. This storage is used to allow for more efficient ranking,
 	 * since we don't need to determine the rank for all players, each time a call is made.
 	 * 
 	 * @param account The account to update the delta money for.
-	 * @param deltaMoney The amount of delta money.
+	 * @param NetMoney The amount of delta money.
 	 * @throws DatabaseInterfaceException
 	 */
-	public void updateUsersDeltaMoney(Account account, int deltaMoney, TimeframeFilter filter) throws DatabaseInterfaceException
+	public void updateUsersNetMoney(Account account, int netMoney, Filter filter) throws DatabaseInterfaceException
 	{
-		String columnName = "delta_money_"+filter.getTimeFrame().getValue();
-		final String updateDeltaMoneySQL = "UPDATE " + USER_TABLE+
+		String columnName = "net_money_"+filter.getTimeFrame().getValue();
+		final String updateNetMoneySQL = "UPDATE " + USER_TABLE+
 				 " SET "+columnName+" = ?" +	
 				 " WHERE id = ?;";
 		
 		try
 		{
-			CallableStatement prepStat = dbConnection.prepareCall(updateDeltaMoneySQL);
+			CallableStatement prepStat = dbConnection.prepareCall(updateNetMoneySQL);
 			
 			prepStat.setInt(2, account.getAccountID());
-			prepStat.setInt(1, deltaMoney);
+			prepStat.setInt(1, netMoney);
 			
 			prepStat.execute();
-
+			prepStat.close();
+			
+			} catch (SQLException e) {
+				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
+			}
+		
+	}
+	
+	/**
+	 * Updates the optimality value. This storage is used to allow for more efficient ranking,
+	 * since we don't need to determine the rank for all players, each time a call is made.
+	 * 
+	 * @param account The account to update the delta money for.
+	 * @param optimality The determined optimality number.
+	 * @throws DatabaseInterfaceException
+	 */
+	public void updateUsersOptimality(Account account, double optimality, Filter filter) throws DatabaseInterfaceException
+	{
+		String columnName = "optimality_"+filter.getTimeFrame().getValue();
+		final String updateNetMoneySQL = "UPDATE " + USER_TABLE+
+				 " SET "+columnName+" = ?" +	
+				 " WHERE id = ?;";
+		
+		try
+		{
+			CallableStatement prepStat = dbConnection.prepareCall(updateNetMoneySQL);
+			
+			prepStat.setInt(2, account.getAccountID());
+			prepStat.setDouble(1, optimality);
+			
+			prepStat.execute();
+			prepStat.close();
+			
 			} catch (SQLException e) {
 				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
 			}
@@ -534,9 +694,9 @@ public class DatabaseInterface {
 	 * @return The amount of money generated by the given account.
 	 * @throws DatabaseInterfaceException
 	 */
-	public int getMoneyGenerated(Account account, TimeframeFilter filter) throws DatabaseInterfaceException
+	public int getMoneyGenerated(Account account, Filter filter) throws DatabaseInterfaceException
 	{
-		String sql = "SELECT sum(value) from misc_data WHERE accountID = ? and name = ? "+ filter.getSqlFilter() +";";
+		String sql = "SELECT sum(value) from misc_data WHERE accountID = ? and name = ? "+ filter.getSqlTimeFrameFilter() +";";
 	
 	try
 	{
@@ -553,6 +713,7 @@ public class DatabaseInterface {
 			count = set.getInt(1);
 		}
 		
+		prepStat.close();
 		return count;
 		
 		} catch (SQLException e) {
@@ -563,14 +724,14 @@ public class DatabaseInterface {
 	/**
 	 * Determines the number of games a provided user has played.
 	 * 
-	 * @param account
+	 * @param account The account to get the number of games played for.
 	 * @return
 	 * @throws DatabaseInterfaceException
 	 */
-	public int getGamesPlayed(Account account, TimeframeFilter filter) throws DatabaseInterfaceException
+	public int getGamesPlayed(Account account, Filter filter) throws DatabaseInterfaceException
 	{
 		String sql = "SELECT count(DISTINCT gameID) from " + GAME_ACTION_TABLE +
-				 " WHERE accountID = ? "+filter.getSqlFilter()+" ;";
+				 " WHERE accountID = ? "+filter.getSqlTimeFrameFilter()+" ;";
 	
 	try
 	{
@@ -586,6 +747,7 @@ public class DatabaseInterface {
 			count = set.getInt(1);
 		}
 		
+		prepStat.close();
 		return count;
 		
 		} catch (SQLException e) {
@@ -601,10 +763,10 @@ public class DatabaseInterface {
 	 * @return The number of a specific poker action an given account has made.
 	 * @throws DatabaseInterfaceException
 	 */
-	public int getGameActionsCount(PokerAction action, Account account, TimeframeFilter filter) throws DatabaseInterfaceException
+	public int getGameActionsCount(PokerAction action, Account account, Filter filter) throws DatabaseInterfaceException
 	{
 		String sql = "SELECT count(*) from " + GAME_ACTION_TABLE +
-					 " WHERE accountID = ? AND type = ? "+filter.getSqlFilter()+" ;";
+					 " WHERE accountID = ? AND type = ? "+filter.getSqlTimeFrameFilter()+" ;";
 		
 		try
 		{
@@ -621,6 +783,7 @@ public class DatabaseInterface {
 				count = set.getInt(1);
 			}
 			
+			prepStat.close();
 			return count;
 			
 			} catch (SQLException e) {
@@ -643,7 +806,7 @@ public class DatabaseInterface {
 	 * @throws DatabaseInterfaceException
 	 */
 	public int getGameActionsTypedNum(Account account, NumerableActionOperation op,
-									NumerableActionColumn column, PokerAction action, boolean ignoreZeroValues, TimeframeFilter filter) throws DatabaseInterfaceException
+									NumerableActionColumn column, PokerAction action, boolean ignoreZeroValues, Filter filter) throws DatabaseInterfaceException
 	{
 		String typeLimit = "";
 		String ignoreZero = "";
@@ -655,7 +818,7 @@ public class DatabaseInterface {
 			ignoreZero = " and " + column.getValue() + "<> 0";
 		
 		String sql = "SELECT "+op.getValue()+"("+column.getValue()+") from " + GAME_ACTION_TABLE +
-					 " WHERE "+typeLimit+" accountID = ? "+ignoreZero+" "+filter.getSqlFilter()+" ;";
+					 " WHERE "+typeLimit+" accountID = ? "+ignoreZero+" "+filter.getSqlTimeFrameFilter()+" ;";
 		
 		try
 		{
@@ -678,6 +841,7 @@ public class DatabaseInterface {
 				count = set.getInt(1);
 			}
 			
+			prepStat.close();
 			return count;
 			
 			} catch (SQLException e) {
@@ -739,6 +903,12 @@ public class DatabaseInterface {
 		}
 	}
 	
+	/**
+	 * All the possible numberable operations for querying
+	 * 
+	 * @author dddurand
+	 *
+	 */
 	public enum NumerableActionOperation
 	{
 		SUM("SUM"), AVG("AVG");
@@ -757,6 +927,13 @@ public class DatabaseInterface {
 		
 	}
 	
+	/**
+	 * All possible columns that NumerableActionsOperations
+	 * can act upon.
+	 * 
+	 * @author dddurand
+	 *
+	 */
 	public enum NumerableActionColumn
 	{
 		POT("pot"), BET("bet");

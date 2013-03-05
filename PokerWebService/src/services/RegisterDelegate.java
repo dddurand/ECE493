@@ -15,6 +15,12 @@ import database.ResponseObject;
  */
 public class RegisterDelegate extends ServiceDelegate{
 
+	/**
+	 * General Constructor
+	 * 
+	 * @param gson The gson object to be used to convert from / to JSON strings.
+	 * @param dbInterface The interface to the external database.
+	 */
 	public RegisterDelegate(Gson gson, DatabaseInterface dbInterface) {
 		super(gson, dbInterface);
 	}

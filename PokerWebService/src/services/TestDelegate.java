@@ -3,8 +3,6 @@ package services;
 import com.google.gson.Gson;
 
 import dataModels.Account;
-import dataModels.PersonalStatistics;
-import dataModels.TimeframeFilter;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
 
@@ -31,12 +29,7 @@ public class TestDelegate extends ServiceDelegate{
 			throws DatabaseInterfaceException {
 
 
-		TimeframeFilter filter = gson.fromJson(postData, TimeframeFilter.class);
-		
-		PersonalStatistics stat = new PersonalStatistics(postAccount, dbInterface, filter);
-		int money = stat.getMoneyGenerate();
-
-		return ""+money;
+		return "";
 
 	}
 
