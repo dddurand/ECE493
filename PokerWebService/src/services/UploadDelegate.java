@@ -9,6 +9,7 @@ import dataModels.Game;
 import dataModels.MiscGameData;
 import dataModels.PersonalStatistics;
 import dataModels.TimeframeFilter;
+import dataModels.TimeframeFilter.TimeFrame;
 import dataModels.UploadData;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
@@ -47,6 +48,8 @@ public class UploadDelegate extends ServiceDelegate{
 		ArrayList<MiscGameData> miscDatas = data.getMiscDatas();
 		ArrayList<Integer> miscUploadResults = uploadMiscData(account, miscDatas);
 
+		this.updateRankings(account);
+		
 		if(gameUploadResults.size() > 0 || miscUploadResults.size() > 0)
 			success = true;
 		
@@ -92,17 +95,23 @@ public class UploadDelegate extends ServiceDelegate{
 			catch(DatabaseInterfaceException e) { }
 		}
 		
-		this.updateRankings(account);
+		
 
 		return gameUploadResults;
 	}
 	
 	private void updateRankings(Account account) throws DatabaseInterfaceException
 	{
-		PersonalStatistics stats = new PersonalStatistics(account, dbInterface, new TimeframeFilter());
-		int deltaMoney = stats.deltaMoney();
 		
-		dbInterface.updateUsersDeltaMoney(account, deltaMoney, new TimeframeFilter());
+		for (TimeFrame timeFrame : TimeFrame.values()) {
+			TimeframeFilter filter = new TimeframeFilter(timeFrame.getValue());
+			PersonalStatistics stats = new PersonalStatistics(account, dbInterface, filter);
+			int deltaMoney = stats.deltaMoney();
+			
+			dbInterface.updateUsersDeltaMoney(account, deltaMoney, filter);
+		}
+		
+		
 	}
 
 }

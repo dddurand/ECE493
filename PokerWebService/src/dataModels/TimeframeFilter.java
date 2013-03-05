@@ -38,6 +38,11 @@ public class TimeframeFilter {
 		this.time_frame = TimeFrame.getTimeFrame(timeFrame);
 	}
 	
+	public TimeFrame getTimeFrame()
+	{
+		return this.time_frame;
+	}
+	
 	/**
 	 * Generates a fragement of SQL that should be placed in the WHERE clause.
 	 * It will cause the data to be filtered based on a column called date_uploaded,

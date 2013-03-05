@@ -1,6 +1,5 @@
 package database;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -176,7 +175,8 @@ public class DatabaseInterface {
 			CallableStatement prepStat = dbConnection.prepareCall(insertAccountSQL);
 
 			prepStat.setString(1, account.getUsername());
-			prepStat.setBytes(2, account.getEncyptedPassword().getBytes());
+			byte[] password = passUtil.getBytesFromString(account.getEncyptedPassword());
+			prepStat.setBytes(2, password);
 
 			prepStat.execute();
 			
@@ -471,9 +471,10 @@ public class DatabaseInterface {
 	 * @return
 	 * @throws DatabaseInterfaceException
 	 */
-	public int getUserDeltaMoneyRanking(Account account) throws DatabaseInterfaceException
+	public int getUserDeltaMoneyRanking(Account account, TimeframeFilter filter) throws DatabaseInterfaceException
 	{
-		String rank = "SELECT COUNT(*) FROM " + USER_TABLE + " u2 WHERE u2.delta_money > u1.delta_money";
+		String columnName = "delta_money_"+filter.getTimeFrame().getValue();
+		String rank = "SELECT COUNT(*) FROM " + USER_TABLE + " u2 WHERE u2."+columnName+" > u1."+columnName+" ";
 		String sql = "SELECT (("+rank+") + 1) FROM " + USER_TABLE + " u1 WHERE id=?;";
 		
 		try
@@ -505,9 +506,10 @@ public class DatabaseInterface {
 	 */
 	public void updateUsersDeltaMoney(Account account, int deltaMoney, TimeframeFilter filter) throws DatabaseInterfaceException
 	{
+		String columnName = "delta_money_"+filter.getTimeFrame().getValue();
 		final String updateDeltaMoneySQL = "UPDATE " + USER_TABLE+
-				 " SET delta_money = ?" +	
-				 " WHERE id = ?  "+filter.getSqlFilter()+" ;";
+				 " SET "+columnName+" = ?" +	
+				 " WHERE id = ?;";
 		
 		try
 		{

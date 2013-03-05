@@ -19,39 +19,76 @@ public class PersonalStatistics {
 	private transient Account account;
 	private transient TimeframeFilter filter;
 	
+	/**
+	 * Used in JSON Output
+	 */
+	@SuppressWarnings("unused")
 	private int totalDollarsBetOnCalls;
+	@SuppressWarnings("unused")
 	private int totalDollarsBetOnBets;
+	@SuppressWarnings("unused")
 	private int totalDollarsBetOnRaises;
+	@SuppressWarnings("unused")
 	private int totalDollarsBetOnReRaises;
+	@SuppressWarnings("unused")
 	private int totalDollarsBet;
+	@SuppressWarnings("unused")
 	private int avgDollarsBetOnCalls;
+	@SuppressWarnings("unused")
 	private int avgDollarsBetOnBets;
+	@SuppressWarnings("unused")
 	private int avgDollarsBetOnRaises;
+	@SuppressWarnings("unused")
 	private int avgDollarsBetOnReRaises;
+	@SuppressWarnings("unused")
 	private int totalNumberOfBets;
+	@SuppressWarnings("unused")
 	private int totalNumberOfChecks;
+	@SuppressWarnings("unused")
 	private int totalNumberOfCalls;
+	@SuppressWarnings("unused")
 	private int totalNumberOfFolds;
+	@SuppressWarnings("unused")
 	private int totalNumberOfRaise;
+	@SuppressWarnings("unused")
 	private int totalNumberOfReRaise;
+	@SuppressWarnings("unused")
 	private int totalNumberOfPotsWon;
+	@SuppressWarnings("unused")
 	private int totalNumberOfPotsLoss;
+	@SuppressWarnings("unused")
 	private int avgPotOnChecks;
+	@SuppressWarnings("unused")
 	private int avgPotOnCalls;
+	@SuppressWarnings("unused")
 	private int avgPotOnBets;
+	@SuppressWarnings("unused")
 	private int avgPotOnRaises;
+	@SuppressWarnings("unused")
 	private int avgPotOnReRaises;
+	@SuppressWarnings("unused")
 	private int avgPotOnFolds;
+	@SuppressWarnings("unused")
 	private int avgPotOnWins;
+	@SuppressWarnings("unused")
 	private int avgPotOnLoses;
+	@SuppressWarnings("unused")
 	private int totalDollarsWon;
+	@SuppressWarnings("unused")
 	private int totalDollarsLoss;
+	@SuppressWarnings("unused")
 	private int totalDollarsFolded;
+	@SuppressWarnings("unused")
 	private double winPercentage;
+	@SuppressWarnings("unused")
 	private int moneyGenerated;
+	@SuppressWarnings("unused")
 	private int gamesPlayed;
+	@SuppressWarnings("unused")
 	private int deltaMoney;
+	@SuppressWarnings("unused")
 	private int avgBet;
+	@SuppressWarnings("unused")
 	private int deltaMoneyRanking;
 	
 	/**
@@ -118,7 +155,7 @@ public class PersonalStatistics {
 	 */
 	public int getDeltaMoneyRank() throws DatabaseInterfaceException
 	{
-		return dbInterface.getUserDeltaMoneyRanking(account);
+		return dbInterface.getUserDeltaMoneyRanking(account, filter);
 	}
 	
 	/**
