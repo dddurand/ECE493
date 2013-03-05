@@ -1,4 +1,7 @@
+Note the :8080 addresses are for the local machine only (For Tomcat stuff - use the labtest.ece.ualberta.ca/XXXXXXX
+
 REGISTER - http://<SERVER>:8080/PokerWebService/RegisterServlet
+http://labtest.ece.ualberta.ca/register
 	{"username":"asdf","password":"asdf"}
 
 	Ex: Success
@@ -8,6 +11,7 @@ REGISTER - http://<SERVER>:8080/PokerWebService/RegisterServlet
 	=> {"Success":"FALSE","Message":"Username already in use."}
 
 LOGIN- http://<SERVER>:8080/PokerWebService/LoginServlet
+http://labtest.ece.ualberta.ca/login
 	{"username":"asdf","password":"asdf"}
 
 	Ex:Success
@@ -17,6 +21,7 @@ LOGIN- http://<SERVER>:8080/PokerWebService/LoginServlet
 	=>{"Success":"FALSE","Message":"Invalid Login."}
 
 UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
+http://labtest.ece.ualberta.ca/upload
 
 	{
 		"username":"asdf2",
@@ -195,7 +200,7 @@ UPLOAD - http://<SERVER>:8080/PokerWebService/UploadServlet
 	{"Success":"TRUE","Message":"Upload Results","game_success_uploads":["1","2","3"],"misc_success_uploads":[0,1,2]}
 	
 PersonalStatisticsServlet: http://<SERVER>:8080/PokerWebService/PersonalStatisticsServlet
-	
+http://labtest.ece.ualberta.ca/personalstatistics	
 	{
      "timeframe": "DAY",(Defaults to "ALL")
 	"username":"asdf2",
@@ -246,8 +251,8 @@ PersonalStatisticsServlet: http://<SERVER>:8080/PokerWebService/PersonalStatisti
 		}
 	}
 	
-RankingStatisticsServlet: http://<SERVER>:8080/PokerWebService/RakingStatisticsServlet
-	
+RankingStatisticsServlet: http://<SERVER>:8080/PokerWebService/RankingStatisticsServlet
+http://labtest.ece.ualberta.ca/rankstatistics	
 	{
 	"skip":1,(Number of position to skip- ex start at #5 position)
 	"max":2,   (Max number to return)
@@ -279,6 +284,7 @@ RankingStatisticsServlet: http://<SERVER>:8080/PokerWebService/RakingStatisticsS
 }
 	
 LOGOUT- http://<SERVER>:8080/PokerWebService/LogoutServlet
+http://labtest.ece.ualberta.ca/logout
 	{
 		"username": "asdf2",
 		"authenticationToken": "fda5e7cd-702a-47bc-9ef8-71488d7e1d0b"
