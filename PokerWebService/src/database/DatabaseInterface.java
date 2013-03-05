@@ -474,7 +474,7 @@ public class DatabaseInterface {
 	public int getUserDeltaMoneyRanking(Account account, TimeframeFilter filter) throws DatabaseInterfaceException
 	{
 		String columnName = "delta_money_"+filter.getTimeFrame().getValue();
-		String rank = "SELECT COUNT(*) FROM " + USER_TABLE + " u2 WHERE u2."+columnName+" > u1."+columnName+" ";
+		String rank = "SELECT COUNT(Distinct accountID) FROM " + USER_TABLE + " u2 JOIN game_actions ON u2.id = game_actions.accountID WHERE u2."+columnName+" > u1."+columnName+" ";
 		String sql = "SELECT (("+rank+") + 1) FROM " + USER_TABLE + " u1 WHERE id=?;";
 		
 		try
