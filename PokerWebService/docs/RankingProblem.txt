@@ -1,0 +1,119 @@
+{
+	"Success": "TRUE",
+	"Message": "Ranking Results",
+	"ranked_statistics": [{
+		"position": 1,
+		"username": "as3df",
+		"rankValue": 36.0
+	},
+	{
+		"position": 2,
+		"username": "asdf",
+		"rankValue": 0.0
+	},
+	{
+		"position": 3,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	},
+	{
+		"position": 4,
+		"username": "as2df",
+		"rankValue": -4.6999964E7
+	}],
+	"my_ranked_statistics": {
+		"position": 2,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	}
+	
+
+}
+	{
+	"Success": "TRUE",
+	"Message": "Ranking Results",
+	"ranked_statistics": [{
+		"position": 1,
+		"username": "as3df",
+		"rankValue": 36.0
+	},
+	{
+		"position": 2,
+		"username": "asdf",
+		"rankValue": 0.0
+	},
+	{
+		"position": 3,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	},
+	{
+		"position": 4,
+		"username": "as2df",
+		"rankValue": -4.6999964E7
+	}],
+	"my_ranked_statistics": {
+		"position": 1,
+		"username": "as3df",
+		"rankValue": 36.0
+	}
+}
+{
+	"Success": "TRUE",
+	"Message": "Ranking Results",
+	"ranked_statistics": [{
+		"position": 1,
+		"username": "as3df",
+		"rankValue": 36.0
+	},
+	{
+		"position": 2,
+		"username": "asdf",
+		"rankValue": 0.0
+	},
+	{
+		"position": 3,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	},
+	{
+		"position": 4,
+		"username": "as2df",
+		"rankValue": -4.6999964E7
+	}],
+	"my_ranked_statistics": {
+		"position": 3,
+		"username": "as2df",
+		"rankValue": -4.6999964E7
+	}
+}
+
+{
+	"Success": "TRUE",
+	"Message": "Ranking Results",
+	"ranked_statistics": [{
+		"position": 1,
+		"username": "as3df",
+		"rankValue": 36.0
+	},
+	{
+		"position": 2,
+		"username": "asdf",
+		"rankValue": 0.0
+	},
+	{
+		"position": 3,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	},
+	{
+		"position": 4,
+		"username": "as2df",
+		"rankValue": -4.6999964E7
+	}],
+	"my_ranked_statistics": {
+		"position": 2,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	}
+}

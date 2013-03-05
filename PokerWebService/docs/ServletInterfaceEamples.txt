@@ -257,8 +257,8 @@ RankingStatisticsServlet: http://<SERVER>:8080/PokerWebService/RakingStatisticsS
 	"authenticationToken":"fda5e7cd-702a-47bc-9ef8-71488d7e1d0b",
 	}
 	
-	SUCCESS:
-	{
+	SUCCESS:(CURRENTLY BROKEN)
+{
 	"Success": "TRUE",
 	"Message": "Ranking Results",
 	"ranked_statistics": [{
@@ -270,7 +270,12 @@ RankingStatisticsServlet: http://<SERVER>:8080/PokerWebService/RakingStatisticsS
 		"position": 3,
 		"username": "ddddd",
 		"rankValue": -1.1999964E7
-	}]
+	}],
+	"my_ranked_statistics": {
+		"position": 2,
+		"username": "ddddd",
+		"rankValue": -1.1999964E7
+	}
 }
 	
 LOGOUT- http://<SERVER>:8080/PokerWebService/LogoutServlet
