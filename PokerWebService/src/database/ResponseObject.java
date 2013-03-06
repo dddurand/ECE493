@@ -10,6 +10,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import dataModels.CommunityStatistics;
 import dataModels.PersonalStatistics;
 import dataModels.RankingStatistics;
 
@@ -30,7 +31,7 @@ public class ResponseObject {
 	private ArrayList<Integer> uploadMiscSuccess;
 	private PersonalStatistics personalStatistics;
 	private RankingStatistics rankingStatistics;
-	
+	private CommunityStatistics communityStatistics;
 	
 	private String authenticationToken;
 	
@@ -52,6 +53,24 @@ public class ResponseObject {
 		this.message = message;
 	}
 	
+	
+	/**
+	 * Community stats getter
+	 * @return
+	 */
+	public CommunityStatistics getCommunityStatistics() {
+		return communityStatistics;
+	}
+
+	/**
+	 * Community stats setter
+	 * 
+	 * @param communityStatistics
+	 */
+	public void setCommunityStatistics(CommunityStatistics communityStatistics) {
+		this.communityStatistics = communityStatistics;
+	}
+
 	/**
 	 * Ranking Stats Getter
 	 * 
@@ -193,6 +212,7 @@ public class ResponseObject {
 			ArrayList<Integer> miscResults = response.getUploadMiscSuccess();
 			PersonalStatistics personalStatistics = response.getPersonalStatistics();
 			RankingStatistics rankingStatistics = response.getRankingStatistics();
+			CommunityStatistics communityStatistics = response.getCommunityStatistics();
 			
 			if(response.isSuccess())
 				jsonObject.add("Success", new JsonPrimitive(SUCCESS));
@@ -236,6 +256,12 @@ public class ResponseObject {
 				JsonElement myRankedDataElement = context.serialize(rankingStatistics.getMyRankData());
 				jsonObject.add("ranked_statistics", rankedDataElement);
 				jsonObject.add("my_ranked_statistics", myRankedDataElement);
+			}
+			
+			if(communityStatistics != null)
+			{
+				JsonElement commDataElement = context.serialize(communityStatistics);
+				jsonObject.add("community_statistics", commDataElement);
 			}
 			
 			

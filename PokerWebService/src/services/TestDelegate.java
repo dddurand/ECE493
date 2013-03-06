@@ -28,9 +28,7 @@ public class TestDelegate extends ServiceDelegate{
 	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
 
-
 		return "";
-
 	}
 
 

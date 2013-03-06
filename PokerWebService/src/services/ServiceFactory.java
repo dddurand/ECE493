@@ -9,6 +9,7 @@ import database.DatabaseInterface;
 import database.ResponseObject;
 import database.DatabaseInterface.DatabaseInterfaceException;
 
+import servlets.CommunityStatisticsServlet;
 import servlets.ConfigHttpServlet;
 import servlets.LoginServlet;
 import servlets.LogoutServlet;
@@ -41,7 +42,7 @@ public class ServiceFactory {
 	 */
 	public enum ServletType
 	{
-		LOGIN, LOGOUT, REGISTER, UPLOAD, PERSONAL, RANKING, UNKNOWN,TEST
+		LOGIN, LOGOUT, REGISTER, UPLOAD, PERSONAL, RANKING, COMMUNITY, UNKNOWN,TEST
 	}
 	
 	/**
@@ -88,6 +89,8 @@ public class ServiceFactory {
 			return new PersonalStatisticsDelegate(gson, dbInterface);
 		case RANKING:
 			return new RankingStatisticsDelegate(gson, dbInterface);
+		case COMMUNITY:
+			return new CommunityStatisticsDelegate(gson, dbInterface);
 		case TEST:
 			return new TestDelegate(gson, dbInterface);
 		default:
@@ -115,6 +118,7 @@ public class ServiceFactory {
 			gsonBuilder.registerTypeAdapter(ResponseObject.class, new ResponseObject.ResponseSerializer());
 			break;
 		
+		case COMMUNITY:
 		case RANKING:
 		case PERSONAL:
 		case UPLOAD:
@@ -150,6 +154,8 @@ public class ServiceFactory {
 			return ServletType.PERSONAL;
 		else if(servlet instanceof RankingStatisticsServlet)
 			return ServletType.RANKING;
+		else if (servlet instanceof CommunityStatisticsServlet)
+			return ServletType.COMMUNITY;
 		else
 			return ServletType.UNKNOWN;
 	}

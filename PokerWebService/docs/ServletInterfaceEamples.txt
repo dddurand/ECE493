@@ -282,6 +282,56 @@ http://labtest.ece.ualberta.ca/rankstatistics
 		"rankValue": -1.1999964E7
 	}
 }
+
+COMMUNITY - http://<SERVER>:8080/PokerWebService/CommunityStatisticsServlet
+http://labtest.ece.ualberta.ca/communitystatistics
+{
+    "timeframe": "ALL",
+	"username":"ddddd",
+	"authenticationToken":"c00f1bb0-bd51-4c25-b0c4-e8f6c4992072"
+	}
+
+
+	SUCCESS
+	{
+		"Success": "TRUE",
+		"Message": "SUCCESS",
+		"community_statistics": {
+			"totalDollarsBetOnCalls": 198,
+			"totalDollarsBetOnBets": 0,
+			"totalDollarsBetOnRaises": 207,
+			"totalDollarsBetOnReRaises": 0,
+			"totalDollarsBet": 585,
+			"avgDollarsBetOnCalls": 22,
+			"avgDollarsBetOnBets": 0,
+			"avgDollarsBetOnRaises": 23,
+			"avgDollarsBetOnReRaises": 0,
+			"totalNumberOfBets": 0,
+			"totalNumberOfChecks": 18,
+			"totalNumberOfCalls": 9,
+			"totalNumberOfFolds": 0,
+			"totalNumberOfRaise": 9,
+			"totalNumberOfReRaise": 0,
+			"totalNumberOfPotsWon": 6,
+			"totalNumberOfPotsLoss": 3,
+			"totalNumberOfPots": 9,
+			"avgPotOnChecks": 12,
+			"avgPotOnCalls": 12,
+			"avgPotOnBets": 0,
+			"avgPotOnRaises": 12,
+			"avgPotOnReRaises": 0,
+			"avgPotOnFolds": 0,
+			"avgPotOnWins": 36,
+			"avgPotOnLoses": 36,
+			"totalDollarsWon": 216,
+			"totalDollarsLoss": 108,
+			"totalDollarsFolded": 0,
+			"moneyGenerated": 59000000,
+			"gamesPlayed": 3,
+			"netMoney": -58999892,
+			"avgBet": 21
+		}
+	}
 	
 LOGOUT- http://<SERVER>:8080/PokerWebService/LogoutServlet
 http://labtest.ece.ualberta.ca/logout

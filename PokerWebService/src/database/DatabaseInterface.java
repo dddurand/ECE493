@@ -499,9 +499,7 @@ public class DatabaseInterface {
 						//otherwise if u2 is an older player
 						"or ((u2."+columnName+" = u1."+columnName+") and ("+gameCount+"u1.id) = ("+gameCount+"u2.id) and u1.id > u2.id))" +
 						") + 1";
-		
-		
-		
+
 		return rank;
 	}
 	
@@ -705,14 +703,18 @@ public class DatabaseInterface {
 	 */
 	public int getMoneyGenerated(Account account, Filter filter) throws DatabaseInterfaceException
 	{
-		String sql = "SELECT sum(value) from misc_data WHERE accountID = ? and name = ? "+ filter.getSqlTimeFrameFilter() +";";
+		String accountFiltering = "";
+		
+		if(account!=null)
+			accountFiltering = " and accountID = " + account.getAccountID();
+		
+		String sql = "SELECT sum(value) from misc_data WHERE TRUE "+accountFiltering+" and name = ? "+ filter.getSqlTimeFrameFilter() +";";
 	
 	try
 	{
 		CallableStatement prepStat = dbConnection.prepareCall(sql);
 		
-		prepStat.setInt(1, account.getAccountID());
-		prepStat.setString(2, "MoneyGenerated");
+		prepStat.setString(1, "MoneyGenerated");
 		
 		ResultSet set = prepStat.executeQuery();
 		int count = 0;
@@ -739,14 +741,17 @@ public class DatabaseInterface {
 	 */
 	public int getGamesPlayed(Account account, Filter filter) throws DatabaseInterfaceException
 	{
+		String accountFiltering = "";
+		
+		if(account!=null)
+			accountFiltering = " and accountID = " + account.getAccountID();
+		
 		String sql = "SELECT count(DISTINCT gameID) from " + GAME_ACTION_TABLE +
-				 " WHERE accountID = ? "+filter.getSqlTimeFrameFilter()+" ;";
+				 " WHERE TRUE "+accountFiltering+" "+filter.getSqlTimeFrameFilter()+" ;";
 	
 	try
 	{
 		CallableStatement prepStat = dbConnection.prepareCall(sql);
-		
-		prepStat.setInt(1, account.getAccountID());
 		
 		ResultSet set = prepStat.executeQuery();
 		int count = 0;
@@ -774,15 +779,19 @@ public class DatabaseInterface {
 	 */
 	public int getGameActionsCount(PokerAction action, Account account, Filter filter) throws DatabaseInterfaceException
 	{
+		String accountFiltering = "";
+		
+		if(account!=null)
+			accountFiltering = "and accountID = " + account.getAccountID();
+		
 		String sql = "SELECT count(*) from " + GAME_ACTION_TABLE +
-					 " WHERE accountID = ? AND type = ? "+filter.getSqlTimeFrameFilter()+" ;";
+					 " WHERE TRUE "+accountFiltering+" AND type = ? "+filter.getSqlTimeFrameFilter()+" ;";
 		
 		try
 		{
 			CallableStatement prepStat = dbConnection.prepareCall(sql);
 			
-			prepStat.setInt(1, account.getAccountID());
-			prepStat.setString(2, action.getValue());
+			prepStat.setString(1, action.getValue());
 			
 			ResultSet set = prepStat.executeQuery();
 			int count = 0;
@@ -819,28 +828,25 @@ public class DatabaseInterface {
 	{
 		String typeLimit = "";
 		String ignoreZero = "";
+		String accountFiltering = "";
 		
 		if(action != null)
-			typeLimit = " type = ? and";
+			typeLimit = " and type = '"+ action.getValue()+"' ";
+		
+		if(account !=null)
+			accountFiltering = " and accountID = "+account.getAccountID()+" ";
 		
 		if(ignoreZeroValues)
 			ignoreZero = " and " + column.getValue() + "<> 0";
 		
+		
+		
 		String sql = "SELECT "+op.getValue()+"("+column.getValue()+") from " + GAME_ACTION_TABLE +
-					 " WHERE "+typeLimit+" accountID = ? "+ignoreZero+" "+filter.getSqlTimeFrameFilter()+" ;";
+					 " WHERE TRUE "+typeLimit+" "+accountFiltering+" "+ignoreZero+" "+filter.getSqlTimeFrameFilter()+" ;";
 		
 		try
 		{
 			CallableStatement prepStat = dbConnection.prepareCall(sql);
-			
-			if(action != null)
-			{
-				prepStat.setString(1, action.getValue());
-				prepStat.setInt(2, account.getAccountID());
-			}
-			else
-				prepStat.setInt(1, account.getAccountID());
-				
 			
 			ResultSet set = prepStat.executeQuery();
 			int count = 0;
