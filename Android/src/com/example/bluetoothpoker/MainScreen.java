@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import fragments.Login;
 import fragments.OfflineMode;
+import fragments.RegisterUser;
 
 public class MainScreen extends Activity {
 	
 	public final static int LOGIN_SCREEN = 0;
 	public final static int OFFLINE_SCREEN = 1;
 	public final static int ONLINE_SCREEN = 2;
+	public final static int REGISTER_SCREEN = 3;
 	
 	
 	@Override
@@ -40,6 +42,10 @@ public class MainScreen extends Activity {
 		return true;
 	}
 	
+	/**
+	 * Method for changing the fragment in the main screen. Fragment changed to specified code.
+	 * @param screen
+	 */
 	public void switchFragment(int screen) {
 		Fragment newFragment;
 		
@@ -52,6 +58,10 @@ public class MainScreen extends Activity {
 		
 		case MainScreen.OFFLINE_SCREEN:
 			newFragment = new OfflineMode();
+			break;
+			
+		case MainScreen.REGISTER_SCREEN:
+			newFragment = new RegisterUser();
 			break;
 			
 		default: newFragment = new Login(); 

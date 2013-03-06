@@ -7,5 +7,7 @@
     <string name="username">Username</string>
     <string name="remember_me_str">Remember Me</string>
     <string name="offlineUserHint">Temp. Name</string>
+    <string name="joinTableString">Join Table</string>
+    <string name="createTableString">Create Table</string>
 
 </resources>

@@ -62,7 +62,7 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Regster button action***/
 		case R.id.registerButton:
-				System.out.println("registerButton");
+			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
 			break;
 		}
 		

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/register_screen_helper"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    
+    <ImageView
+        android:id="@+id/registrationIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/register_screen_helper"
+        android:src="@drawable/ic_login_icon" />
+
+    <EditText
+        android:id="@+id/newUsernameField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/registrationIcon"
+        android:layout_toRightOf="@id/registrationIcon"
+        android:layout_toLeftOf="@+id/validUsernameIcon"
+        android:ems="10"
+        android:hint="@string/username" >
+
+        <requestFocus />
+    </EditText>
+    
+    <ImageView
+        android:id="@+id/validUsernameIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/newUsernameField"
+        android:src="@drawable/ic_negative"
+        android:visibility="invisible" />
+    
+    <View
+        android:id="@+id/register_screen_helper_3"
+        android:layout_width="fill_parent"
+        android:layout_height="15dp"
+        android:layout_below="@id/newUsernameField"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/passwordIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_screen_helper_3"
+        android:src="@drawable/ic_password_icon" />
+
+    <EditText
+        android:id="@+id/passwordField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/newUsernameField"
+        android:layout_alignTop="@id/passwordIcon"
+        android:layout_toRightOf="@id/passwordIcon"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/passwordConfirmField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/passwordField"
+        android:layout_alignRight="@id/passwordField"
+        android:layout_below="@id/passwordField"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/passwordConfirmField"
+        android:layout_toRightOf="@id/passwordConfirmField"
+        android:src="@drawable/ic_negative"
+        android:visibility="invisible" />
+
+</RelativeLayout>

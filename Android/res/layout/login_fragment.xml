@@ -30,7 +30,9 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textAutoComplete"
-        android:singleLine="true" />
+        android:singleLine="true" >
+    <requestFocus />
+    </EditText>
 
     <ImageView
         android:id="@+id/password_icon"
