@@ -485,13 +485,22 @@ public class DatabaseInterface {
 		String columnName = user_rank_column+"_"+filter.getTimeFrame().getValue();
 		
 		//rank based on delta money, then if tied - number of more games
-		String rank = " ( SELECT COUNT(Distinct accountID) FROM " + USER_TABLE + " u2 JOIN game_actions ON u2.id = game_actions.accountID" +
+		String rank = " ( SELECT COUNT(Distinct u2.id) FROM " + USER_TABLE + " u2 LEFT JOIN game_actions ON u2.id = game_actions.accountID" +
 				//More delta money
-				" WHERE u2."+columnName+" > u1."+columnName+" " +
-				//more delta games
-				"or (u2."+columnName+" = u1."+columnName+" and ("+gameCount+"u2.id) > ("+gameCount+"u1.id) "+
-				//whoever registered first is the tie breaker
-				"or (u2."+columnName+" = u1."+columnName+" and ("+gameCount+"u2.id) = ("+gameCount+"u1.id) and u2.id < u1.id)) ) + 1 ";
+				//No games played, if u2 was registered first he is above
+				" WHERE ( ("+gameCount+"u1.id) = 0 and ("+gameCount+"u2.id) = 0 and (u1.id > u2.id) ) " +
+				//U2 has games, while u1 doesn't - therefore hes above
+				" or ( ("+gameCount+"u1.id) = 0 and ("+gameCount+"u2.id) > 0) " +
+				//Otherwise both have games. So we vote based on columns
+				" or (( ("+gameCount+"u1.id) > 0 and ("+gameCount+"u2.id) > 0) and " +
+						" (u2."+columnName+" > u1."+columnName+") " +
+						//columns equal - if u2 has more games he's above
+						"or ((u2."+columnName+" = u1."+columnName+") and ("+gameCount+"u1.id) < ("+gameCount+"u2.id))" +
+						//otherwise if u2 is an older player
+						"or ((u2."+columnName+" = u1."+columnName+") and ("+gameCount+"u1.id) = ("+gameCount+"u2.id) and u1.id > u2.id))" +
+						") + 1";
+		
+		
 		
 		return rank;
 	}
