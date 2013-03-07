@@ -9,8 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_register_icon"
-        android:padding="9dp" />
+        android:layout_alignTop="@+id/offlineUsernameTextField"
+        android:layout_alignBottom="@id/offlineUsernameTextField"
+        android:src="@drawable/ic_new_user_big" />
 
     <EditText
         android:id="@+id/offlineUsernameTextField"
@@ -25,7 +26,7 @@
     </EditText>
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/addFundsButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/offlineUsernameTextField"

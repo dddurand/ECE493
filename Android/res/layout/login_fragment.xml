@@ -86,10 +86,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="2dp"
         android:layout_toLeftOf="@id/buttons_helper"
+        android:layout_marginRight="1dp"
         android:background="#333333"
-        android:paddingTop="6dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:src="@drawable/ic_register_icon" />
 
     <ImageButton
@@ -97,9 +98,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="2dp"
+        android:layout_alignTop="@id/registerButton"
         android:layout_toRightOf="@id/buttons_helper"
         android:background="#333333"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:layout_marginLeft="1dp"
         android:src="@drawable/ic_offline_icon" />
 
 </RelativeLayout>

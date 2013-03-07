@@ -1,6 +1,7 @@
 package fragments;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.bluetoothpoker.R;
 
@@ -24,10 +26,10 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		this.view = inflater.inflate(R.layout.offline_fragment,container, false);
 		
 		/******************Set listener for buttons******************/
-//		ImageButton b = (ImageButton) view.findViewById(R.id.imageButton1);
+		ImageButton addFundsButton = (ImageButton) view.findViewById(R.id.addFundsButton);
 //		ImageButton registerButton = (ImageButton) view.findViewById(R.id.registerButton);
 //		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
-//		b.setOnClickListener(this);
+		addFundsButton.setOnClickListener(this);
 //		registerButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
 		/***Set listener for edittext***/
@@ -46,8 +48,15 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 	}
 
 	@Override
-	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
+	public void onClick(View v) {
+		
+		switch(v.getId()) {
+
+		/*****Add funds button***/
+		case R.id.addFundsButton:
+			this.showAmountDialog();
+			break;
+		}
 		
 	}
 
@@ -61,6 +70,14 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 			int arg3) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * Method for displaying a dialog for the funds and obtaining amount from user
+	 */
+	private void showAmountDialog(){
+		
 		
 	}
 

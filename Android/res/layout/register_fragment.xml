@@ -7,7 +7,7 @@
     <View
         android:id="@+id/register_screen_helper"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     
@@ -27,6 +27,7 @@
         android:layout_toRightOf="@id/registrationIcon"
         android:layout_toLeftOf="@+id/validUsernameIcon"
         android:ems="10"
+        android:lines="1"
         android:hint="@string/username" >
 
         <requestFocus />
@@ -63,6 +64,7 @@
         android:layout_alignTop="@id/passwordIcon"
         android:layout_toRightOf="@id/passwordIcon"
         android:ems="10"
+        android:hint="@string/passwordFieldString"
         android:inputType="textPassword" />
 
     <EditText
@@ -73,15 +75,27 @@
         android:layout_alignRight="@id/passwordField"
         android:layout_below="@id/passwordField"
         android:ems="10"
+        android:hint="@string/passwordConfirmFieldString"
         android:inputType="textPassword" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/validPasswordsIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/passwordConfirmField"
         android:layout_toRightOf="@id/passwordConfirmField"
         android:src="@drawable/ic_negative"
         android:visibility="invisible" />
+
+    <ImageButton
+        android:id="@+id/confirmRegistrationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/passwordConfirmField"
+        android:layout_below="@id/passwordConfirmField"
+        android:background="#333333"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:src="@drawable/ic_accept_login_icon" />
 
 </RelativeLayout>

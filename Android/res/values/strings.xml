@@ -9,5 +9,9 @@
     <string name="offlineUserHint">Temp. Name</string>
     <string name="joinTableString">Join Table</string>
     <string name="createTableString">Create Table</string>
+    <string name="passwordFieldString">Password</string>
+    <string name="passwordConfirmFieldString">Confirm Password</string>
+    <string name="fundsDialogMessage">Desired Amount of Funds</string>
+    <string name="OK">OK</string>
 
 </resources>
