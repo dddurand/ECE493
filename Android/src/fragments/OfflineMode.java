@@ -1,7 +1,6 @@
 package fragments;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 public class OfflineMode extends Fragment implements OnClickListener,TextWatcher {
@@ -27,10 +28,10 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		
 		/******************Set listener for buttons******************/
 		ImageButton addFundsButton = (ImageButton) view.findViewById(R.id.addFundsButton);
-//		ImageButton registerButton = (ImageButton) view.findViewById(R.id.registerButton);
+		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);
 //		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
 		addFundsButton.setOnClickListener(this);
-//		registerButton.setOnClickListener(this);
+		joinTableButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
 		/***Set listener for edittext***/
 		EditText offlineUsername = (EditText) view.findViewById(R.id.offlineUsernameTextField);
@@ -55,6 +56,10 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		/*****Add funds button***/
 		case R.id.addFundsButton:
 			this.showAmountDialog();
+			break;
+			
+		case R.id.joinTableButton:
+			((MainScreen) getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
 		}
 		

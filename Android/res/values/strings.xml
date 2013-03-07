@@ -13,5 +13,7 @@
     <string name="passwordConfirmFieldString">Confirm Password</string>
     <string name="fundsDialogMessage">Desired Amount of Funds</string>
     <string name="OK">OK</string>
+    <string name="currentFundsString">Current Funds($):</string>
+    <string name="initialFundsAmount">500</string>
 
 </resources>

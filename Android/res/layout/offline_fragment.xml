@@ -3,22 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <TextView
+        android:id="@+id/fundsTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/fundsAmountTextview"
+        android:text="@string/currentFundsString"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/fundsAmountTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/initialFundsAmount"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <ImageView
         android:id="@+id/newOfflineUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_alignBottom="@+id/offlineUsernameTextField"
         android:layout_alignTop="@+id/offlineUsernameTextField"
-        android:layout_alignBottom="@id/offlineUsernameTextField"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/offlineUsernameTextField"
         android:src="@drawable/ic_new_user_big" />
 
     <EditText
         android:id="@+id/offlineUsernameTextField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/newOfflineUserName"
         android:ems="10"
         android:hint="@string/offlineUserHint" >
 
@@ -29,11 +48,12 @@
         android:id="@+id/addFundsButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/createTableButton"
         android:layout_alignLeft="@id/offlineUsernameTextField"
         android:layout_alignRight="@id/offlineUsernameTextField"
-        android:layout_below="@id/offlineUsernameTextField"
         android:background="#333333"
         android:src="@drawable/ic_add_funds" />
+
     <View
  		android:id="@+id/buttons2_helper"
  		android:layout_width="0dp"
@@ -42,19 +62,27 @@
     
     <Button
         android:id="@+id/createTableButton"
+        android:minHeight="45dp"
+        android:textColor="#cc0000"
+        android:background="#333333"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/buttons2_helper"
+        android:layout_margin="1dp"
         android:text="@string/createTableString" />
 
     <Button
         android:id="@+id/joinTableButton"
+        android:minHeight="45dp"
+        android:textColor="#cc0000"
+        android:background="#333333"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/buttons2_helper"
+        android:layout_margin="1dp"
         android:text="@string/joinTableString" />
 
 </RelativeLayout>
