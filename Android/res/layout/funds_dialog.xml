@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/dialogAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/amountSeekBar"
+        android:layout_marginBottom="40dp"
+        android:text="@string/initialFundsAmount"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <SeekBar
+        android:id="@+id/amountSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:progress="50" />
+    
+    <View
+ 		android:id="@+id/dialogButtonsHelper"
+ 		android:layout_width="0dp"
+ 		android:layout_height="0dp"
+ 		android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:id="@+id/fundsDialogOKButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/dialogButtonsHelper"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="2dp"
+        android:background="#333333"
+        android:src="@drawable/ic_accept_login_icon" />
+
+    <ImageButton
+        android:id="@+id/fundsDialogCancelButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@id/fundsDialogOKButton"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/dialogButtonsHelper"
+        android:background="#333333"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_negative_small" />
+
+</RelativeLayout>

@@ -1,5 +1,7 @@
 package fragments;
 
+import Misc.SeekBarWatcher;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
@@ -61,6 +64,11 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		case R.id.joinTableButton:
 			((MainScreen) getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
+			
+//		case R.id.fundsDialogCancelButton:
+//			d.dismiss();
+//			break;
+			
 		}
 		
 	}
@@ -83,6 +91,25 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 	 */
 	private void showAmountDialog(){
 		
+		//Initialize dialog
+		final Dialog d = new Dialog(getActivity());
+		d.setContentView(R.layout.funds_dialog);
+		d.setTitle("Choose desired initial amount");
+		
+		//Set listeners for different components
+		//Cancel Button Listener
+		ImageButton dialogCancelButton = (ImageButton)d.findViewById(R.id.fundsDialogCancelButton);
+		dialogCancelButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v){
+				d.dismiss();
+			}
+		});
+		//Seekbar listener
+		SeekBar sb = (SeekBar)d.findViewById(R.id.amountSeekBar);
+		sb.setOnSeekBarChangeListener(new SeekBarWatcher(R.id.amountSeekBar,d));
+		
+		d.show();
 		
 	}
 

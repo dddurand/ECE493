@@ -30,7 +30,7 @@
         android:layout_alignTop="@+id/offlineUsernameTextField"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/offlineUsernameTextField"
-        android:src="@drawable/ic_new_user_big" />
+        android:src="@drawable/ic_login_icon" />
 
     <EditText
         android:id="@+id/offlineUsernameTextField"

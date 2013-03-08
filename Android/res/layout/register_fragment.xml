@@ -4,12 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <View
+    <ImageView
         android:id="@+id/register_screen_helper"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:paddingTop="30dp"
+        android:paddingBottom="10dp"
+        android:src="@drawable/ic_new_user_big" />
     
     <ImageView
         android:id="@+id/registrationIcon"
