@@ -5,9 +5,11 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
+import fragments.CreateTable;
 import fragments.JoinTable;
 import fragments.Login;
 import fragments.OfflineMode;
+import fragments.OnlineMode;
 import fragments.RegisterUser;
 
 public class MainScreen extends Activity {
@@ -17,6 +19,8 @@ public class MainScreen extends Activity {
 	public final static int ONLINE_SCREEN = 2;
 	public final static int REGISTER_SCREEN = 3;
 	public final static int JOIN_TABLE_SCREEN = 4;
+	public final static int CREATE_TABLE_SCREEN = 5;
+	public final static int ONLINE_MODE = 6;
 	
 	
 	@Override
@@ -68,6 +72,14 @@ public class MainScreen extends Activity {
 			
 		case MainScreen.JOIN_TABLE_SCREEN:
 			newFragment = new JoinTable();
+			break;
+			
+		case MainScreen.CREATE_TABLE_SCREEN:
+			newFragment = new CreateTable();
+			break;
+			
+		case MainScreen.ONLINE_MODE:
+			newFragment = new OnlineMode();
 			break;
 			
 		default: newFragment = new Login(); 

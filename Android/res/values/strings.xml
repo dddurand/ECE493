@@ -15,5 +15,6 @@
     <string name="OK">OK</string>
     <string name="currentFundsString">Current Funds($):</string>
     <string name="initialFundsAmount">500</string>
+    <string name="createTableHint">Table name</string>
 
 </resources>

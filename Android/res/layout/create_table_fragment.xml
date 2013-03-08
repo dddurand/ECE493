@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_offline_icon" />
+
+    <EditText
+        android:id="@+id/createTableNameField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:minWidth="50dp"
+        android:ems="10"
+        android:hint="@string/createTableHint"
+        android:lines="1" >
+
+        <requestFocus />
+    </EditText>
+
+    <ImageView
+        android:id="@+id/createTableIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/createTableNameField"
+        android:layout_alignTop="@id/createTableNameField"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/createTableNameField"
+        android:src="@drawable/ic_create_table" />
+
+    <ImageButton
+        android:id="@+id/createTableButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/createTableNameField"
+        android:layout_below="@id/createTableNameField"
+        android:layout_marginTop="10dp"
+        android:background="#333333"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:src="@drawable/ic_accept_login_icon" />
+
+</RelativeLayout>

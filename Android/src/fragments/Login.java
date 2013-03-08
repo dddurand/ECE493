@@ -23,12 +23,13 @@ public class Login extends Fragment implements OnClickListener {
 		this.view = inflater.inflate(R.layout.login_fragment,container, false);
 		
 		/******************Set listener for buttons******************/
-		ImageButton b = (ImageButton) view.findViewById(R.id.imageButton1);
 		ImageButton registerButton = (ImageButton) view.findViewById(R.id.registerButton);
 		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
-		b.setOnClickListener(this);
+		ImageButton onlineModeButton = (ImageButton) view.findViewById(R.id.loginButton);
+		//set listeners
 		registerButton.setOnClickListener(this);
 		offlineModeButton.setOnClickListener(this);
+		onlineModeButton.setOnClickListener(this);
 		
 		return view;
 	}
@@ -50,11 +51,6 @@ public class Login extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch(v.getId()) {
 		
-		/*****Login button action***/
-		case R.id.imageButton1:
-				this.loginButtonAction();
-			break;
-			
 		/*****Offline mode button action***/
 		case R.id.offlineButton:
 			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
@@ -63,6 +59,10 @@ public class Login extends Fragment implements OnClickListener {
 		/*****Regster button action***/
 		case R.id.registerButton:
 			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
+			break;
+			
+		case R.id.loginButton:
+			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
 			break;
 		}
 		

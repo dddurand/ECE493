@@ -32,10 +32,10 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		/******************Set listener for buttons******************/
 		ImageButton addFundsButton = (ImageButton) view.findViewById(R.id.addFundsButton);
 		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);
-//		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
+		Button createTableButton = (Button) view.findViewById(R.id.createTableButton);
 		addFundsButton.setOnClickListener(this);
 		joinTableButton.setOnClickListener(this);
-//		offlineModeButton.setOnClickListener(this);
+		createTableButton.setOnClickListener(this);
 		/***Set listener for edittext***/
 		EditText offlineUsername = (EditText) view.findViewById(R.id.offlineUsernameTextField);
 		offlineUsername.addTextChangedListener(this);
@@ -65,9 +65,9 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 			((MainScreen) getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
 			
-//		case R.id.fundsDialogCancelButton:
-//			d.dismiss();
-//			break;
+		case R.id.createTableButton:
+			((MainScreen) getActivity()).switchFragment(MainScreen.CREATE_TABLE_SCREEN);
+			break;
 			
 		}
 		
