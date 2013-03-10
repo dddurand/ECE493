@@ -1,14 +1,15 @@
 package fragments;
 
-import com.example.bluetoothpoker.R;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.R;
 
 public class OnlineMode extends Fragment implements OnClickListener {
 	
@@ -20,6 +21,10 @@ public class OnlineMode extends Fragment implements OnClickListener {
 		
 		//Load XML Layout into global variable
 		this.view = inflater.inflate(R.layout.online_fragment,container, false);
+		
+		/**Change User Label**/
+		TextView usernameLabel = (TextView)view.findViewById(R.id.onlineModeUsername);
+		usernameLabel.setText(MainScreen.getUsername());
 		
 		/******************Set listener for buttons******************/
 //		ImageButton createTableButton = (ImageButton) view.findViewById(R.id.createTableButton);

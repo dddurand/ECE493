@@ -22,6 +22,8 @@ public class MainScreen extends Activity {
 	public final static int CREATE_TABLE_SCREEN = 5;
 	public final static int ONLINE_MODE = 6;
 	
+	//This variable will contain the username. This will be set by the login fragment class
+	private static String username;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,14 @@ public class MainScreen extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main_screen, menu);
 		return true;
+	}
+	
+	public static void setUsername(String uname){
+		username=uname;
+	}
+	
+	public static String getUsername(){
+		return username;
 	}
 	
 	/**
@@ -79,6 +89,8 @@ public class MainScreen extends Activity {
 			break;
 			
 		case MainScreen.ONLINE_MODE:
+			//newFragment = new OnlineMode(username);
+			System.out.println(username);
 			newFragment = new OnlineMode();
 			break;
 			

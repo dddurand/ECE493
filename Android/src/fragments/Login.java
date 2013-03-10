@@ -68,7 +68,12 @@ public class Login extends Fragment implements OnClickListener {
 		JSONObject response = loginAction.get();
 		String responseSuccess = (String) response.get("Success");
 		
-		if (responseSuccess.compareTo("TRUE")==0) return true;
+		//Sets successfully logged in user in MainScreen
+		if (responseSuccess.compareTo("TRUE")==0) 
+			{
+				((MainScreen) getActivity()).setUsername(userString);
+				return true;
+			}
 		else return false;
 	}
 	
@@ -98,12 +103,14 @@ public class Login extends Fragment implements OnClickListener {
 		/*****Login Button******/	
 		case R.id.loginButton:
 			try {
+				
 				//Clear Label
 				TextView label = (TextView)view.findViewById(R.id.loginErrorLabel);
 				label.setText("");
-				//Send request
-				if (this.sendLoginRequest()) ;
+				//Send request and check result. If true, then switch to online fragment
+				if (this.sendLoginRequest()) ((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
 				else this.showLoginError();
+				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
