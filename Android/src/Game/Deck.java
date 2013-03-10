@@ -17,18 +17,22 @@ public class Deck {
 	
 	protected void shuffle() {
 		this.resetDeck();
-		int randomNum = (int) (Math.random() * 52);
-		for (int i=51; i>0; i--) {
-			randomNum = (int) (Math.random() * (i+1));
-			this.swap(i, randomNum);
+		for(int j=0; j<20;j++) {
+			int randomNum = (int) (Math.random() * 52);
+			for (int i=51; i>0; i--) {
+				randomNum = (int) (Math.random() * (i+1));
+				this.swap(i, randomNum);
+			}
 		}
+		
 	}
 	
-	private void resetDeck() {
+	public void resetDeck() {
 		this.top =51;
-		for (short i =0; i<4; i++) {
-			for (short j=0; j<13;j++) {
-				this.currentDeck[i] = new Card(j,i);
+		for (int i =0; i<4; i++) {
+			for (int j=0; j<13;j++) {
+				int spot = (i*13) +j; 
+				this.currentDeck[spot] = new Card(j,i);
 			}
 		}
 	}

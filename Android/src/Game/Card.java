@@ -2,29 +2,29 @@ package Game;
 import java.util.*;
 
 public class Card {
-	private short rank, suit;
+	private int rank, suit;
 	
-	private static String[] ranks = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+	private static String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
     private static String[] suits = {"Diamonds", "Clubs", "Hearts", "Spades"};
     
-    public Card(short rank, short suit) {
+    public Card(int rank, int suit) {
     	this.rank = rank;
     	this.suit = suit;
     }
     
-    public void setRank(short rank){
+    public void setRank(int rank){
     	this.rank = rank;
     }
     
-    public void setSuit(short suit){
+    public void setSuit(int suit){
     	this.suit = suit;
     }
     
-    public short getSuit() {
+    public int getSuit() {
     	return this.suit;
     }
     
-    public short getRank() {
+    public int getRank() {
     	return this.rank;
     }
     public String toString() {
@@ -41,8 +41,8 @@ class rankComparator implements Comparator<Object>{
                     + " Parameter 2 class: " + card2.getClass());
         }
 
-        short rank1 = ((Card)card1).getRank();
-        short rank2 = ((Card)card2).getRank();
+        int rank1 = ((Card)card1).getRank();
+        int rank2 = ((Card)card2).getRank();
 
         return rank1 - rank2;
     }
@@ -56,8 +56,8 @@ class suitComparator implements Comparator<Object>{
                     + " Parameter 2 class: " + card2.getClass());
         }
 
-        short suit1 = ((Card)card1).getSuit();
-        short suit2 = ((Card)card2).getSuit();
+        int suit1 = ((Card)card1).getSuit();
+        int suit2 = ((Card)card2).getSuit();
 
         return suit1 - suit2;
     }

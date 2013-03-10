@@ -46,4 +46,7 @@ public class Player {
 	protected int getActive() {
 		return active;
 	}
+	public String toString() {
+		return "id: " + this.id + "\nmoney: " + this.money + "\nhand: " + this.hand[0].toString() + " and " + this.hand[1].toString();
+	}
 }
