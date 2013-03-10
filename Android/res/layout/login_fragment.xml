@@ -107,4 +107,13 @@
         android:layout_marginLeft="1dp"
         android:src="@drawable/ic_offline_icon" />
 
+    <TextView
+        android:id="@+id/loginErrorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/checkBox1"
+        android:layout_below="@id/checkBox1"
+        android:textColor="#c00"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </RelativeLayout>

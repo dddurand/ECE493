@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import Misc.GenericTextWatcher;
-import Networking.Register;
+import Networking.NRegister;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -55,14 +55,17 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		JSONObject obj = new JSONObject();
 		obj.put("username", username);
 		obj.put("password", password);
+		
 		//Execute class method for registering
-		Register registerAction = new Register();
+		NRegister registerAction = new NRegister();
 		registerAction.execute(obj);
+		
 		//Get response
 		JSONObject response = registerAction.get();
 		String responseSuccess = (String) response.get("Success");
 		this.updateResponseLabel(responseSuccess,username);
 		//Change to login screen here
+		//hereere
 	}
 	
 	/**

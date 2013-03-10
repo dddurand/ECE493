@@ -13,21 +13,16 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
-public class Register extends AsyncTask<JSONObject,Integer,JSONObject> {
+public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
 	
-	private int TIMEOUT_MILLISEC = 10000;
-	private String serverUrl="http://labtest.ece.ualberta.ca/register";
+	private int TIMEOUT_MILLISEC = 5000; //5 seconds
+	private String serverUrl="http://labtest.ece.ualberta.ca/login";
 	
 	protected HttpParams httpParams;
 	protected HttpClient client;
 
-	/**
-	 * Parameter to get: JSONObject with username and password
-	 */
 	@Override
 	protected JSONObject doInBackground(JSONObject... params) {
-		
-		if (params.length!=1) System.out.println("Error getting parameters");
 		
 		try {
 			//Set up Connection
@@ -43,21 +38,11 @@ public class Register extends AsyncTask<JSONObject,Integer,JSONObject> {
 			String responseBody = client.execute(request, responseHandler);
 			JSONObject response = new JSONObject(responseBody);
 			return response;
-			
+
 		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
 	}
-	
-	/**
-	 * Method executed after value has been returned by the doInBackground method
-	 */
-//	protected void onPostExecute(JSONObject result){
-//		
-//		if (result==null) System.out.println("Register request didn't work");
-//		else System.out.println("Response received successfully");
-//			
-//	}
-	
+
 }
