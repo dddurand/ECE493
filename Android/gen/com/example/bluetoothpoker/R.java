@@ -54,7 +54,7 @@ public final class R {
         public static final int joinTableImage=0x7f07000a;
         public static final int loginButton=0x7f070012;
         public static final int login_icon=0x7f07000d;
-        public static final int menu_settings=0x7f070030;
+        public static final int menu_settings=0x7f070031;
         public static final int newOfflineUserName=0x7f070018;
         public static final int newUsernameField=0x7f070029;
         public static final int offlineButton=0x7f070015;
@@ -68,6 +68,7 @@ public final class R {
         public static final int passwordIcon=0x7f07002c;
         public static final int password_icon=0x7f07000f;
         public static final int registerButton=0x7f070014;
+        public static final int registerResponseLabel=0x7f070030;
         public static final int register_screen_helper=0x7f070027;
         public static final int register_screen_helper_3=0x7f07002b;
         public static final int registrationIcon=0x7f070028;

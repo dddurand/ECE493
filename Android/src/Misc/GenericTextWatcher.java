@@ -39,18 +39,6 @@ public class GenericTextWatcher implements TextWatcher {
 		else icon.setImageResource(R.drawable.ic_negative);
 	}
 	
-	//Sets icon to green check-mark if both password fields' contents match
-	private void updatePasswordIcon(String secondPassword){
-		//Get the string in the first password field
-		EditText passwordField = (EditText)view.findViewById(R.id.passwordField);
-		String firstPassword = passwordField.getText().toString();
-		//Compare
-		if (secondPassword.compareTo(firstPassword)==0) passwordsMatch=true;
-		else passwordsMatch=false;
-		//Change icon
-		this.changeIconSrc((ImageView)view.findViewById(R.id.validPasswordsIcon),passwordsMatch);
-	}
-	
 	//Sets username icon to green mark if username is not taken.
 	private void updateUsernameIcon(CharSequence text){
 		//get imageview from view
@@ -61,17 +49,16 @@ public class GenericTextWatcher implements TextWatcher {
 
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		//Get text from both password fields
+		EditText passwordField = (EditText)view.findViewById(R.id.passwordField);
+		EditText passwordConfirmField = (EditText)view.findViewById(R.id.passwordConfirmField);
+		ImageView icon = (ImageView)view.findViewById(R.id.validPasswordsIcon);
 		
-		switch (this.id){
+		String s1 = passwordField.getText().toString();
+		String s2 = passwordConfirmField.getText().toString();
 		
-		case R.id.passwordConfirmField:
-			this.updatePasswordIcon(arg0.toString());
-			break;
-			
-		case R.id.newUsernameField:
-			this.updateUsernameIcon(arg0.toString());
-			break;
-		}
+		if (s1.compareTo(s2)==0) this.changeIconSrc(icon,true);
+		else this.changeIconSrc(icon,false);
 	}
 
 }

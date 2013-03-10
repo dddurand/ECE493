@@ -1,6 +1,12 @@
 package fragments;
 
+import java.util.concurrent.ExecutionException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import Misc.GenericTextWatcher;
+import Networking.Register;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +14,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.bluetoothpoker.R;
 
@@ -22,33 +29,66 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		
 		//Load XML Layout into global variable
 		this.view = inflater.inflate(R.layout.register_fragment,container, false);
-		//Get icons to modify later
-//		validUsernameIcon = (ImageView) this.view.findViewById(R.id.validUsernameIcon);
 		
 		/******************Set listener for buttons******************/
-//		ImageButton b = (ImageButton) view.findViewById(R.id.imageButton1);
-//		ImageButton registerButton = (ImageButton) view.findViewById(R.id.registerButton);
-//		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
-//		b.setOnClickListener(this);
-//		registerButton.setOnClickListener(this);
-//		offlineModeButton.setOnClickListener(this);
-		/***Set listener for username field***/
-		EditText offlineUsername = (EditText) view.findViewById(R.id.newUsernameField);
-		offlineUsername.addTextChangedListener(new GenericTextWatcher(R.id.newUsernameField,view));
+		/***Set listener for button***/
+		ImageButton registerButton = (ImageButton) view.findViewById(R.id.confirmRegistrationButton);
+		registerButton.setOnClickListener(this);
 		/***Set listener for password fields***/
+		EditText passwordField = (EditText) view.findViewById(R.id.passwordField);
+		passwordField.addTextChangedListener(new GenericTextWatcher(R.id.passwordField,view));
 		EditText passwordConfirmField = (EditText) view.findViewById(R.id.passwordConfirmField);
 		passwordConfirmField.addTextChangedListener(new GenericTextWatcher(R.id.passwordConfirmField,view));
-		
 		
 		return view;
 	}
 	
+	/**
+	 * Method that creates a JSONObject and then sends it to the register server.
+	 * @param username
+	 * @param password
+	 * @throws JSONException
+	 */
+	private void sendRegisterRequest(String username, String password) throws JSONException, InterruptedException, ExecutionException, Exception {
+		
+		//Create JSON Object
+		JSONObject obj = new JSONObject();
+		obj.put("username", username);
+		obj.put("password", password);
+		//Execute class method for registering
+		Register registerAction = new Register();
+		registerAction.execute(obj);
+		//Get response
+		JSONObject response = registerAction.get();
+		String responseSuccess = (String) response.get("Success");
+		this.updateResponseLabel(responseSuccess,username);
+		//Change to login screen here
+	}
+	
+	/**
+	 * For sending the JSON Object to webserver
+	 */
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		/**
-		 * Register JSON stuff here. Ask Dustin
-		 */
+		//get text
+		EditText newUsername = (EditText) view.findViewById(R.id.newUsernameField);
+		EditText passwordField = (EditText) view.findViewById(R.id.passwordField);
+		
+		try {
+			this.sendRegisterRequest(newUsername.getText().toString(), passwordField.getText().toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	private void updateResponseLabel(String status, String username){
+		//get the label view
+		TextView label = (TextView)this.view.findViewById(R.id.registerResponseLabel);
+		if (status.compareTo("FALSE")==0) label.setText("Username '"+username+"' already taken."); 
+		else label.setText("");
+		
 	}
 
 }

@@ -58,7 +58,7 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 
 		/*****Add funds button***/
 		case R.id.addFundsButton:
-			this.showAmountDialog();
+			this.showAmountDialog("Choose desired initial amount");
 			break;
 			
 		case R.id.joinTableButton:
@@ -89,12 +89,12 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 	/**
 	 * Method for displaying a dialog for the funds and obtaining amount from user
 	 */
-	private void showAmountDialog(){
+	private void showAmountDialog(String message){
 		
 		//Initialize dialog
 		final Dialog d = new Dialog(getActivity());
 		d.setContentView(R.layout.funds_dialog);
-		d.setTitle("Choose desired initial amount");
+		d.setTitle(message);
 		
 		//Set listeners for different components
 		//Cancel Button Listener
