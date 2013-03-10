@@ -1,5 +1,6 @@
 package fragments;
 
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 public class RegisterUser extends Fragment implements OnClickListener {
@@ -58,14 +60,18 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		
 		//Execute class method for registering
 		NRegister registerAction = new NRegister();
-		registerAction.execute(obj);
 		
 		//Get response
-		JSONObject response = registerAction.get();
+		JSONObject response = registerAction.execute(obj).get();
 		String responseSuccess = (String) response.get("Success");
 		this.updateResponseLabel(responseSuccess,username);
+		
 		//Change to login screen here
-		//hereere
+		if (responseSuccess.compareTo("TRUE")==0) {
+			MainScreen.setUsername(username);
+			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
+			//Clear back stack here?
+		}
 	}
 	
 	/**

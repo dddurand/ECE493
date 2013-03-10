@@ -62,16 +62,15 @@ public class Login extends Fragment implements OnClickListener {
 		
 		//Execute class method for registering
 		NLogin loginAction = new NLogin();
-		loginAction.execute(obj);
 		
 		//Get response
-		JSONObject response = loginAction.get();
+		JSONObject response = loginAction.execute(obj).get();
 		String responseSuccess = (String) response.get("Success");
 		
 		//Sets successfully logged in user in MainScreen
 		if (responseSuccess.compareTo("TRUE")==0) 
 			{
-				((MainScreen) getActivity()).setUsername(userString);
+				MainScreen.setUsername(userString);
 				return true;
 			}
 		else return false;
