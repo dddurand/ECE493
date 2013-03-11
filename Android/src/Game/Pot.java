@@ -10,14 +10,34 @@ public class Pot {
 	private int totalAmount=0;
 	private ArrayList<Integer> participants = new ArrayList<Integer>();
 	private Hashtable<Integer, Integer> playeramount = new Hashtable<Integer, Integer>();
+
 	public Pot(int owner, int amount) {
 		this.participants.add(owner);
 		this.amount = amount;
 	}
+	
 	protected void mainPot(){
 		for(int i=0; i<this.participants.size();i++) {
 			this.playeramount.put(this.participants.get(i), 0);
 		}
+	}
+	
+	protected void resetPlayerAmount() {
+		Enumeration<Integer> e = this.playeramount.keys();
+		while(e.hasMoreElements()) {
+			int id = (int) e.nextElement();
+			this.playeramount.put(id, 0);
+		}
+	}
+	protected boolean checkPlayersBet() {
+		Enumeration<Integer> e = this.playeramount.keys();
+		while(e.hasMoreElements()) {
+			int id = (int) e.nextElement();
+			if(this.playeramount.get(id)<this.amount){
+				return false;
+			}
+		}
+		return true;
 	}
 	protected void addList(ArrayList<Integer> participants) {
 		this.participants.addAll(participants);
@@ -94,4 +114,6 @@ public class Pot {
 		}
 		return false;
 	}
+
+	
 }
