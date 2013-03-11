@@ -22,8 +22,11 @@ public class MainScreen extends Activity {
 	public final static int CREATE_TABLE_SCREEN = 5;
 	public final static int ONLINE_MODE = 6;
 	
+	
 	//This variable will contain the username. This will be set by the login fragment class
 	private static String username;
+	
+	public static boolean loggedIn = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

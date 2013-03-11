@@ -116,4 +116,12 @@
         android:textColor="#c00"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <ProgressBar
+        android:id="@+id/loginProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible" />
+
 </RelativeLayout>

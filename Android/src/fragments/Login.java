@@ -2,6 +2,7 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.bluetoothpoker.MainScreen;
@@ -22,6 +24,7 @@ import com.example.bluetoothpoker.R;
 public class Login extends Fragment implements OnClickListener {
 	
 	private View view;
+	private String username;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,12 +50,12 @@ public class Login extends Fragment implements OnClickListener {
 		
 	}
 	
-	private boolean sendLoginRequest() throws JSONException, InterruptedException, ExecutionException, Exception {
+	private void sendLoginRequest() throws JSONException, InterruptedException, ExecutionException, ConnectTimeoutException {
 		//Get components from view
 		EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
 		EditText passwordField = (EditText) this.view.findViewById(R.id.passwordField);
-		//Get username and password
-		String userString=userField.getText().toString();
+		//Get username and password (save username only)
+		String userString=userField.getText().toString();this.username=userString;
 		String passwordString=passwordField.getText().toString();
 		
 		//Create JSON Object
@@ -61,25 +64,44 @@ public class Login extends Fragment implements OnClickListener {
 		obj.put("password", passwordString);
 		
 		//Execute class method for registering
-		NLogin loginAction = new NLogin();
+		ProgressBar pb = (ProgressBar)this.view.findViewById(R.id.loginProgressBar);
+		NLogin loginAction = new NLogin(pb,this);
 		
-		//Get response
-		JSONObject response = loginAction.execute(obj).get();
-		String responseSuccess = (String) response.get("Success");
-		
-		//Sets successfully logged in user in MainScreen
-		if (responseSuccess.compareTo("TRUE")==0) 
-			{
-				MainScreen.setUsername(userString);
-				return true;
-			}
-		else return false;
+		//Execute AsyncTask
+		loginAction.execute(obj);
 	}
 	
-	private void showLoginError(){
+	//This method will be executed on the onPostExecute method from the AsyncTask
+	//Checks the response sent by the web service.
+	public void onPostLoginRequest(JSONObject response){
+		try {
+			if (response!=null)
+			{
+				String responseSuccess;
+				responseSuccess = (String) response.get("Success");
+
+				if (responseSuccess.compareTo("TRUE")==0) 
+				{
+					//Clear Label
+					this.showLoginError("");
+					//Modify Username in Main Screen Activity
+					MainScreen.setUsername(this.username);
+					//Switch fragments
+					((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
+				} else this.showLoginError("Invalid Login Credentials");
+			} 
+			else this.showLoginError("Timeout. Please ensure you're connected to the Internet");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void showLoginError(String s){
 		//Get label first
 		TextView label = (TextView)view.findViewById(R.id.loginErrorLabel);
-		label.setText("Invalid Login Credentials.");
+		label.setText(s);
 	}
 
 	/**
@@ -102,26 +124,18 @@ public class Login extends Fragment implements OnClickListener {
 		/*****Login Button******/	
 		case R.id.loginButton:
 			try {
-				
 				//Clear Label
-				TextView label = (TextView)view.findViewById(R.id.loginErrorLabel);
-				label.setText("");
-				//Send request and check result. If true, then switch to online fragment
-				if (this.sendLoginRequest()) ((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
-				else this.showLoginError();
-				
+				this.showLoginError("");
+				//Send request
+				this.sendLoginRequest();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.showLoginError("Connection Interrupted. Please try again");
 			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (ConnectTimeoutException e) {
+				this.showLoginError("Timeout. Please ensure you're connected to the Internet");
 			}
 			break;
 		}

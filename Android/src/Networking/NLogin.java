@@ -1,5 +1,9 @@
 package Networking;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -9,9 +13,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
+import fragments.Login;
 
 public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
 	
@@ -20,11 +28,24 @@ public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
 	
 	protected HttpParams httpParams;
 	protected HttpClient client;
-
+	
+	private final ProgressBar pb;
+	private final Login parent;
+	
+	public NLogin (final ProgressBar pb, Login parent){
+		this.pb=pb;
+		this.parent=parent;
+	}
+	
+	@Override
+	protected void onPreExecute(){
+		pb.setVisibility(View.VISIBLE);
+	}
+	
 	@Override
 	protected JSONObject doInBackground(JSONObject... params) {
 		
-		try {
+		try{
 			//Set up Connection
 			httpParams = new BasicHttpParams();
 			HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
@@ -38,11 +59,22 @@ public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
 			String responseBody = client.execute(request, responseHandler);
 			JSONObject response = new JSONObject(responseBody);
 			return response;
-
-		} catch (Exception e) {
-			System.out.println(e);
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		} catch (ClientProtocolException e) {
+			return null;
+		} catch (JSONException e) {
+			return null;
+		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	
+	@Override
+	protected void onPostExecute(JSONObject result){
+		pb.setVisibility(View.INVISIBLE);
+		parent.onPostLoginRequest(result);
 	}
 
 }

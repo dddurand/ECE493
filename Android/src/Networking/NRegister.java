@@ -1,5 +1,9 @@
 package Networking;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -9,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
@@ -22,7 +27,8 @@ public class NRegister extends AsyncTask<JSONObject,Integer,JSONObject> {
 	protected HttpClient client;
 
 	/**
-	 * Parameter to get: JSONObject with username and password
+	 * Parameter to get: JSONObject with username and password.
+	 * Returns null if anything goes wrong
 	 */
 	@Override
 	protected JSONObject doInBackground(JSONObject... params) {
@@ -43,9 +49,13 @@ public class NRegister extends AsyncTask<JSONObject,Integer,JSONObject> {
 			String responseBody = client.execute(request, responseHandler);
 			JSONObject response = new JSONObject(responseBody);
 			return response;
-			
-		} catch (Exception e) {
-			System.out.println(e);
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		} catch (ClientProtocolException e) {
+			return null;
+		} catch (JSONException e) {
+			return null;
+		} catch (IOException e) {
 			return null;
 		}
 	}

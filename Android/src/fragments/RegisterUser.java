@@ -1,8 +1,8 @@
 package fragments;
 
-import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,8 +51,9 @@ public class RegisterUser extends Fragment implements OnClickListener {
 	 * @param password
 	 * @throws JSONException
 	 */
-	private void sendRegisterRequest(String username, String password) throws JSONException, InterruptedException, ExecutionException, Exception {
+	private boolean sendRegisterRequest(String username, String password) throws JSONException, InterruptedException, ExecutionException, ConnectTimeoutException {
 		
+		boolean validResponse=false;
 		//Create JSON Object
 		JSONObject obj = new JSONObject();
 		obj.put("username", username);
@@ -63,15 +64,20 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		
 		//Get response
 		JSONObject response = registerAction.execute(obj).get();
-		String responseSuccess = (String) response.get("Success");
-		this.updateResponseLabel(responseSuccess,username);
 		
-		//Change to login screen here
-		if (responseSuccess.compareTo("TRUE")==0) {
-			MainScreen.setUsername(username);
-			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
-			//Clear back stack here?
-		}
+		//Check if response is valid
+		if (response!=null)
+		{
+			String responseSuccess = (String) response.get("Success");
+			
+			if (responseSuccess.compareTo("TRUE")==0) {
+				validResponse=true;
+				MainScreen.setUsername(username);
+			}
+				
+		} else throw new ConnectTimeoutException();
+		
+		return validResponse;
 	}
 	
 	/**
@@ -82,22 +88,32 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		//get text
 		EditText newUsername = (EditText) view.findViewById(R.id.newUsernameField);
 		EditText passwordField = (EditText) view.findViewById(R.id.passwordField);
+		String usernameStr = newUsername.getText().toString();
+		String passwordStr = passwordField.getText().toString();
 		
 		try {
-			this.sendRegisterRequest(newUsername.getText().toString(), passwordField.getText().toString());
+			//Clean Label
+			this.updateResponseLabel(null);
+			//Perform Request
+			if (this.sendRegisterRequest(usernameStr,passwordStr))
+			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
+			else this.updateResponseLabel("Username "+usernameStr+" already taken.");
 		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		} catch (ConnectTimeoutException e) {
+			this.updateResponseLabel("Timeout. Please ensure you're connected to the Internet");
+		} catch (InterruptedException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			System.out.println(e);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
 		}
 	}
 	
-	private void updateResponseLabel(String status, String username){
+	private void updateResponseLabel(String message){
 		//get the label view
 		TextView label = (TextView)this.view.findViewById(R.id.registerResponseLabel);
-		if (status.compareTo("FALSE")==0) label.setText("Username '"+username+"' already taken."); 
+		if (message!=null) label.setText(message);
 		else label.setText("");
-		
 	}
 
 }
