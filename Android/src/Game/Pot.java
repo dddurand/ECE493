@@ -34,6 +34,9 @@ public class Pot {
 		while(e.hasMoreElements()) {
 			int id = (int) e.nextElement();
 			if(this.playeramount.get(id)<this.amount){
+				System.out.println("player" + id + "Ain't got enough");
+				System.out.println(this.playeramount.get(id));
+				System.out.println(this.amount);
 				return false;
 			}
 		}
