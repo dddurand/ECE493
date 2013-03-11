@@ -32,8 +32,11 @@ public class GameMechanics {
 	public String getcommunityCards3() {
 		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString()+" "+ this.communityCards[4].toString();
 	}
-	/*
+	/**
 	 * create game mechanics
+	 * @param playerList
+	 * @param Dealer
+	 * @param blindAmount
 	 */
 	public GameMechanics(Player[] playerList, int Dealer, int blindAmount) {
 		this.playerList = new ArrayList<Player>(Arrays.asList(playerList));;
@@ -44,8 +47,10 @@ public class GameMechanics {
 		}
 	}
 	
-	/*
+	/**
 	 * add player to game
+	 * @param p - player to be added
+	 * @return the new size of the game or -1 if already full
 	 */
 	public int addPlayer(Player p) {
 		if(this.playerList.size() ==6) {
@@ -56,8 +61,10 @@ public class GameMechanics {
 		}
 	}
 	
-	/*
+	/**
 	 * remove player from game
+	 * @param p - player removed
+	 * @return new list of players present
 	 */
 	public int removePlayer(Player p) {
 		for (int i =0; i<this.playerList.size(); i++) {
@@ -69,7 +76,7 @@ public class GameMechanics {
 		return -1;
 	}
 	
-	/*
+	/**
 	 * set up the game
 	 */
 	public void startGame() {
@@ -90,7 +97,7 @@ public class GameMechanics {
 		this.blinds();
 	}
 	
-	/*
+	/**
 	 * go to the next round
 	 */
 	public void nextTurn() {
@@ -112,7 +119,7 @@ public class GameMechanics {
 		}
 		this.currentTurn++;
 	}
-	/*
+	/**
 	 * finish the game and give the winner their money
 	 */
 	private void endGame() {
@@ -142,8 +149,9 @@ public class GameMechanics {
 		
 	}
 
-	/*
+	/**
 	 * determine the winner between all the hands
+	 * @return player array of winners 
 	 */
 	private Player[] determineWinners() {
 		int rank[] = {11,11,11,11,11,11,11};
@@ -158,7 +166,7 @@ public class GameMechanics {
 				boolean straight = false;
 				boolean fullhouse = false;
 				int count=0;
-				int suit=0;
+				int suit=-1;
 				Card st_hand[];
 				Card tempHand[] = new Card[7];
 				Arrays.sort(hand, suitcompare);
@@ -311,7 +319,7 @@ public class GameMechanics {
 		return BestPlayer;
 	}
 
-	/*
+	/**
 	 * Start off the betting round
 	 */
 	private void startBetting() {
@@ -377,8 +385,9 @@ public class GameMechanics {
 		//this.mainPot.decrementPlayerAmount(this.mainPot.getAmount());
 		//this.mainPot.setAmount(0);
 	}
-	/*
+	/**
 	 * Checks to see if all other players have folded
+	 * @return
 	 */
 	private boolean checkForFolds() {
 		int countfolds =0;
@@ -400,8 +409,10 @@ public class GameMechanics {
 		this.playerList.get(player).addMoney(this.mainPot.getTotal());
 	}
 
-	/*
+	/**
 	 * Just some fake stuff to mimic the gui
+	 * @param id2
+	 * @return
 	 */
 	private int gui(int id2) {
 		int bet =0;
@@ -422,7 +433,7 @@ public class GameMechanics {
 		}
 		return bet;
 	}
-	/*
+	/**
 	 * get the blinds 
 	 */
 	private void blinds(){
@@ -447,8 +458,9 @@ public class GameMechanics {
 		smallBlind(smallBlind);
 	}
 
-	/*
+	/**
 	 * get the small blind
+	 * @param smallBlind
 	 */
 	private void smallBlind(int smallBlind) {
 		Player p = this.playerList.get(smallBlind);
@@ -460,7 +472,11 @@ public class GameMechanics {
 			p.setActive(1);
 		}
 	}
-
+	
+	/**
+	 * get the big blind
+	 * @param bigBlind
+	 */
 	private void bigBlind(int bigBlind) {
 		Player p = this.playerList.get(bigBlind);
 		if(p.getAmountMoney()>this.blindAmount) {
