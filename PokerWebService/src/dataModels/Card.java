@@ -217,6 +217,10 @@ public class Card {
 	        return value;
 	    }
 	    
+	    public String getStringValue() {
+	        return new StringBuilder().append(value).toString();
+	    }
+	    
 	    /**
 	     * Retrieves the enum Number for a given char
 	     * Unknown is returned for an invalid char
@@ -263,6 +267,10 @@ public class Card {
 		 */
 	    public char getValue() {
 	        return value;
+	    }
+	    
+	    public String getStringValue() {
+	        return new StringBuilder().append(value).toString();
 	    }
 	    
 	    /**

@@ -34,7 +34,7 @@ CREATE TABLE `games` (
   `date_uploaded` date NOT NULL,
   PRIMARY KEY (`id`,`gameUUID`),
   UNIQUE KEY `gameUUID_UNIQUE` (`gameUUID`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8$$
 
 
 delimiter $$
@@ -57,7 +57,7 @@ CREATE TABLE `user_table` (
   `password` mediumtext NOT NULL,
   `auth_token` varchar(200) DEFAULT NULL,
   `optimality_ALL` double DEFAULT '0',
-  `optimality_DAY` double DEFAULT '0',
+  `optimality_DAY` double NOT NULL DEFAULT '0',
   `optimality_WEEK` double DEFAULT '0',
   `optimality_MONTH` double DEFAULT '0',
   `optimality_YEAR` double DEFAULT '0',
@@ -69,6 +69,6 @@ CREATE TABLE `user_table` (
   PRIMARY KEY (`id`,`username`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `auth_token_UNIQUE` (`auth_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8$$
 
 
