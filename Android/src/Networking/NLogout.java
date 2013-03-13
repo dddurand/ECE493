@@ -19,22 +19,25 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
-import fragments.Login;
+import fragments.OnlineMode;
 
-public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
+public class NLogout extends AsyncTask<JSONObject,Integer,JSONObject>{
 	
 	private int TIMEOUT_MILLISEC = 5000; //5 seconds
-	private String serverUrl="http://labtest.ece.ualberta.ca/login";
+	private String serverUrl="http://labtest.ece.ualberta.ca/logout";
 	
 	protected HttpParams httpParams;
 	protected HttpClient client;
 	
+	private final OnlineMode parent;
 	private final ProgressBar pb;
-	private final Login parent;
 	
-	public NLogin (final ProgressBar pb, Login parent){
-		this.pb=pb;
+	/**
+	 * Constructor. Takes ....
+	 */
+	public NLogout(OnlineMode parent, ProgressBar pb){
 		this.parent=parent;
+		this.pb=pb;
 	}
 	
 	@Override
@@ -70,11 +73,10 @@ public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
 		}
 	}
 	
-	
 	@Override
 	protected void onPostExecute(JSONObject result){
 		pb.setVisibility(View.INVISIBLE);
-		parent.onPostLoginRequest(result);
+		parent.onPostLogoutRequest(result);
 	}
 
 }

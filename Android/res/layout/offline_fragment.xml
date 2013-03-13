@@ -60,29 +60,30 @@
  		android:layout_height="0dp"
  		android:layout_centerHorizontal="true" />
     
-    <Button
+    <ImageButton
         android:id="@+id/createTableButton"
-        android:minHeight="45dp"
-        android:textColor="#cc0000"
-        android:background="#333333"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/buttons2_helper"
         android:layout_margin="1dp"
-        android:text="@string/createTableString" />
+        android:layout_toLeftOf="@id/buttons2_helper"
+        android:background="#333333"
+        android:minHeight="45dp"
+        android:src="@drawable/ic_create_table_game"
+        android:textColor="#cc0000" />
 
-    <Button
+    <ImageButton
         android:id="@+id/joinTableButton"
         android:minHeight="45dp"
-        android:textColor="#cc0000"
         android:background="#333333"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/buttons2_helper"
         android:layout_margin="1dp"
+        android:layout_alignTop="@id/createTableButton"
+        android:src="@drawable/ic_join_table"
         android:text="@string/joinTableString" />
 
 </RelativeLayout>

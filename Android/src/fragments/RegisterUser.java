@@ -2,12 +2,13 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
+import networking.NRegister;
+
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import Misc.GenericTextWatcher;
-import Networking.NRegister;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;

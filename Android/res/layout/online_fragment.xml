@@ -17,13 +17,25 @@
        	 android:layout_gravity="center_horizontal"
        	 android:src="@drawable/ic_user_big" />
 
-    	<Button
-    	    android:id="@+id/button5"
+    	<ImageButton
+    	    android:id="@+id/logoutButton"
     	    android:layout_width="wrap_content"
+    	    android:minWidth="60dp"
     	    android:layout_height="wrap_content"
     	    android:layout_alignParentRight="true"
     	    android:layout_alignParentTop="true"
-    	    android:text="Log Out" />
+    	    android:src="@drawable/ic_logout"
+    	    android:paddingLeft="25dp"
+    	    android:paddingRight="25dp"
+    	    android:background="#333333"/>
+
+    	<ProgressBar
+    	    android:id="@+id/logoutProgressBar"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentLeft="true"
+    	    android:layout_alignParentTop="true"
+    	    android:visibility="invisible" />
     
     </RelativeLayout>
 
@@ -81,13 +93,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/button4"
+        <ImageButton
+            android:id="@+id/addFundsButtonOnline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Add Funds" />
+            android:background="#333333"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:src="@drawable/ic_add_funds"/>
         
         <TextView
             android:id="@+id/textView1"

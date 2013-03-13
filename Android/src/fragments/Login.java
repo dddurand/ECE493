@@ -2,12 +2,15 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
+import networking.NLogin;
+
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import Networking.NLogin;
 import android.app.Fragment;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
@@ -72,22 +76,25 @@ public class Login extends Fragment implements OnClickListener {
 	}
 	
 	//This method will be executed on the onPostExecute method from the AsyncTask
-	//Checks the response sent by the web service.
+	//Checks the response sent by the web service. If null then something was wrong with
+	//the connection.
 	public void onPostLoginRequest(JSONObject response){
 		try {
 			if (response!=null)
 			{
-				String responseSuccess;
-				responseSuccess = (String) response.get("Success");
+				String responseSuccess = (String) response.get("Success");
 
 				if (responseSuccess.compareTo("TRUE")==0) 
 				{
 					//Clear Label
 					this.showLoginError("");
-					//Modify Username in Main Screen Activity
+					//Modify Username and AuthTokebn in Main Screen Activity
+					String authToken = (String) response.get("authentificationToken");
 					MainScreen.setUsername(this.username);
+					MainScreen.setAuthToken(authToken);
 					//Switch fragments
 					((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
+					
 				} else this.showLoginError("Invalid Login Credentials");
 			} 
 			else this.showLoginError("Timeout. Please ensure you're connected to the Internet");
@@ -102,6 +109,27 @@ public class Login extends Fragment implements OnClickListener {
 		//Get label first
 		TextView label = (TextView)view.findViewById(R.id.loginErrorLabel);
 		label.setText(s);
+	}
+	
+	/**
+	 * Checks if device is connected to a network. Returns true or false accordingly. 
+	 * @return
+	 */
+	private boolean isConnectedWifi(){
+		ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+	}
+	
+	/**
+	 * Displays the given parameter in a short toast.
+	 * @param text
+	 */
+	private void showToast(CharSequence text){
+		Context context = getActivity().getApplicationContext();
+		int duration = Toast.LENGTH_SHORT;
+		
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 
 	/**
@@ -118,16 +146,22 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Register button action***/
 		case R.id.registerButton:
-			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
+//			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
+			//TODO Backdoor. REMOVE!!!
+			MainScreen.setUsername("krodas");
+			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
 			break;
 			
 		/*****Login Button******/	
 		case R.id.loginButton:
 			try {
 				//Clear Label
-				this.showLoginError("");
-				//Send request
-				this.sendLoginRequest();
+				showLoginError("");
+				//Check for internet connection
+			    if(isConnectedWifi()) {
+					sendLoginRequest(); 
+			    } else showToast("You're offline. Please connect to a network before logging in.");
+				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {

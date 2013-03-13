@@ -24,7 +24,8 @@ public class MainScreen extends Activity {
 	
 	
 	//This variable will contain the username. This will be set by the login fragment class
-	private static String username;
+	private static String username=null;
+	private static String authToken=null;
 	
 	public static boolean loggedIn = false;
 	
@@ -53,12 +54,23 @@ public class MainScreen extends Activity {
 		return true;
 	}
 	
+	/**
+	 * Getters and Setters
+	 */
 	public static void setUsername(String uname){
 		username=uname;
 	}
 	
 	public static String getUsername(){
 		return username;
+	}
+	
+	public static void setAuthToken(String token){
+		authToken=token;
+	}
+	
+	public static String getAuthToken(){
+		return authToken;
 	}
 	
 	/**

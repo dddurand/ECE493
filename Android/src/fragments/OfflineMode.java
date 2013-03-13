@@ -31,8 +31,8 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		
 		/******************Set listener for buttons******************/
 		ImageButton addFundsButton = (ImageButton) view.findViewById(R.id.addFundsButton);
-		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);
-		Button createTableButton = (Button) view.findViewById(R.id.createTableButton);
+		ImageButton joinTableButton = (ImageButton) view.findViewById(R.id.joinTableButton);
+		ImageButton createTableButton = (ImageButton) view.findViewById(R.id.createTableButton);
 		addFundsButton.setOnClickListener(this);
 		joinTableButton.setOnClickListener(this);
 		createTableButton.setOnClickListener(this);
