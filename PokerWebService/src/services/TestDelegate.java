@@ -1,14 +1,10 @@
 package services;
 
-import java.util.ArrayList;
+import util.PokerHandRanker;
 
 import com.google.gson.Gson;
 
 import dataModels.Account;
-import dataModels.Card;
-import dataModels.Card.Number;
-import dataModels.Card.Suit;
-import dataModels.Optimality;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
 
@@ -34,6 +30,8 @@ public class TestDelegate extends ServiceDelegate{
 	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
 
+		PokerHandRanker.test();
+		
 		return " ";
 	}
 

@@ -952,6 +952,36 @@ public class DatabaseInterface {
 			}
 	}
 	
+	/**
+	 * Adds a entry for game optimality
+	 * 
+	 * @param account
+	 * @return
+	 * @throws DatabaseInterfaceException
+	 */
+	public boolean setGameOptimalityForUser(Account account, Game game, double optimality) throws DatabaseInterfaceException
+	{
+		String insertAccountSQL = "INSERT INTO game_optimality (game_id, account_id, optimality) VALUES (?,?,?);";
+
+		int gameId = getGameDatabaseID(game);
+		
+		try {
+			CallableStatement prepStat = dbConnection.prepareCall(insertAccountSQL);
+
+			prepStat.setInt(1, gameId);
+			prepStat.setInt(2, account.getAccountID());
+			prepStat.setDouble(3, optimality);
+
+			prepStat.execute();
+			prepStat.close();
+		} catch (SQLException e) {
+			throw new DatabaseInterfaceException("Unable to store optimality value for game.", e);
+		}
+
+		return false;
+
+	}
+	
 	public void close()
 	{
 		try {

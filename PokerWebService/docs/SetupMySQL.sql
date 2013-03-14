@@ -23,7 +23,18 @@ CREATE TABLE `game_actions` (
   `pot` int(11) NOT NULL DEFAULT '0',
   `bet` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`accountID`,`gameID`)
-) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=317 DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `game_optimality` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` int(11) NOT NULL,
+  `account_id` int(11) NOT NULL,
+  `optimality` double NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8$$
 
 
 delimiter $$
@@ -34,7 +45,7 @@ CREATE TABLE `games` (
   `date_uploaded` date NOT NULL,
   PRIMARY KEY (`id`,`gameUUID`),
   UNIQUE KEY `gameUUID_UNIQUE` (`gameUUID`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8$$
 
 
 delimiter $$
@@ -46,7 +57,7 @@ CREATE TABLE `misc_data` (
   `value` blob NOT NULL,
   `date_uploaded` date NOT NULL,
   PRIMARY KEY (`id`,`accountID`)
-) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8$$
 
 
 delimiter $$
@@ -70,8 +81,6 @@ CREATE TABLE `user_table` (
   PRIMARY KEY (`id`,`username`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `auth_token_UNIQUE` (`auth_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8$$
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8$$
 
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import util.PokerHandRanker;
+
 import dataModels.GameAction.PokerAction;
 
 public class Optimality {
@@ -201,10 +203,11 @@ public class Optimality {
 	}
 	
 	
-	public double getOptimalRating(ArrayList<GameAction> actions)
+	public double getOptimalRatingForGame(Game game)
 	{
 		ArrayList<Double> opValues = new ArrayList<Double>();
 		
+		ArrayList<GameAction> actions = game.getGameActions();
 		
 		for(GameAction gameAction : actions)
 		{
@@ -223,35 +226,22 @@ public class Optimality {
 			 * players have a general idea when to fold, and this is a much
 			 * less important measure than the other actions.
 			 */
-			if(action != PokerAction.BET || 
-			   action != PokerAction.CALL || 
-			   action != PokerAction.RAISE || 
+			if(action != PokerAction.BET && 
+			   action != PokerAction.CALL && 
+			   action != PokerAction.RAISE && 
 			   action != PokerAction.RERAISE)
 				continue;
 			
 			ArrayList<Card> commCards = gameAction.getCommunityCards();
-			ArrayList<Card> hand = gameAction.getHand();
+			ArrayList<Card> handCards = gameAction.getHand();
 			
-			/*
-			 * Pre-Flop
-			 */
-			if(commCards.size() == 0)
-				opValues.add(preFlopOptimalityRating(hand));
+			int pot = gameAction.getPot();
+			int bet = gameAction.getBet();
 			
-			/*
-			 * Post Flop
-			 */
-			//deal with 2 + 3 Looking at 4th (flop)
-			
-			/*
-			 * Post Turn
-			 */
-			//deal with 2 + 4 Looking at 5th
-			
-			/*
-			 * Post River
-			 */
-			//deal with 7 Looking at Everything.
+			if(this.isPositiveEV(pot, bet, handCards, commCards))
+				opValues.add(new Double(1));
+			else
+				opValues.add(new Double(0));
 			
 		}
 		
@@ -311,6 +301,173 @@ public class Optimality {
 		
 		return value;
 		
+	}
+	
+	public static double getNextCardFutureRankings(int pot, int bet, int comm[], int hand[])
+	{
+		int commLength = comm.length;
+		int totalCards = commLength + hand.length;
+		double ev = 0;
+		int l = 0;
+		
+		double leftOverCards = 52-totalCards;
+				//card 1
+				//each suit
+				for(int c1S = 0; c1S < 4; c1S++)
+				{
+					//each number
+					for(int c1N = 0; c1N < 13;c1N++)
+					{
+						int card1 = c1N * 4 + c1S + 1;
+						
+						boolean skip = false;
+
+						for(int commCard : comm)
+							if(commCard == card1)
+								{skip = true;break;}
+						if(!skip)
+						for(int handCard : hand)
+							if(handCard == card1)
+								{skip = true;break;}
+						
+						if(skip) continue;
+						
+						
+						
+						int[] newComm = new int[commLength+1];
+						
+						for(int i = 0; i < commLength; i++)
+							newComm[i] = comm[i];
+
+						newComm[commLength] = card1;
+								
+							ev+= (1/(leftOverCards))*getHandEV(pot, bet, newComm, hand);
+							l++;
+					}
+					
+				}
+				
+				return ev;
+	}
+	
+	public boolean isPositiveEV(int pot, int bet, ArrayList<Card> handCards, ArrayList<Card> commCards)
+	{
+		
+		double ev = getTotalEv(pot, bet, handCards, commCards);
+		
+		if(ev > 0)
+			return true;
+		else 
+			return false;
+		
+	}
+	
+	public double getTotalEv(int pot, int bet, ArrayList<Card> handCards, ArrayList<Card> commCards)
+	{
+		
+		int hand[] = PokerHandRanker.convertHand(handCards);
+		int comm[] = PokerHandRanker.convertHand(commCards);
+		
+		int totalCards = commCards.size() + handCards.size();
+
+		/*
+		 * Pre-Flop
+		 */
+		if(totalCards == 2)
+			return preFlopOptimalityRating(handCards);
+		
+		/*
+		 * Post Flop or Post Turn
+		 *
+		 * deal with 2 + 3 Looking at 4th (flop)
+		 * or deal with 2 + 4 Looking at 5th
+		 */
+		if(totalCards==5 || totalCards==6)
+		{
+			return getNextCardFutureRankings(pot, bet, comm, hand);
+		}
+		
+		/*
+		 * Post River
+		 */
+		//deal with 7 Looking at Everything.
+		if(totalCards==7)
+			return getHandEV(pot, bet, comm, hand);
+		
+		
+		return 0;
+		
+	}
+	
+	private static double getHandEV(int pot, int bet, int comm[], int hand[])
+	{
+		int l = 0;
+		double ev = 0;
+		int cardCount = comm.length + hand.length;
+		int[] myHand = new int[cardCount];
+		
+		double leftOverCards = 52-cardCount;
+		
+		System.arraycopy(comm, 0, myHand, 0, comm.length);
+		System.arraycopy(hand, 0, myHand, comm.length, hand.length);
+		
+		int myHandRating = PokerHandRanker.lookupHand(myHand);
+		
+		//card 1
+		//each suit
+		for(int c1S = 0; c1S < 4; c1S++)
+		{
+			//each number
+			for(int c1N = 0; c1N<13;c1N++)
+			{
+				//card 2
+				//each suit
+				for(int c2S = 0; c2S < 4; c2S++)
+				{
+					//each number
+					for(int c2N = 0; c2N<13;c2N++)
+					{
+						int card1 = c1N * 4 + c1S + 1;
+						int card2 = c2N * 4 + c2S + 1;
+						
+						boolean skip = false;
+						if(card1==card2)
+							skip=true;
+						
+						if(!skip)
+						for(int commCard : comm)
+							if(commCard == card1 || commCard == card2)
+								{skip = true;break;}
+						if(!skip)
+						for(int handCard : hand)
+							if(handCard == card1 || handCard == card2)
+								{skip = true;break;}
+						
+						
+						if(skip) continue;
+						
+						int[] newHand = {card1, card2};
+						int[] oppHand = new int[cardCount];
+						System.arraycopy(comm, 0, oppHand, 0, comm.length);
+						System.arraycopy(newHand, 0, oppHand, comm.length, newHand.length);
+						
+						int oppHandRating = PokerHandRanker.lookupHand(oppHand);
+						
+						//System.out.println(l++);
+						
+						if(myHandRating > oppHandRating)
+							ev+= (1/leftOverCards)*(1/(leftOverCards-1))* pot;
+						else
+							ev+= (1/leftOverCards)*(1/(leftOverCards-1))* -bet;
+						
+					}
+				}
+				
+				
+			}
+		}
+			
+			return ev;
 	}
 	
 	
