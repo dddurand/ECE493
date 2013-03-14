@@ -8,9 +8,11 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +30,17 @@ import com.example.bluetoothpoker.R;
 public class Login extends Fragment implements OnClickListener {
 	
 	private View view;
-	private String username;
+	
+	private String username=null;
+	private String password=null;
+	private boolean isLoggedIn=false;
+	
+	@SuppressLint("ValidFragment")
+	public Login(String username, String password, boolean loggedIn){
+		this.username=username;
+		this.password=password;
+		this.isLoggedIn=loggedIn;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,21 +58,16 @@ public class Login extends Fragment implements OnClickListener {
 		offlineModeButton.setOnClickListener(this);
 		onlineModeButton.setOnClickListener(this);
 		
+		//Perform login button action if user is logged in
+		if (this.isLoggedIn)
+		{
+			this.onClick(onlineModeButton);
+		}
+		
 		return view;
 	}
 	
-	//When imagebutton is pressed
-	public void loginButtonAction(){
-		
-	}
-	
-	private void sendLoginRequest() throws JSONException, InterruptedException, ExecutionException, ConnectTimeoutException {
-		//Get components from view
-		EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
-		EditText passwordField = (EditText) this.view.findViewById(R.id.passwordField);
-		//Get username and password (save username only)
-		String userString=userField.getText().toString();this.username=userString;
-		String passwordString=passwordField.getText().toString();
+	private void sendLoginRequest(String userString, String passwordString) throws JSONException, InterruptedException, ExecutionException, ConnectTimeoutException {
 		
 		//Create JSON Object
 		JSONObject obj = new JSONObject();
@@ -89,7 +96,7 @@ public class Login extends Fragment implements OnClickListener {
 					//Clear Label
 					this.showLoginError("");
 					//Modify Username and AuthTokebn in Main Screen Activity
-					String authToken = (String) response.get("authentificationToken");
+					String authToken = (String) response.get("AuthenticationToken");
 					MainScreen.setUsername(this.username);
 					MainScreen.setAuthToken(authToken);
 					//Switch fragments
@@ -115,9 +122,10 @@ public class Login extends Fragment implements OnClickListener {
 	 * Checks if device is connected to a network. Returns true or false accordingly. 
 	 * @return
 	 */
-	private boolean isConnectedWifi(){
+	private boolean isConnectedInternet(){
 		ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+		NetworkInfo info = cm.getActiveNetworkInfo();
+		return (info!=null && info.isConnected());
 	}
 	
 	/**
@@ -131,7 +139,7 @@ public class Login extends Fragment implements OnClickListener {
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
 	}
-
+	
 	/**
 	 * Methods for onClick listener.
 	 */
@@ -146,10 +154,7 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Register button action***/
 		case R.id.registerButton:
-//			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
-			//TODO Backdoor. REMOVE!!!
-			MainScreen.setUsername("krodas");
-			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
+			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
 			break;
 			
 		/*****Login Button******/	
@@ -157,9 +162,28 @@ public class Login extends Fragment implements OnClickListener {
 			try {
 				//Clear Label
 				showLoginError("");
+				String userString, passwordString;
+				
+				//Already logged in. Get username and password from class vars.
+				if (this.isLoggedIn)
+				{
+					userString = this.username;
+					passwordString = this.password;
+				}
+				//Not logged in. Get username and password from Views
+					else 
+					{
+						//Get components from view only if user is not previously logged in
+						EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
+						EditText passwordField = (EditText) this.view.findViewById(R.id.passwordField);
+						//Get username and password (save username only)
+						userString=userField.getText().toString();this.username=userString;
+						passwordString=passwordField.getText().toString();
+					}
+				
 				//Check for internet connection
-			    if(isConnectedWifi()) {
-					sendLoginRequest(); 
+			    if(isConnectedInternet()) {
+					sendLoginRequest(userString,passwordString); 
 			    } else showToast("You're offline. Please connect to a network before logging in.");
 				
 			} catch (JSONException e) {

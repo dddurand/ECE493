@@ -22,10 +22,10 @@ public class MainScreen extends Activity {
 	public final static int ONLINE_MODE = 6;
 	
 	
-	//This variable will contain the username. This will be set by the login fragment class
+	//This variable will contain the username. This will be set by the login or register fragment class
 	private static String username=null;
+	private static String password=null;
 	private static String authToken=null;
-	
 	public static boolean loggedIn = false;
 	
 	@Override
@@ -71,7 +71,12 @@ public class MainScreen extends Activity {
 	public static String getAuthToken(){
 		return authToken;
 	}
-	
+	public static void setPassword(String psw){
+		password=psw;
+	}
+	public static void setLoggedIn(boolean li){
+		loggedIn=li;
+	}
 	/**
 	 * Method for changing the fragment in the main screen. Fragment changed to specified code.
 	 * @param screen
@@ -83,7 +88,7 @@ public class MainScreen extends Activity {
 		switch (screen) {
 		
 		case MainScreen.LOGIN_SCREEN:
-			newFragment = new Login();
+			newFragment = new Login(username,password,loggedIn);
 			break;
 		
 		case MainScreen.OFFLINE_SCREEN:
@@ -106,7 +111,7 @@ public class MainScreen extends Activity {
 			newFragment = new OnlineMode();
 			break;
 			
-		default: newFragment = new Login(); 
+		default: newFragment = new Login(null,null,false); 
 		
 		}
 		//Change the fragment

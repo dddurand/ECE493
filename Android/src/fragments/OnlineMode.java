@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class OnlineMode extends Fragment implements OnClickListener {
 	private View view;
 	
 	private final String timeoutMessage = "Operation Timed Out. Please try again.";
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +62,7 @@ public class OnlineMode extends Fragment implements OnClickListener {
 		/**Logout Button**/
 		case R.id.logoutButton:
 			try {
-				if (isConnectedWifi()) sendLogoutRequest();
+				if (isConnectedInternet()) sendLogoutRequest();
 				else showToast("Please connect to the Internet before logging out.");
 			} catch (ConnectTimeoutException e) {
 				showToast("Timeout. Please ensure you're connected to the Internet");
@@ -88,9 +90,12 @@ public class OnlineMode extends Fragment implements OnClickListener {
 	 * Checks if device is connected to a network. Returns true or false accordingly. 
 	 * @return
 	 */
-	private boolean isConnectedWifi(){
+	private boolean isConnectedInternet(){
 		ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+//		boolean result = (cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) || (cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected());
+//		return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+		NetworkInfo info = cm.getActiveNetworkInfo();
+		return (info!=null && info.isConnected());
 	}
 	
 	/**
@@ -104,7 +109,7 @@ public class OnlineMode extends Fragment implements OnClickListener {
 		//Create JSON Object
 		JSONObject obj = new JSONObject();
 		obj.put("username", MainScreen.getUsername());
-		obj.put("authentificationToken", MainScreen.getAuthToken());
+		obj.put("authenticationToken", MainScreen.getAuthToken());
 		
 		//Get ProgressBar
 		ProgressBar pb = (ProgressBar)this.view.findViewById(R.id.logoutProgressBar);
@@ -128,6 +133,9 @@ public class OnlineMode extends Fragment implements OnClickListener {
 				if (responseSuccess.compareTo("TRUE")==0) 
 				{
 					//Switch fragments
+					showToast("You have successfully logged out");
+					//Tell mainscreen that user is no longer logged in
+					MainScreen.setLoggedIn(false);
 					((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
 				} else showToast("Something went wrong");
 			} 

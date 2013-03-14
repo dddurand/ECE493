@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
@@ -93,16 +94,23 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		String passwordStr = passwordField.getText().toString();
 		
 		try {
-			//Clean Label
-			this.updateResponseLabel(null);
 			//Perform Request
-			if (this.sendRegisterRequest(usernameStr,passwordStr))
-			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
-			else this.updateResponseLabel("Username "+usernameStr+" already taken.");
+			if (sendRegisterRequest(usernameStr,passwordStr)){
+				//Successful if here
+				MainScreen.setUsername(usernameStr);
+				MainScreen.setPassword(passwordStr);
+				MainScreen.setLoggedIn(true);
+				//Show toast
+				showToast("New account created successfully");
+				//Change screens
+				((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
+			}
+			
+			else showToast("Username "+usernameStr+" already taken.");
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		} catch (ConnectTimeoutException e) {
-			this.updateResponseLabel("Timeout. Please ensure you're connected to the Internet");
+			showToast("Timeout. Please ensure you're connected to the Internet");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -110,11 +118,12 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		}
 	}
 	
-	private void updateResponseLabel(String message){
-		//get the label view
-		TextView label = (TextView)this.view.findViewById(R.id.registerResponseLabel);
-		if (message!=null) label.setText(message);
-		else label.setText("");
+	private void showToast(CharSequence text){
+		Context context = getActivity().getApplicationContext();
+		int duration = Toast.LENGTH_SHORT;
+		
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 
 }
