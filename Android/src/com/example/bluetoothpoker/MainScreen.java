@@ -16,7 +16,6 @@ public class MainScreen extends Activity {
 	
 	public final static int LOGIN_SCREEN = 0;
 	public final static int OFFLINE_SCREEN = 1;
-	//public final static int ONLINE_SCREEN = 2;
 	public final static int REGISTER_SCREEN = 3;
 	public final static int JOIN_TABLE_SCREEN = 4;
 	public final static int CREATE_TABLE_SCREEN = 5;
@@ -104,8 +103,6 @@ public class MainScreen extends Activity {
 			break;
 			
 		case MainScreen.ONLINE_MODE:
-			//newFragment = new OnlineMode(username);
-			System.out.println(username);
 			newFragment = new OnlineMode();
 			break;
 			

@@ -1,6 +1,6 @@
 package fragments;
 
-import Misc.SeekBarWatcher;
+import misc.SeekBarWatcher;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;

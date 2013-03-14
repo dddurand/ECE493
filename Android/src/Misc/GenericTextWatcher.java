@@ -1,4 +1,4 @@
-package Misc;
+package misc;
 
 import android.text.Editable;
 import android.text.TextWatcher;
