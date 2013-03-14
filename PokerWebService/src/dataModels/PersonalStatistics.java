@@ -1,5 +1,6 @@
 package dataModels;
 
+import dataModels.Filter.TimeFrame;
 import dataModels.GameAction.PokerAction;
 import dataModels.RankingStatistics.RankedDataRow;
 import database.DatabaseInterface;
@@ -631,6 +632,32 @@ public class PersonalStatistics {
 	public int getNetMoney() throws DatabaseInterfaceException
 	{
 		return this.getTotalDollarsWon() - this.getTotalDollarsFolded() - this.getTotalDollarsLoss() - getMoneyGenerate();
+	}
+	
+	/**
+	 * A function that causes all the ranking information to be updated for the current used.
+	 * This function is only called after new data has been processed, in order to be more efficient.
+	 * 
+	 * @param account
+	 * @throws DatabaseInterfaceException
+	 */
+	public void updateRankings() throws DatabaseInterfaceException
+	{
+		this.updateNetMoneyRankings();
+		dbInterface.updateRankCacheDate(account);
+	}
+	
+	private void updateNetMoneyRankings() throws DatabaseInterfaceException
+	{
+		Filter original = this.filter;
+		for (TimeFrame timeFrame : TimeFrame.values()) {
+			filter = new Filter(timeFrame.getValue());
+			int netMoney = this.getNetMoney();
+			
+			dbInterface.updateUsersNetMoney(account, netMoney, filter);
+		}
+		
+		this.filter = original;
 	}
 
 	

@@ -48,6 +48,7 @@ public class TestServlet extends ConfigHttpServlet {
 			String data = this.getPostData(request);
 			SecureService service = factory.getService(this);
 			message = service.authSecuredProcess(data);
+			service.close();
 		} catch (DatabaseInterfaceException e) {
 			Gson gson = new Gson();
 			ResponseObject responseMsg = new ResponseObject(false, e.getMessage());

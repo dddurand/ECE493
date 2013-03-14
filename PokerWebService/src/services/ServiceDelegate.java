@@ -94,4 +94,14 @@ public class ServiceDelegate {
 	{
 		return "Not Implemented.";
 	}
+	
+	/**
+	 * Should be called after the service's work has been completed.
+	 * No calls should be made on this object after this has been called.
+	 * 
+	 */
+	public void close()
+	{
+		this.dbInterface.close();
+	}
 }

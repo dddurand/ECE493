@@ -108,6 +108,45 @@ public class DatabaseInterface {
 	}
 	
 	/**
+	 * Retrieves all accounts
+	 * 
+	 * @return Account if found, otherwise null
+	 * @throws DatabaseInterfaceException
+	 */
+	public ArrayList<Account> getAllAccounts() throws DatabaseInterfaceException
+	{
+		final String getAccountSQL = "SELECT * FROM "+ USER_TABLE;
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		
+		CallableStatement prepStat = null;
+		try {
+			prepStat = dbConnection.prepareCall(getAccountSQL);
+			
+			ResultSet resultSet = prepStat.executeQuery();
+			
+			while(resultSet.next())
+            {
+				int id = resultSet.getInt("id");
+            	String user = resultSet.getString("username");
+            	byte[] pass = resultSet.getBytes("password");	
+            	String authToken = resultSet.getString("auth_token");	
+            	
+            	String password = passUtil.getStringFromBytes(pass);
+            	
+            	accounts.add(new Account(id, user, password, authToken, true));
+            }
+			
+			prepStat.close();
+			return accounts;
+			
+			
+		} catch (SQLException e) {
+			throw new DatabaseInterfaceException("Error Retrieving Account From Database", e);
+		}
+		
+	}
+	
+	/**
 	 * Removes an account's Authentication token from the database.
 	 * 
 	 * @param username Account's Username
@@ -662,6 +701,55 @@ public class DatabaseInterface {
 		
 	}
 	
+	public void updateRankCacheDate(Account account) throws DatabaseInterfaceException
+	{
+			final String setAuthSQL = "UPDATE " + USER_TABLE+
+					 					 " SET rank_cache_data = CURDATE()" +	
+										 " WHERE username = ?";
+			
+			try {
+				CallableStatement prepStat = dbConnection.prepareCall(setAuthSQL);
+				
+				prepStat.setString(1, account.getUsername());
+				
+				prepStat.execute();
+				
+				prepStat.close();
+			} catch (SQLException e) {
+				throw new DatabaseInterfaceException("Error Storing Auth Token", e);
+			}
+
+	}
+	
+	public boolean isRankCacheCurrent(Account account) throws DatabaseInterfaceException
+	{
+			boolean isCurrent = false;
+			final String setAuthSQL = "SELECT count(id) FROM " + USER_TABLE+
+					 					 " where rank_cache_data = CURDATE()" +	
+										 " and username = ?";
+			
+			try {
+				CallableStatement prepStat = dbConnection.prepareCall(setAuthSQL);
+				
+				prepStat.setString(1, account.getUsername());
+				
+				ResultSet result = prepStat.executeQuery();
+				
+				if(result.next())
+				{
+					isCurrent = result.getBoolean(1);
+				}
+				
+				prepStat.close();
+	
+			} catch (SQLException e) {
+				throw new DatabaseInterfaceException("Error Storing Auth Token", e);
+			}
+			
+			return isCurrent;
+
+	}
+	
 	/**
 	 * Updates the optimality value. This storage is used to allow for more efficient ranking,
 	 * since we don't need to determine the rank for all players, each time a call is made.
@@ -864,6 +952,12 @@ public class DatabaseInterface {
 			}
 	}
 	
+	public void close()
+	{
+		try {
+			this.dbConnection.close();
+		} catch (SQLException e) { }
+	}
 	
 	/**
 	 * Centralizes all Exceptions caused by DatabaseInterface.

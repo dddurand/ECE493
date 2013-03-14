@@ -124,22 +124,16 @@ public class UploadDelegate extends ServiceDelegate{
 	
 	/**
 	 * A function that causes all the ranking information to be updated for the current used.
-	 * This function is only called after new data has been processed, in order to be more efficient.
+	 * This function is only called after new data has been processed, in order to be more efficient. (or during cron)
 	 * 
 	 * @param account
 	 * @throws DatabaseInterfaceException
 	 */
 	private void updateRankings(Account account) throws DatabaseInterfaceException
 	{
-		
-		for (TimeFrame timeFrame : TimeFrame.values()) {
-			Filter filter = new Filter(timeFrame.getValue());
+			Filter filter = new Filter();
 			PersonalStatistics stats = new PersonalStatistics(account, dbInterface, filter);
-			int netMoney = stats.getNetMoney();
-			
-			dbInterface.updateUsersNetMoney(account, netMoney, filter);
-		}
-		
+			stats.updateRankings();
 		
 	}
 

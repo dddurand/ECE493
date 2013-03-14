@@ -63,9 +63,11 @@ CREATE TABLE `user_table` (
   `net_money_WEEK` int(11) DEFAULT '0',
   `net_money_MONTH` int(11) DEFAULT '0',
   `net_money_YEAR` int(11) DEFAULT '0',
+  `rank_cache_data` date DEFAULT NULL,
   PRIMARY KEY (`id`,`username`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `auth_token_UNIQUE` (`auth_token`)
 ) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8$$
+
 
 

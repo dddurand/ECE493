@@ -54,8 +54,9 @@ public class AuthenticationService {
 	
 	public String testDatabaseConnection()
 	{
-				
-		return DatabaseTest.Test();
+		String result = DatabaseTest.Test();
+		dbInterface.close();
+		return result;
 		
 	}
 

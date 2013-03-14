@@ -23,4 +23,11 @@
     <param-name>debug</param-name>
     <param-value>true</param-value>
   </context-param>
+  
+  <servlet>
+    <servlet-name>CronServlet</servlet-name>
+    <servlet-class>servlets.CronServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+  
 </web-app>

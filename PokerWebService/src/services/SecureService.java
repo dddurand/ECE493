@@ -279,4 +279,14 @@ public class SecureService {
 		return gson.toJson(response, ResponseObject.class);
 	}
 	
+	/**
+	 * Clean up method for the service.
+	 * All actions made on this object after calling this method is undefined.
+	 * 
+	 */
+	public void close()
+	{
+		this.service.close();
+	}
+	
 }
