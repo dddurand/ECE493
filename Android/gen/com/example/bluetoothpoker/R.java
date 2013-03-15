@@ -82,6 +82,7 @@ public final class R {
         public static final int sj=0x7f020044;
         public static final int sk=0x7f020045;
         public static final int sq=0x7f020046;
+        public static final int table_bg=0x7f020047;
     }
     public static final class id {
         public static final int addFundsButton=0x7f07001e;
@@ -91,10 +92,11 @@ public final class R {
         public static final int button2=0x7f070026;
         public static final int button3=0x7f070028;
         public static final int buttons2_helper=0x7f07001f;
+        public static final int buttonsLayout=0x7f07002f;
         public static final int buttons_helper=0x7f070015;
         public static final int cardsHelper=0x7f07002c;
         public static final int checkBox1=0x7f070013;
-        public static final int confirmRegistrationButton=0x7f070038;
+        public static final int confirmRegistrationButton=0x7f07003a;
         public static final int createTableButton=0x7f070006;
         public static final int createTableIcon=0x7f070005;
         public static final int createTableNameField=0x7f070004;
@@ -117,32 +119,33 @@ public final class R {
         public static final int logoutProgressBar=0x7f070023;
         public static final int mainscreenHelper=0x7f070000;
         public static final int mainscreenLeft=0x7f070001;
-        public static final int menu_settings=0x7f07003a;
+        public static final int menu_settings=0x7f07003c;
         public static final int newOfflineUserName=0x7f07001c;
-        public static final int newUsernameField=0x7f070032;
+        public static final int newUsernameField=0x7f070034;
         public static final int offlineButton=0x7f070017;
         public static final int offlineUsernameTextField=0x7f07001d;
         public static final int onlineModePicture=0x7f070021;
         public static final int onlineModeUsername=0x7f070024;
         public static final int onlineWhiteSpace=0x7f070027;
         public static final int onlineWhiteSpace2=0x7f070029;
-        public static final int passwordConfirmField=0x7f070036;
+        public static final int passwordConfirmField=0x7f070038;
         public static final int passwordField=0x7f070012;
-        public static final int passwordIcon=0x7f070035;
+        public static final int passwordIcon=0x7f070037;
         public static final int password_icon=0x7f070011;
-        public static final int player1=0x7f07002f;
+        public static final int player1=0x7f070030;
+        public static final int player2=0x7f070031;
         public static final int registerButton=0x7f070016;
-        public static final int registerResponseLabel=0x7f070039;
-        public static final int register_screen_helper=0x7f070030;
-        public static final int register_screen_helper_3=0x7f070034;
-        public static final int registrationIcon=0x7f070031;
+        public static final int registerResponseLabel=0x7f07003b;
+        public static final int register_screen_helper=0x7f070032;
+        public static final int register_screen_helper_3=0x7f070036;
+        public static final int registrationIcon=0x7f070033;
         public static final int rightCard=0x7f07002e;
         public static final int screen_middle=0x7f07000e;
         public static final int tablesList=0x7f07000d;
         public static final int textView1=0x7f07002b;
         public static final int usernameField=0x7f070010;
-        public static final int validPasswordsIcon=0x7f070037;
-        public static final int validUsernameIcon=0x7f070033;
+        public static final int validPasswordsIcon=0x7f070039;
+        public static final int validUsernameIcon=0x7f070035;
     }
     public static final class layout {
         public static final int activity_main_screen=0x7f030000;

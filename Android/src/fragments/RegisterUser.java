@@ -90,23 +90,30 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		//get text
 		EditText newUsername = (EditText) view.findViewById(R.id.newUsernameField);
 		EditText passwordField = (EditText) view.findViewById(R.id.passwordField);
+		EditText confirmPasswordField = (EditText) view.findViewById(R.id.passwordConfirmField);
+		
 		String usernameStr = newUsername.getText().toString();
 		String passwordStr = passwordField.getText().toString();
+		String passwordConfirmStr = confirmPasswordField.getText().toString();
 		
 		try {
-			//Perform Request
-			if (sendRegisterRequest(usernameStr,passwordStr)){
-				//Successful if here
-				MainScreen.setUsername(usernameStr);
-				MainScreen.setPassword(passwordStr);
-				MainScreen.setLoggedIn(true);
-				//Show toast
-				showToast("New account created successfully");
-				//Change screens
-				((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
-			}
+			//Check passwords first
+			if (passwordStr.compareTo(passwordConfirmStr)!=0) showToast("Password mismatch. Please ensure both passwords are the same");
+			else
+				//Perform Request
+				if (sendRegisterRequest(usernameStr,passwordStr)){
+					//Successful if here
+					MainScreen.setUsername(usernameStr);
+					MainScreen.setPassword(passwordStr);
+					MainScreen.setLoggedIn(true);
+					//Show toast
+					showToast("New account created successfully");
+					//Change screens
+					((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
+				}
+				//Not a valid request
+				else showToast("Username '"+usernameStr+"' already taken.");
 			
-			else showToast("Username "+usernameStr+" already taken.");
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		} catch (ConnectTimeoutException e) {

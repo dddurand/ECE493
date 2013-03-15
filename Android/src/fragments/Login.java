@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 public class Login extends Fragment implements OnClickListener {
@@ -149,7 +151,11 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Offline mode button action***/
 		case R.id.offlineButton:
-			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
+			//TODO Back door to playing area, remove!!
+			//((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
+			Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
+			//Add stuff here?
+			startActivity(i);
 			break;
 		
 		/*****Register button action***/
