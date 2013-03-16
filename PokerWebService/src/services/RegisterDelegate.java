@@ -1,5 +1,7 @@
 package services;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 
 import dataModels.Account;
@@ -34,24 +36,24 @@ public class RegisterDelegate extends ServiceDelegate{
 			
 			if(account.getUsername() == null || account.getUsername().isEmpty())
 			{
-				ResponseObject response = new ResponseObject(false, "Invalid Username Provided");
+				ResponseObject response = new ResponseObject(false, "Invalid Username Provided", Codes.INVALID_USERNAME);
 				return gson.toJson(response, ResponseObject.class);
 			}
 			
 			if(account.getPassword() == null || account.getPassword().isEmpty())
 			{
-				ResponseObject response = new ResponseObject(false, "Invalid Password Provided");
+				ResponseObject response = new ResponseObject(false, "Invalid Password Provided", Codes.INVALID_PASSWORD);
 				return gson.toJson(response, ResponseObject.class);
 			}
 			
 			if(dbInterface.isDuplicateUsername(account.getUsername()))
 			{
-				ResponseObject response = new ResponseObject(false, "Username already in use.");
+				ResponseObject response = new ResponseObject(false, "Username already in use.", Codes.DUPLICATE_USERNAME);
 				return gson.toJson(response, ResponseObject.class);
 			}
 			
 			dbInterface.addAccount(account);
-			ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS);
+			ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS, Codes.SUCCESS);
 			return gson.toJson(response, ResponseObject.class);
 		
 	}

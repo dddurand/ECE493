@@ -95,7 +95,6 @@ public final class R {
         public static final int buttonsLayout=0x7f07002f;
         public static final int buttons_helper=0x7f070015;
         public static final int cardsHelper=0x7f07002c;
-        public static final int checkBox1=0x7f070013;
         public static final int confirmRegistrationButton=0x7f07003a;
         public static final int createTableButton=0x7f070006;
         public static final int createTableIcon=0x7f070005;
@@ -139,6 +138,7 @@ public final class R {
         public static final int register_screen_helper=0x7f070032;
         public static final int register_screen_helper_3=0x7f070036;
         public static final int registrationIcon=0x7f070033;
+        public static final int remember_me_checkbox=0x7f070013;
         public static final int rightCard=0x7f07002e;
         public static final int screen_middle=0x7f07000e;
         public static final int tablesList=0x7f07000d;
@@ -178,6 +178,12 @@ public final class R {
         public static final int passwordConfirmFieldString=0x7f040009;
         public static final int passwordFieldString=0x7f040008;
         public static final int remember_me_str=0x7f040004;
+        public static final int server_duplicate_user=0x7f040011;
+        public static final int server_invalid_login=0x7f040010;
+        public static final int server_invalid_password=0x7f040013;
+        public static final int server_invalid_username=0x7f040012;
+        public static final int server_unknown=0x7f040015;
+        public static final int server_unregistered=0x7f040014;
         public static final int username=0x7f040003;
     }
     public static final class style {

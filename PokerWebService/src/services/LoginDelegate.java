@@ -2,6 +2,8 @@ package services;
 
 import java.util.UUID;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 
 import dataModels.Account;
@@ -37,7 +39,7 @@ public class LoginDelegate extends ServiceDelegate{
 		
 		String authToken = generateAuthenticationToken(account);
 		
-		ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS);
+		ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS, Codes.SUCCESS);
 		response.setAuthenticationToken(authToken);
 		return gson.toJson(response, ResponseObject.class);
 	}

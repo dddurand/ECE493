@@ -17,5 +17,13 @@
     <string name="initialFundsAmount">500</string>
     <string name="createTableHint">Table name</string>
     <string name="initializing">Initializing . . .</string>
-
+	
+	<string name="server_invalid_login">Invalid Login Credentials</string>
+    <string name="server_duplicate_user">Username already in use</string>
+    <string name="server_invalid_username">Invalid username</string>
+    <string name="server_invalid_password">Invalid password</string>
+    <string name="server_unregistered">Username not registered</string>
+    <string name="server_unknown">Unable to contact server.</string>
+    
+    
 </resources>

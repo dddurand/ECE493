@@ -1,5 +1,7 @@
 package services;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 
 import dataModels.Account;
@@ -33,7 +35,7 @@ public class LogoutDelegate extends ServiceDelegate{
 	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
 		 dbInterface.invalidateAuth(postAccount.getUsername());
-			ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS);
+			ResponseObject response = new ResponseObject(true, ResponseObject.SUCCESS, Codes.SUCCESS);
 			return gson.toJson(response, ResponseObject.class);
 	}
 

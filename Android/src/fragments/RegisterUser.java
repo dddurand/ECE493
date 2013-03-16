@@ -19,14 +19,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
+import dataModels.Account;
+
 public class RegisterUser extends Fragment implements OnClickListener {
 	
 	private View view;
-
+	private PokerApplication application;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -43,6 +47,8 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		passwordField.addTextChangedListener(new GenericTextWatcher(R.id.passwordField,view));
 		EditText passwordConfirmField = (EditText) view.findViewById(R.id.passwordConfirmField);
 		passwordConfirmField.addTextChangedListener(new GenericTextWatcher(R.id.passwordConfirmField,view));
+		
+		application = (PokerApplication) this.getActivity().getApplication();
 		
 		return view;
 	}
@@ -74,7 +80,8 @@ public class RegisterUser extends Fragment implements OnClickListener {
 			
 			if (responseSuccess.compareTo("TRUE")==0) {
 				validResponse=true;
-				MainScreen.setUsername(username);
+				Account account = new Account(username, null, -1);
+				application.setAccount(account);
 			}
 				
 		} else throw new ConnectTimeoutException();
@@ -103,9 +110,12 @@ public class RegisterUser extends Fragment implements OnClickListener {
 				//Perform Request
 				if (sendRegisterRequest(usernameStr,passwordStr)){
 					//Successful if here
-					MainScreen.setUsername(usernameStr);
-					MainScreen.setPassword(passwordStr);
-					MainScreen.setLoggedIn(true);
+					Account account = new Account(usernameStr, null, -1);
+
+					application.setAccount(account);
+					account.setPassword(passwordStr);
+					
+					application.setLoggedIn(true);
 					//Show toast
 					showToast("New account created successfully");
 					//Change screens

@@ -52,7 +52,7 @@ public class RegisterServlet extends ConfigHttpServlet {
 			service.close();
 		} catch (DatabaseInterfaceException e) {
 			Gson gson = new Gson();
-			ResponseObject responseMsg = new ResponseObject(false, e.getMessage());
+			ResponseObject responseMsg = new ResponseObject(false, e.getMessage(), e.getCode());
 			message = gson.toJson(responseMsg, ResponseObject.class);
 		}
 		

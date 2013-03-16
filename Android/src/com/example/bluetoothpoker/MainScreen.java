@@ -1,6 +1,7 @@
 package com.example.bluetoothpoker;
 
 import database.DatabaseDataSource;
+import Networking.ServerCodes;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,22 +26,8 @@ public class MainScreen extends Activity {
 	public final static int CREATE_TABLE_SCREEN = 5;
 	public final static int ONLINE_MODE = 6;
 	
-	/**@TODO
-	 * I migrated these variables to PokerApplication so they can be retrieved in all activities,
-	 * without using static.
-	 * 
-	 * I'm not sure if you want to change them - if its complex then we can do it this way.
-	 * I'll leave it up to you Kenneth.
-	 * (I needed to do it for the datasource and didn't see these before I added them - 
-	 * if it's too difficult then just delete them from application.PokerApplication)
-	 * 
-	 * Dustin
-	 */
-	//This variable will contain the username. This will be set by the login or register fragment class
-	private static String username=null;
-	private static String password=null;
-	private static String authToken=null;
-	public static boolean loggedIn = false;
+	private ServerCodes serverCodes;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +43,7 @@ public class MainScreen extends Activity {
 				return;
 			}
 			
+			this.serverCodes = new ServerCodes(this);
 			this.switchFragment(MainScreen.LOGIN_SCREEN);
 			initializeDataSource();
 			
@@ -86,31 +74,7 @@ public class MainScreen extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main_screen, menu);
 		return true;
 	}
-	
-	/**
-	 * Getters and Setters
-	 */
-	public static void setUsername(String uname){
-		username=uname;
-	}
-	
-	public static String getUsername(){
-		return username;
-	}
-	
-	public static void setAuthToken(String token){
-		authToken=token;
-	}
-	
-	public static String getAuthToken(){
-		return authToken;
-	}
-	public static void setPassword(String psw){
-		password=psw;
-	}
-	public static void setLoggedIn(boolean li){
-		loggedIn=li;
-	}
+
 	/**
 	 * Method for changing the fragment in the main screen. Fragment changed to specified code.
 	 * @param screen
@@ -122,7 +86,7 @@ public class MainScreen extends Activity {
 		switch (screen) {
 		
 		case MainScreen.LOGIN_SCREEN:
-			newFragment = new Login(username,password,loggedIn);
+			newFragment = new Login(serverCodes);
 			break;
 		
 		case MainScreen.OFFLINE_SCREEN:
@@ -145,7 +109,7 @@ public class MainScreen extends Activity {
 			newFragment = new OnlineMode();
 			break;
 			
-		default: newFragment = new Login(null,null,false); 
+		default: newFragment = new Login(serverCodes); 
 		
 		}
 		//Change the fragment

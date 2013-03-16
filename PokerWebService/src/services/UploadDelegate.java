@@ -2,6 +2,8 @@ package services;
 
 import java.util.ArrayList;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 
 import dataModels.Account;
@@ -60,7 +62,7 @@ public class UploadDelegate extends ServiceDelegate{
 		if(gameUploadResults.size() > 0 || miscUploadResults.size() > 0)
 			success = true;
 		
-		ResponseObject obj = new ResponseObject(success, "Upload Results");
+		ResponseObject obj = new ResponseObject(success, "Upload Results", Codes.SUCCESS);
 		obj.setUploadGameSuccess(gameUploadResults);
 		obj.setUploadMiscSuccess(miscUploadResults);
 

@@ -1,5 +1,7 @@
 package services;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
@@ -79,13 +81,13 @@ public class SecureService {
 				//empty username
 				if(account == null || account.getUsername()==null || account.getUsername().isEmpty())
 				{
-					return generateError("Invalid username");
+					return generateError("Invalid username", Codes.INVALID_USERNAME);
 				}
 				
 				//empty auth token
 				if(account.getAuthenticationToken()==null || account.getAuthenticationToken().isEmpty())
 				{
-					return generateError("Invalid auth token");
+					return generateError("Invalid auth token", Codes.INVALID_AUTH);
 				}
 				
 				
@@ -115,7 +117,7 @@ public class SecureService {
 				
 				
 			} catch (DatabaseInterfaceException e) {
-				return generateError(e.getMessage());
+				return generateError(e.getMessage(), e.getCode());
 			}
 			catch (JsonSyntaxException e)
 			{
@@ -151,13 +153,13 @@ public class SecureService {
 			//empty username
 			if(account == null || account.getUsername()==null || account.getUsername().isEmpty())
 			{
-				return generateError("Invalid username");
+				return generateError("Invalid username", Codes.INVALID_USERNAME);
 			}
 			
 			//empty password
 			if(account.getPassword()==null || account.getPassword().isEmpty())
 			{
-				return generateError("Invalid password");
+				return generateError("Invalid password", Codes.INVALID_PASSWORD);
 			}
 			
 			//get account from database
@@ -166,7 +168,7 @@ public class SecureService {
 			//No Valid Account
 			if(accountFromDB == null)
 			{
-				ResponseObject response = new ResponseObject(false, "User Not Found");
+				ResponseObject response = new ResponseObject(false, "User Not Found", Codes.NO_ACCOUNT);
 				return gson.toJson(response, ResponseObject.class);
 			} 
 			//Valid account
@@ -186,7 +188,7 @@ public class SecureService {
 			
 			
 		} catch (DatabaseInterfaceException e) {
-			return generateError(e.getMessage());
+			return generateError(e.getMessage(), e.getCode());
 		}
 		catch (JsonSyntaxException e)
 		{
@@ -213,13 +215,13 @@ public class SecureService {
 			//Load account from post data
 			Account account = gson.fromJson(postData, Account.class);
 			
-			if(account == null) return generateError("Invalid Username Provided");
+			if(account == null) return generateError("Invalid Username Provided", Codes.INVALID_USERNAME);
 			
 			
 			return this.service.unsecureProcess(account, postData);
 			
 		} catch (DatabaseInterfaceException e) {
-			return generateError(e.getMessage());
+			return generateError(e.getMessage(), e.getCode());
 		}
 		catch (JsonSyntaxException e)
 		{
@@ -237,7 +239,7 @@ public class SecureService {
 	 */
 	private String generateUsernameNotFoundError()
 	{
-		return generateError("The provided username is not registered.");
+		return generateError("The provided username is not registered.", Codes.NO_ACCOUNT);
 	}
 	
 	/**
@@ -246,7 +248,7 @@ public class SecureService {
 	 */
 	private String generateInvalidLoginError()
 	{
-		return generateError("Invalid Login.");
+		return generateError("Invalid Login.", Codes.INVALID_LOGIN);
 	}
 	
 	/**
@@ -255,7 +257,7 @@ public class SecureService {
 	 */
 	private String generateInvalidAuthError()
 	{
-		return generateError("The provided authtoken and username is invalid.");
+		return generateError("The provided authtoken and username is invalid.", Codes.NOT_AUTHED);
 	}
 	
 	/**
@@ -264,7 +266,7 @@ public class SecureService {
 	 */
 	protected String generateInvalidDataError()
 	{
-		return generateError("Invalid post data.");
+		return generateError("Invalid post data.", Codes.INVALID_DATA);
 	}
 	
 	/**
@@ -273,9 +275,9 @@ public class SecureService {
 	 * @param message
 	 * @return
 	 */
-	protected String generateError(String message)
+	protected String generateError(String message, int code)
 	{
-		ResponseObject response = new ResponseObject(false, message);
+		ResponseObject response = new ResponseObject(false, message, code);
 		return gson.toJson(response, ResponseObject.class);
 	}
 	

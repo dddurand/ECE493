@@ -21,16 +21,19 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
+import dataModels.Account;
+
 public class OnlineMode extends Fragment implements OnClickListener {
 	
 	private View view;
-	
 	private final String timeoutMessage = "Operation Timed Out. Please try again.";
-	
+	private PokerApplication application;
+	private Account account;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,9 +42,12 @@ public class OnlineMode extends Fragment implements OnClickListener {
 		//Load XML Layout into global variable
 		this.view = inflater.inflate(R.layout.online_fragment,container, false);
 		
+		application = (PokerApplication) this.getActivity().getApplication();
+		account = application.getAccount();
+		
 		/**Change User Label**/
 		TextView usernameLabel = (TextView)view.findViewById(R.id.onlineModeUsername);
-		usernameLabel.setText(MainScreen.getUsername());
+		usernameLabel.setText(account.getUsername());
 		
 		/******************Set listener for buttons******************/
 		ImageButton logoutButton = (ImageButton) view.findViewById(R.id.logoutButton);
@@ -108,8 +114,8 @@ public class OnlineMode extends Fragment implements OnClickListener {
 	private void sendLogoutRequest() throws JSONException, InterruptedException, ExecutionException, ConnectTimeoutException {
 		//Create JSON Object
 		JSONObject obj = new JSONObject();
-		obj.put("username", MainScreen.getUsername());
-		obj.put("authenticationToken", MainScreen.getAuthToken());
+		obj.put("username", account.getUsername());
+		obj.put("authenticationToken", account.getAuthenticationToken());
 		
 		//Get ProgressBar
 		ProgressBar pb = (ProgressBar)this.view.findViewById(R.id.logoutProgressBar);
@@ -135,7 +141,7 @@ public class OnlineMode extends Fragment implements OnClickListener {
 					//Switch fragments
 					showToast("You have successfully logged out");
 					//Tell mainscreen that user is no longer logged in
-					MainScreen.setLoggedIn(false);
+					application.setLoggedIn(false);
 					((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
 				} else showToast("Something went wrong");
 			} 

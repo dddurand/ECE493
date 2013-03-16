@@ -1,5 +1,7 @@
 package services;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 
 import dataModels.Account;
@@ -36,7 +38,7 @@ public class CommunityStatisticsDelegate extends ServiceDelegate {
 		CommunityStatistics stat = new CommunityStatistics(dbInterface, filter);
 		stat.generateAllStatistics();
 
-		ResponseObject response = new ResponseObject(true, "SUCCESS");
+		ResponseObject response = new ResponseObject(true, "SUCCESS", Codes.SUCCESS);
 		response.setCommunityStatistics(stat);
 
 		return gson.toJson(response, ResponseObject.class);

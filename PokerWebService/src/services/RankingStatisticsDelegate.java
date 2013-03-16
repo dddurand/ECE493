@@ -2,6 +2,8 @@ package services;
 
 import java.util.ArrayList;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 
 import dataModels.Account;
@@ -39,7 +41,7 @@ public class RankingStatisticsDelegate extends ServiceDelegate{
 		
 		RankingStatistics statistics = new RankingStatistics(rankData, myRankData);
 		
-		ResponseObject responseObject = new ResponseObject(true, "Ranking Results");
+		ResponseObject responseObject = new ResponseObject(true, "Ranking Results", Codes.SUCCESS);
 		responseObject.setRankingStatistics(statistics);
 		
 		String result = gson.toJson(responseObject);

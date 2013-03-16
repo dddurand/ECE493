@@ -12,6 +12,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import util.Codes;
 import util.PasswordUtil;
 import util.ServletConfiguration;
 import util.ServletConfiguration.Database;
@@ -60,7 +61,7 @@ public class DatabaseInterface {
 		{
 			throw new DatabaseInterfaceException(e);
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error retrieving connection to database", e);
+			throw new DatabaseInterfaceException("Error retrieving connection to database", e, Codes.DATABASE);
 		}
 	}
 	
@@ -102,7 +103,7 @@ public class DatabaseInterface {
 			
 			
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Retrieving Account From Database", e);
+			throw new DatabaseInterfaceException("Error Retrieving Account From Database", e, Codes.DATABASE);
 		}
 		
 	}
@@ -141,7 +142,7 @@ public class DatabaseInterface {
 			
 			
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Retrieving Account From Database", e);
+			throw new DatabaseInterfaceException("Error Retrieving Accounts From Database", e, Codes.DATABASE);
 		}
 		
 	}
@@ -168,7 +169,7 @@ public class DatabaseInterface {
 			
 			prepStat.close();
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Storing Auth Token", e);
+			throw new DatabaseInterfaceException("Error Storing Auth Token", e, Codes.DATABASE);
 		}
 
 	}
@@ -196,7 +197,7 @@ public class DatabaseInterface {
 			
 			prepStat.close();
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Storing Auth Token", e);
+			throw new DatabaseInterfaceException("Error Storing Auth Token", e, Codes.DATABASE);
 		}
 
 	}
@@ -222,7 +223,7 @@ public class DatabaseInterface {
 			prepStat.execute();
 			prepStat.close();
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Unable to create account.", e);
+			throw new DatabaseInterfaceException("Unable to create account.", e, Codes.DATABASE);
 		}
 
 		return false;
@@ -272,7 +273,7 @@ public class DatabaseInterface {
         	dataSource = (DataSource)envContext.lookup("jdbc/DatabaseHome");
         
         else
-        	throw new DatabaseInterfaceException("Invalid Database Provided");
+        	throw new DatabaseInterfaceException("Invalid Database Provided",Codes.DATABASE);
 		
 		return dataSource;
 	}
@@ -291,7 +292,7 @@ public class DatabaseInterface {
 		int gameID = this.saveGameGetID(account, game);
 		
 		if(gameID == -1)
-			throw new DatabaseInterfaceException("Unable to store game");
+			throw new DatabaseInterfaceException("Unable to store game", Codes.DATABASE);
 		
 		ArrayList<GameAction> actions = game.getGameActions();
 		
@@ -345,7 +346,7 @@ public class DatabaseInterface {
 			
 			
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Storing Game Action", e);
+			throw new DatabaseInterfaceException("Error Storing Game Action", e, Codes.DATABASE);
 		}
 		
 	}
@@ -390,7 +391,7 @@ public class DatabaseInterface {
 			
 			
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Storing Game Action", e);
+			throw new DatabaseInterfaceException("Error Storing Game Action", e, Codes.DATABASE);
 		}
 		
 	}
@@ -441,7 +442,7 @@ public class DatabaseInterface {
 			
 			prepStat.close();
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Storing Game Action", e);
+			throw new DatabaseInterfaceException("Error Storing Game Action", e,Codes.DATABASE);
 		}
 		
 	}
@@ -473,7 +474,7 @@ public class DatabaseInterface {
 			
 			prepStat.close();
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error Storing Misc Data", e);
+			throw new DatabaseInterfaceException("Error Storing Misc Data", e, Codes.DATABASE);
 		}
 		
 	}
@@ -509,7 +510,7 @@ public class DatabaseInterface {
 			prepStat.close();
 			return result;
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving game ID", e);
+				throw new DatabaseInterfaceException("Error retrieving game ID", e, Codes.DATABASE);
 			}
 	}
 	
@@ -550,7 +551,7 @@ public class DatabaseInterface {
 		return id;
 		
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error storing game ID", e);
+			throw new DatabaseInterfaceException("Error storing game ID", e, Codes.DATABASE);
 		}
 		
 	}
@@ -633,7 +634,7 @@ public class DatabaseInterface {
 			prepStat.close();
 
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error building rank statistics", e);
+				throw new DatabaseInterfaceException("Error building rank statistics", e, Codes.DATABASE);
 			}
 		
 		return rankedData;
@@ -670,12 +671,12 @@ public class DatabaseInterface {
 			else
 				{
 				prepStat.close();
-				throw new DatabaseInterfaceException("Error retrieving User Money ranking");
+				throw new DatabaseInterfaceException("Error retrieving User Money ranking", Codes.DATABASE);
 				}
 				
 
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving User Money ranking", e);
+				throw new DatabaseInterfaceException("Error retrieving User Money ranking", e, Codes.DATABASE);
 			}
 		
 	}
@@ -709,12 +710,12 @@ public class DatabaseInterface {
 			else
 				{
 				prepStat.close();
-				throw new DatabaseInterfaceException("Error retrieving User optimality ranking");
+				throw new DatabaseInterfaceException("Error retrieving User optimality ranking", Codes.DATABASE);
 				}
 				
 
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving User optimality ranking", e);
+				throw new DatabaseInterfaceException("Error retrieving User optimality ranking", e, Codes.DATABASE);
 			}
 		
 	}
@@ -745,7 +746,7 @@ public class DatabaseInterface {
 			prepStat.close();
 			
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
+				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e, Codes.DATABASE);
 			}
 		
 	}
@@ -765,7 +766,7 @@ public class DatabaseInterface {
 				
 				prepStat.close();
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error Storing Auth Token", e);
+				throw new DatabaseInterfaceException("Error Storing Auth Token", e,  Codes.DATABASE);
 			}
 
 	}
@@ -792,7 +793,7 @@ public class DatabaseInterface {
 				prepStat.close();
 	
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error Storing Auth Token", e);
+				throw new DatabaseInterfaceException("Error Storing Auth Token", e,  Codes.DATABASE);
 			}
 			
 			return isCurrent;
@@ -825,7 +826,7 @@ public class DatabaseInterface {
 			prepStat.close();
 			
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
+				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e,  Codes.DATABASE);
 			}
 		
 	}
@@ -865,7 +866,7 @@ public class DatabaseInterface {
 		return count;
 		
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
+			throw new DatabaseInterfaceException("Error retrieving SUM statistic", e,  Codes.DATABASE);
 		}
 	}
 
@@ -902,7 +903,7 @@ public class DatabaseInterface {
 		return count;
 		
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
+			throw new DatabaseInterfaceException("Error retrieving SUM statistic", e,  Codes.DATABASE);
 		}
 	}
 	
@@ -942,7 +943,7 @@ public class DatabaseInterface {
 			return count;
 			
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
+				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e,  Codes.DATABASE);
 			}
 		
 	}
@@ -997,7 +998,7 @@ public class DatabaseInterface {
 			return count;
 			
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e);
+				throw new DatabaseInterfaceException("Error retrieving SUM statistic", e,  Codes.DATABASE);
 			}
 	}
 	
@@ -1027,7 +1028,7 @@ public class DatabaseInterface {
 			prepStat.execute();
 			prepStat.close();
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Unable to store optimality value for game.", e);
+			throw new DatabaseInterfaceException("Unable to store optimality value for game.", e,  Codes.DATABASE);
 		}
 
 		return false;
@@ -1063,7 +1064,7 @@ public class DatabaseInterface {
 			return count;
 			
 		} catch (SQLException e) {
-			throw new DatabaseInterfaceException("Unable to retrieve optimality value for user.", e);
+			throw new DatabaseInterfaceException("Unable to retrieve optimality value for user.", e,  Codes.DATABASE);
 		}
 
 	}
@@ -1087,7 +1088,8 @@ public class DatabaseInterface {
 		 * 
 		 */
 		private static final long serialVersionUID = -3785824197570821055L;
-
+		private int code = Codes.DATABASE;
+		
 		/**
 		 * Empty Exception
 		 */
@@ -1100,9 +1102,10 @@ public class DatabaseInterface {
 		 * New exception with a specific message
 		 * @param message
 		 */
-		public DatabaseInterfaceException(String message)
+		public DatabaseInterfaceException(String message, int code)
 		{
 			super(message);
+			this.code = code;
 		}
 		
 		/**
@@ -1112,7 +1115,7 @@ public class DatabaseInterface {
 		 * @param message
 		 * @param e An existing exception.
 		 */
-		public DatabaseInterfaceException(String message, Exception e)
+		public DatabaseInterfaceException(String message, Exception e, int code)
 		{
 			super(message, e);
 		}
@@ -1125,6 +1128,15 @@ public class DatabaseInterface {
 		public DatabaseInterfaceException(Exception e)
 		{
 			super(e);
+		}
+		
+		/**
+		 * Returns code number
+		 * @return
+		 */
+		public int getCode()
+		{
+			return this.code;
 		}
 	}
 	

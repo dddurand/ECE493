@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import Networking.NLogin;
+import Networking.ServerCodes;
+import Networking.ServerCodes.Codes;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
@@ -18,29 +20,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
+import dataModels.Account;
+import database.DatabaseDataSource;
+
 public class Login extends Fragment implements OnClickListener {
 	
 	private View view;
+
+	private ServerCodes serverCodes;
+	CheckBox rememberMeCheckBox;
 	
-	private String username=null;
-	private String password=null;
-	private boolean isLoggedIn=false;
+	private PokerApplication application;
+	private boolean rememberMe;
+	private DatabaseDataSource dbInterface;
+	private Account account;
 	
 	@SuppressLint("ValidFragment")
-	public Login(String username, String password, boolean loggedIn){
-		this.username=username;
-		this.password=password;
-		this.isLoggedIn=loggedIn;
+	public Login(ServerCodes codes){
+		this.serverCodes = codes;
 	}
 
 	@Override
@@ -54,13 +63,29 @@ public class Login extends Fragment implements OnClickListener {
 		ImageButton registerButton = (ImageButton) view.findViewById(R.id.registerButton);
 		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
 		ImageButton onlineModeButton = (ImageButton) view.findViewById(R.id.loginButton);
+		rememberMeCheckBox = (CheckBox) view.findViewById(R.id.remember_me_checkbox);
+		
 		//set listeners
 		registerButton.setOnClickListener(this);
 		offlineModeButton.setOnClickListener(this);
 		onlineModeButton.setOnClickListener(this);
 		
+		application = (PokerApplication) (this.getActivity().getApplication());
+		dbInterface = application.getDataSource();
+		account = application.getAccount();
+		
+		//@TODO
+		//remember username
+		if(true)
+		{
+			EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
+			//get from value-pair
+			userField.setText("BOB");
+			
+		}
+		
 		//Perform login button action if user is logged in
-		if (this.isLoggedIn)
+		if (application.isLoggedIn())
 		{
 			this.onClick(onlineModeButton);
 		}
@@ -75,9 +100,15 @@ public class Login extends Fragment implements OnClickListener {
 		obj.put("username", userString);
 		obj.put("password", passwordString);
 		
+		account.setUsername(userString);
+		account.setPassword(passwordString);
+		application.setLoggedIn(false);
+		
 		//Execute class method for registering
 		ProgressBar pb = (ProgressBar)this.view.findViewById(R.id.loginProgressBar);
 		NLogin loginAction = new NLogin(pb,this);
+		rememberMe = rememberMeCheckBox.isChecked();
+		
 		
 		//Execute AsyncTask
 		loginAction.execute(obj);
@@ -91,26 +122,60 @@ public class Login extends Fragment implements OnClickListener {
 			if (response!=null)
 			{
 				String responseSuccess = (String) response.get("Success");
+				int code = response.getInt("Code");
 
-				if (responseSuccess.compareTo("TRUE")==0) 
+				if (responseSuccess.compareTo("TRUE")==0 && code == Codes.SUCCESS) 
 				{
-					//Clear Label
-					this.showLoginError("");
-					//Modify Username and AuthTokebn in Main Screen Activity
-					String authToken = (String) response.get("AuthenticationToken");
-					MainScreen.setUsername(this.username);
-					MainScreen.setAuthToken(authToken);
-					//Switch fragments
-					((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
+					this.processSuccessfulLogin(response);
 					
-				} else this.showLoginError("Invalid Login Credentials");
+				} else serverCodes.getErrorMessage(code);
 			} 
 			else this.showLoginError("Timeout. Please ensure you're connected to the Internet");
 
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
+		
+		Account account = application.getAccount();
+		account.setPassword("");
+	}
+	
+	private void processSuccessfulLogin(JSONObject response) throws JSONException
+	{
+		//Clear Label
+		this.showLoginError("");
+		
+		if(rememberMe)
+		{
+			//store in name, auth, remember me indicator in name-values
+		}
+		
+		//remember username
+		if(true)
+		{
+			//store remember username indicator and username
+		}
+		
+		//account doesn't exist 
+		if(false)
+		{
+			//add to db
+		} else
+		{
+			//get account object
+		}
+		
+		Account account = application.getAccount();
+		String authToken = (String) response.get("AuthenticationToken");
+		account.setAuthenticationToken(authToken);
+		
+		//set auth in account
+		//update account
+		application.setLoggedIn(true);
+		
+		
+		//Switch fragments
+		((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
 	}
 	
 	private void showLoginError(String s){
@@ -170,10 +235,11 @@ public class Login extends Fragment implements OnClickListener {
 				String userString, passwordString;
 				
 				//Already logged in. Get username and password from class vars.
-				if (this.isLoggedIn)
+				if (application.isLoggedIn())
 				{
-					userString = this.username;
-					passwordString = this.password;
+					Account account = application.getAccount();
+					userString = account.getUsername();
+					passwordString = account.getPassword();
 				}
 				//Not logged in. Get username and password from Views
 					else 
@@ -182,7 +248,7 @@ public class Login extends Fragment implements OnClickListener {
 						EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
 						EditText passwordField = (EditText) this.view.findViewById(R.id.passwordField);
 						//Get username and password (save username only)
-						userString=userField.getText().toString();this.username=userString;
+						userString=userField.getText().toString();
 						passwordString=passwordField.getText().toString();
 					}
 				

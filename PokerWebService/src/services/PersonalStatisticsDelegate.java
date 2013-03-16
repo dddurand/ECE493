@@ -1,5 +1,7 @@
 package services;
 
+import util.Codes;
+
 import com.google.gson.Gson;
 
 import dataModels.Account;
@@ -36,7 +38,7 @@ public class PersonalStatisticsDelegate extends ServiceDelegate {
 		PersonalStatistics stat = new PersonalStatistics(postAccount, dbInterface, filter);
 		stat.generateAllStatistics();
 
-		ResponseObject response = new ResponseObject(true, "SUCCESS");
+		ResponseObject response = new ResponseObject(true, "SUCCESS", Codes.SUCCESS);
 		response.setPersonalStatistics(stat);
 
 		return gson.toJson(response, ResponseObject.class);

@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,8 +13,8 @@ import services.ServiceFactory;
 
 import com.google.gson.Gson;
 
-import database.ResponseObject;
 import database.DatabaseInterface.DatabaseInterfaceException;
+import database.ResponseObject;
 
 /**
  * This servlet provided an auth'd user with a set of personal statistics based
@@ -44,7 +45,7 @@ public class CommunityStatisticsServlet extends ConfigHttpServlet {
 			message = service.authSecuredProcess(data);
 		} catch (DatabaseInterfaceException e) {
 			Gson gson = new Gson();
-			ResponseObject responseMsg = new ResponseObject(false, e.getMessage());
+			ResponseObject responseMsg = new ResponseObject(false, e.getMessage(), e.getCode());
 			message = gson.toJson(responseMsg, ResponseObject.class);
 		}
 		

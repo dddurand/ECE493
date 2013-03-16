@@ -27,6 +27,7 @@ public class ResponseObject {
 	
 	private boolean success;
 	private String message;
+	private int code;
 	private ArrayList<String> uploadGameSuccess;
 	private ArrayList<Integer> uploadMiscSuccess;
 	private PersonalStatistics personalStatistics;
@@ -47,13 +48,31 @@ public class ResponseObject {
 	 * @param success Represents if the operation was successful or not.
 	 * @param message A message detailing errors, or general messages.
 	 */
-	public ResponseObject(boolean success, String message)
+	public ResponseObject(boolean success, String message, int code)
 	{
 		this.success = success;
 		this.message = message;
+		this.code = code;
 	}
 	
 	
+	
+	/**
+	 * Getter for response code
+	 * @return
+	 */
+	public int getCode() {
+		return code;
+	}
+
+	/**
+	 * Setter for response code
+	 * @return
+	 */
+	public void setCode(int code) {
+		this.code = code;
+	}
+
 	/**
 	 * Community stats getter
 	 * @return
@@ -213,6 +232,8 @@ public class ResponseObject {
 			PersonalStatistics personalStatistics = response.getPersonalStatistics();
 			RankingStatistics rankingStatistics = response.getRankingStatistics();
 			CommunityStatistics communityStatistics = response.getCommunityStatistics();
+			
+			jsonObject.add("Code", new JsonPrimitive(response.getCode()));
 			
 			if(response.isSuccess())
 				jsonObject.add("Success", new JsonPrimitive(SUCCESS));

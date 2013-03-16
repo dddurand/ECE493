@@ -54,19 +54,19 @@
         android:hint="@string/passwordFieldString" />
 
     <CheckBox
-        android:id="@+id/checkBox1"
+        android:id="@+id/remember_me_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/passwordField"
         android:layout_below="@id/passwordField"
-        android:text="@string/remember_me_str"/>
+        android:text="@string/remember_me_str" />
     
     <ImageButton
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/checkBox1"
+        android:layout_alignTop="@id/remember_me_checkbox"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="3dp"
         android:background="#333333"
@@ -111,8 +111,8 @@
         android:id="@+id/loginErrorLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/checkBox1"
-        android:layout_below="@id/checkBox1"
+        android:layout_alignLeft="@id/remember_me_checkbox"
+        android:layout_below="@id/remember_me_checkbox"
         android:textColor="#c00"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
