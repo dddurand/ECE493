@@ -1,4 +1,4 @@
-package Networking;
+package networking;
 
 import android.content.Context;
 

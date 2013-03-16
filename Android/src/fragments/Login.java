@@ -6,9 +6,9 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import Networking.NLogin;
-import Networking.ServerCodes;
-import Networking.ServerCodes.Codes;
+import networking.NLogin;
+import networking.ServerCodes;
+import networking.ServerCodes.Codes;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;

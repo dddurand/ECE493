@@ -1,4 +1,4 @@
-package Misc;
+package misc;
 
 import android.app.Dialog;
 import android.widget.SeekBar;

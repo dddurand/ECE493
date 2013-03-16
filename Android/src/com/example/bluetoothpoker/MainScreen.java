@@ -1,7 +1,7 @@
 package com.example.bluetoothpoker;
 
 import database.DatabaseDataSource;
-import Networking.ServerCodes;
+import networking.ServerCodes;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

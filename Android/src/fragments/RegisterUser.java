@@ -2,8 +2,8 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
-import Misc.GenericTextWatcher;
-import Networking.NRegister;
+import misc.GenericTextWatcher;
+import networking.NRegister;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
