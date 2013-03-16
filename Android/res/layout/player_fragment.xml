@@ -4,12 +4,20 @@
     android:layout_height="wrap_content"
     android:background="#00000000" >
 
+    <TextView
+        android:id="@+id/playerNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
     <ImageView
         android:id="@+id/leftCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_below="@id/playerNameText"
         android:src="@drawable/back" />
     
     <ImageView
@@ -21,6 +29,5 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="15dp"
         android:src="@drawable/back" />
-    
 
 </RelativeLayout>

@@ -31,7 +31,7 @@
         </activity>
         <activity 
             android:screenOrientation="sensorLandscape" 
-            android:name="PlayingArea"
+            android:name="com.example.bluetoothpoker.PlayingArea"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"></activity>
     </application>
 

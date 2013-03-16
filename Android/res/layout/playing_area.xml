@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/player3"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="90dp">
     </FrameLayout>
     
     <FrameLayout
@@ -86,7 +86,7 @@
         android:layout_height="wrap_content" 
         android:layout_alignRight="@id/player4"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="90dp">
     </FrameLayout>
 
 </RelativeLayout>
