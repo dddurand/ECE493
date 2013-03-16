@@ -8,6 +8,7 @@ import dataModels.Account;
 import dataModels.Filter;
 import dataModels.Game;
 import dataModels.MiscGameData;
+import dataModels.Optimality;
 import dataModels.PersonalStatistics;
 import dataModels.UploadData;
 import database.DatabaseInterface;
@@ -23,6 +24,8 @@ import database.ResponseObject;
  */
 public class UploadDelegate extends ServiceDelegate{
 	
+	private Optimality optimality;
+	
 	/**
 	 * General Constructor
 	 * @param gson
@@ -30,6 +33,7 @@ public class UploadDelegate extends ServiceDelegate{
 	 */
 	public UploadDelegate(Gson gson, DatabaseInterface dbInterface) {
 		super(gson, dbInterface);
+		optimality = new Optimality();
 	}
 
 	/**
@@ -113,8 +117,8 @@ public class UploadDelegate extends ServiceDelegate{
 				dbInterface.saveGame(account, game);
 				gameUploadResults.add(game.getGameID());
 				
-//				double opRating = optimality.getOptimalRatingForGame(game);
-//				dbInterface.setGameOptimalityForUser(account, game, opRating);
+				double opRating = optimality.getOptimalRatingForGame(game);
+				dbInterface.setGameOptimalityForUser(account, game, opRating);
 			} 
 			catch(DatabaseInterfaceException e) { }
 		}

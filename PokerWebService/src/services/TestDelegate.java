@@ -29,8 +29,6 @@ public class TestDelegate extends ServiceDelegate{
 	@Override
 	public String applyAuthProcess(Account postAccount, String postData)
 			throws DatabaseInterfaceException {
-
-		PokerHandRanker.test();
 		
 		return " ";
 	}

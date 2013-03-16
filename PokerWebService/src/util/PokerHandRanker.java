@@ -96,11 +96,6 @@ public class PokerHandRanker {
 		
 	}
 	
-	public static void test()
-	{
-		
-	}
-	
 	/**
      * Converts a little-endian byte array to a Java (big-endian) integer.
      * We need this because the HandRanks.dat file was generated using
