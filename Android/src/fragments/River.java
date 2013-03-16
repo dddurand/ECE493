@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 
 import com.example.bluetoothpoker.R;
 
-public class PlayerFragment extends Fragment {
+public class River extends Fragment {
 	
 	private View view;
-	private boolean local;
 	
-	public PlayerFragment(boolean local){
-		this.local=local;
+	public River(){
+		
 	}
 	
 	@Override
@@ -22,10 +21,10 @@ public class PlayerFragment extends Fragment {
 			Bundle savedInstanceState) {
 		
 		//Load XML Layout into global variable
-		if (this.local) this.view = inflater.inflate(R.layout.local_player_fragment,container, false);
-		else this.view = inflater.inflate(R.layout.player_fragment,container, false);
+		this.view = inflater.inflate(R.layout.river_fragment,container, false);
 		
 		return view;
 	}
+
 
 }

@@ -5,22 +5,20 @@
     android:background="#00000000" >
 
     <ImageView
-        android:id="@+id/leftCard"
+        android:id="@+id/localLeftCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/back" />
+        android:src="@drawable/sk" />
     
     <ImageView
-        android:id="@+id/rightCard"
+        android:id="@+id/localRightCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/leftCard"
-        android:layout_alignLeft="@id/leftCard"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/back" />
+        android:layout_alignTop="@id/localLeftCard"
+        android:layout_toRightOf="@id/localLeftCard"
+        android:src="@drawable/h1" />
     
 
 </RelativeLayout>

@@ -28,9 +28,16 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/player1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/riverLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/localPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/buttonsLayout" >
 
@@ -38,10 +45,48 @@
 
     <FrameLayout
         android:id="@+id/player2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true" >
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/player3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="40dp">
+    </FrameLayout>
+    
+    <FrameLayout
+        android:id="@+id/player4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp">
+    </FrameLayout>
+    
+    <FrameLayout
+        android:id="@+id/player5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/player3"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp">
+    </FrameLayout>
+    
+    <FrameLayout
+        android:id="@+id/player6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignRight="@id/player4"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp">
     </FrameLayout>
 
 </RelativeLayout>
