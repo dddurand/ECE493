@@ -1,4 +1,4 @@
-package Game;
+package game;
 
 public class Player {
 	private Card[] hand = new Card[2];
