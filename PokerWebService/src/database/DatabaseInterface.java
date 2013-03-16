@@ -351,6 +351,51 @@ public class DatabaseInterface {
 	}
 	
 	/**
+	 * Checks if a game action already exists
+	 * 
+	 * @param gameID Game id to tie action to
+	 * @param accountID The account to tie the action to
+	 * @param position The order in which the action occured.
+	 * @return True if exists, false otherwise
+	 * @throws DatabaseInterfaceException
+	 */
+	private boolean optimalityExists(int gameID, int accountID) throws DatabaseInterfaceException
+	{
+		final String getActionCount = "SELECT count(*) FROM game_optimality WHERE account_id = ? AND game_id = ?";
+		
+		try {
+			CallableStatement prepStat = dbConnection.prepareCall(getActionCount);
+			
+			prepStat.setInt(1, accountID);
+			prepStat.setInt(2, gameID);
+			
+			ResultSet set = prepStat.executeQuery();
+			
+			if(set.next())
+			{
+				if(set.getInt(1) > 0)
+				{
+					prepStat.close();
+					return true;
+				}
+				else
+				{
+					prepStat.close();
+					return false;
+				}
+			}
+			
+			prepStat.close();
+			return false;
+			
+			
+		} catch (SQLException e) {
+			throw new DatabaseInterfaceException("Error Storing Game Action", e);
+		}
+		
+	}
+	
+	/**
 	 * Saves a given game action to a certian game, at a given position, for a given account.
 	 * 
 	 * @param gameID Game id to tie action to
@@ -522,9 +567,10 @@ public class DatabaseInterface {
 	{
 		String gameCount = " select count(Distinct gameID) from game_actions where accountID = ";
 		String columnName = user_rank_column+"_"+filter.getTimeFrame().getValue();
+		String rank;
 		
 		//rank based on delta money, then if tied - number of more games
-		String rank = " ( SELECT COUNT(Distinct u2.id) FROM " + USER_TABLE + " u2 LEFT JOIN game_actions ON u2.id = game_actions.accountID" +
+		rank = " ( SELECT COUNT(Distinct u2.id) FROM " + USER_TABLE + " u2 LEFT JOIN game_actions ON u2.id = game_actions.accountID" +
 				//More delta money
 				//No games played, if u2 was registered first he is above
 				" WHERE ( ("+gameCount+"u1.id) = 0 and ("+gameCount+"u2.id) = 0 and (u1.id > u2.id) ) " +
@@ -539,6 +585,7 @@ public class DatabaseInterface {
 						"or ((u2."+columnName+" = u1."+columnName+") and ("+gameCount+"u1.id) = ("+gameCount+"u2.id) and u1.id > u2.id))" +
 						") + 1";
 
+		
 		return rank;
 	}
 	
@@ -633,14 +680,16 @@ public class DatabaseInterface {
 		
 	}
 	
+	
+	
 	/**
-	 * Retrieves the ranking of a user based their optimality
+	 * Retrieves the ranking of a user based their optimality of gameplay
 	 * 
 	 * @param account The account to get the ranking for.
 	 * @return
 	 * @throws DatabaseInterfaceException
 	 */
-	public double getUserOptimalityRanking(Account account, Filter filter) throws DatabaseInterfaceException
+	public int getUserOptimalityRanking(Account account, Filter filter) throws DatabaseInterfaceException
 	{
 		String rank = getRankingQuery(RankType.OPTIMALITY.getValue(), filter);
 		String sql = "SELECT ("+rank+") FROM " + USER_TABLE + " u1 WHERE id="+account.getAccountID()+";";
@@ -652,7 +701,7 @@ public class DatabaseInterface {
 			
 			if(set.next())
 				{
-				double value = set.getDouble(1);
+				int value = set.getInt(1);
 				prepStat.close();
 				return value;
 				}
@@ -660,12 +709,12 @@ public class DatabaseInterface {
 			else
 				{
 				prepStat.close();
-				throw new DatabaseInterfaceException("Error retrieving User Money ranking");
+				throw new DatabaseInterfaceException("Error retrieving User optimality ranking");
 				}
 				
 
 			} catch (SQLException e) {
-				throw new DatabaseInterfaceException("Error retrieving User Money ranking", e);
+				throw new DatabaseInterfaceException("Error retrieving User optimality ranking", e);
 			}
 		
 	}
@@ -953,7 +1002,8 @@ public class DatabaseInterface {
 	}
 	
 	/**
-	 * Adds a entry for game optimality
+	 * Adds a entry to the game optimality for the game. This includes a optimality rating for that game.
+	 * 
 	 * 
 	 * @param account
 	 * @return
@@ -961,9 +1011,11 @@ public class DatabaseInterface {
 	 */
 	public boolean setGameOptimalityForUser(Account account, Game game, double optimality) throws DatabaseInterfaceException
 	{
-		String insertAccountSQL = "INSERT INTO game_optimality (game_id, account_id, optimality) VALUES (?,?,?);";
-
 		int gameId = getGameDatabaseID(game);
+		
+		if(this.optimalityExists(gameId, account.getAccountID())) return true;
+		
+		String insertAccountSQL = "INSERT INTO game_optimality (game_id, account_id, optimality) VALUES (?,?,?);";
 		
 		try {
 			CallableStatement prepStat = dbConnection.prepareCall(insertAccountSQL);
@@ -979,6 +1031,40 @@ public class DatabaseInterface {
 		}
 
 		return false;
+
+	}
+	
+	/**
+	 * Retrieves an optimality rating for the user, based on a given timeframe in the filter
+	 * 
+	 * @param account
+	 * @return
+	 * @throws DatabaseInterfaceException
+	 */
+	public double getUserOptimality(Account account, Filter filter) throws DatabaseInterfaceException
+	{
+		
+		String sql = "SELECT avg(optimality) FROM game_optimality JOIN games ON game_optimality.game_id = games.id WHERE account_id = ? "+filter.getSqlTimeFrameFilter()+" ;";
+		
+		try {
+			CallableStatement prepStat = dbConnection.prepareCall(sql);
+
+			prepStat.setInt(1, account.getAccountID());
+
+			ResultSet set = prepStat.executeQuery();
+			double count = 0;
+			
+			if(set.next())
+			{
+				count = set.getDouble(1);
+			}
+			
+			prepStat.close();
+			return count;
+			
+		} catch (SQLException e) {
+			throw new DatabaseInterfaceException("Unable to retrieve optimality value for user.", e);
+		}
 
 	}
 	

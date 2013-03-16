@@ -172,14 +172,14 @@ public class PersonalStatistics {
 		return dataRow;	
 	}
 	
-	public double getOptimality()
+	public double getOptimality() throws DatabaseInterfaceException
 	{
-		return 0;
+		return dbInterface.getUserOptimality(account, filter);
 	}
 	
-	public int getOptimalityRanking()
+	public int getOptimalityRanking() throws DatabaseInterfaceException
 	{
-		return 1;
+		return dbInterface.getUserOptimalityRanking(account, filter);
 	}
 	
 	/**
@@ -644,6 +644,7 @@ public class PersonalStatistics {
 	public void updateRankings() throws DatabaseInterfaceException
 	{
 		this.updateNetMoneyRankings();
+		this.updateOptimalityRankings();
 		dbInterface.updateRankCacheDate(account);
 	}
 	
@@ -655,6 +656,19 @@ public class PersonalStatistics {
 			int netMoney = this.getNetMoney();
 			
 			dbInterface.updateUsersNetMoney(account, netMoney, filter);
+		}
+		
+		this.filter = original;
+	}
+	
+	private void updateOptimalityRankings() throws DatabaseInterfaceException
+	{
+		Filter original = this.filter;
+		for (TimeFrame timeFrame : TimeFrame.values()) {
+			filter = new Filter(timeFrame.getValue());
+			double optimality = this.getOptimality();
+			
+			dbInterface.updateUsersOptimality(account, optimality, filter);
 		}
 		
 		this.filter = original;

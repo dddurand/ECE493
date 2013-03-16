@@ -1,11 +1,9 @@
 package dataModels;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 
 import util.PokerHandRanker;
-
 import dataModels.GameAction.PokerAction;
 
 public class Optimality {
@@ -308,7 +306,6 @@ public class Optimality {
 		int commLength = comm.length;
 		int totalCards = commLength + hand.length;
 		double ev = 0;
-		int l = 0;
 		
 		double leftOverCards = 52-totalCards;
 				//card 1
@@ -342,7 +339,6 @@ public class Optimality {
 						newComm[commLength] = card1;
 								
 							ev+= (1/(leftOverCards))*getHandEV(pot, bet, newComm, hand);
-							l++;
 					}
 					
 				}
@@ -401,7 +397,6 @@ public class Optimality {
 	
 	private static double getHandEV(int pot, int bet, int comm[], int hand[])
 	{
-		int l = 0;
 		double ev = 0;
 		int cardCount = comm.length + hand.length;
 		int[] myHand = new int[cardCount];
