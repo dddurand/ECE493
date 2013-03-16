@@ -79,8 +79,10 @@ public class Login extends Fragment implements OnClickListener {
 		if(true)
 		{
 			EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
+			EditText passf = (EditText) this.view.findViewById(R.id.passwordField);
 			//get from value-pair
-			userField.setText("BOB");
+			userField.setText("Asef");
+			passf.setText("asdf");
 			
 		}
 		
@@ -128,7 +130,7 @@ public class Login extends Fragment implements OnClickListener {
 				{
 					this.processSuccessfulLogin(response);
 					
-				} else serverCodes.getErrorMessage(code);
+				} else this.showLoginError(serverCodes.getErrorMessage(code));
 			} 
 			else this.showLoginError("Timeout. Please ensure you're connected to the Internet");
 
@@ -156,18 +158,11 @@ public class Login extends Fragment implements OnClickListener {
 			//store remember username indicator and username
 		}
 		
-		//account doesn't exist 
-		if(false)
-		{
-			//add to db
-		} else
-		{
-			//get account object
-		}
-		
 		Account account = application.getAccount();
 		String authToken = (String) response.get("AuthenticationToken");
 		account.setAuthenticationToken(authToken);
+		
+		dbInterface.updateAccount(account);
 		
 		//set auth in account
 		//update account
@@ -217,9 +212,10 @@ public class Login extends Fragment implements OnClickListener {
 		case R.id.offlineButton:
 			//TODO Back door to playing area, remove!!
 			//((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
-			Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
+			//Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
 			//Add stuff here?
-			startActivity(i);
+			//startActivity(i);
+			((MainScreen) this.getActivity()).test();
 			break;
 		
 		/*****Register button action***/

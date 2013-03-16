@@ -5,11 +5,14 @@ import java.util.concurrent.ExecutionException;
 
 import misc.GenericTextWatcher;
 import networking.NRegister;
+import networking.ServerCodes;
+import networking.ServerCodes.Codes;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -27,10 +30,17 @@ import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
 
+@SuppressLint("ValidFragment")
 public class RegisterUser extends Fragment implements OnClickListener {
 	
 	private View view;
 	private PokerApplication application;
+	private ServerCodes codes;
+	
+	public RegisterUser(ServerCodes codes)
+	{
+		this.codes = codes;
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,11 +88,15 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		if (response!=null)
 		{
 			String responseSuccess = (String) response.get("Success");
+			int code = response.getInt("Code");
 			
-			if (responseSuccess.compareTo("TRUE")==0) {
+			if (responseSuccess.compareTo("TRUE")==0 && code == Codes.SUCCESS) {
 				validResponse=true;
 				Account account = new Account(username, null, -1);
 				application.setAccount(account);
+			}else
+			{
+				showToast(codes.getErrorMessage(code));
 			}
 				
 		} else throw new ConnectTimeoutException();
@@ -122,8 +136,6 @@ public class RegisterUser extends Fragment implements OnClickListener {
 					//Change screens
 					((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
 				}
-				//Not a valid request
-				else showToast("Username '"+usernameStr+"' already taken.");
 			
 		} catch (JSONException e) {
 			throw new RuntimeException(e);

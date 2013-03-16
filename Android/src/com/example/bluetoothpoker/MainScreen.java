@@ -1,6 +1,7 @@
 package com.example.bluetoothpoker;
 
 import networking.ServerCodes;
+import dataModels.Account;
 import database.DatabaseDataSource;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,7 +47,6 @@ public class MainScreen extends Activity {
 			this.serverCodes = new ServerCodes(this);
 			this.switchFragment(MainScreen.LOGIN_SCREEN);
 			initializeDataSource();
-			
 		}
 	}
 
@@ -66,6 +66,18 @@ public class MainScreen extends Activity {
 		dataSource.open();
 		PokerApplication application = (PokerApplication) this.getApplication();
 		application.setDataSource(dataSource);
+	}
+	
+	public void test()
+	{
+		PokerApplication application = (PokerApplication) this.getApplication();
+		DatabaseDataSource dataSource = application.getDataSource();
+		
+		Account account = dataSource.getAccount("Asef");
+	
+		int id = dataSource.getAccountID(account);
+		
+		int test = 0;
 	}
 	
 	@Override
@@ -94,7 +106,7 @@ public class MainScreen extends Activity {
 			break;
 			
 		case MainScreen.REGISTER_SCREEN:
-			newFragment = new RegisterUser();
+			newFragment = new RegisterUser(serverCodes);
 			break;
 			
 		case MainScreen.JOIN_TABLE_SCREEN:

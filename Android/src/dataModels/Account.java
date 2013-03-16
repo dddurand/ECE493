@@ -8,7 +8,6 @@ public class Account {
 	private boolean isOnline;
 	private String password;
 	
-	
 	public Account()
 	{
 		this.clear();
