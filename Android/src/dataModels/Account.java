@@ -8,6 +8,9 @@ public class Account {
 	private boolean isOnline;
 	private String password;
 	
+	/**
+	 * General Constructor
+	 */
 	public Account()
 	{
 		this.clear();
