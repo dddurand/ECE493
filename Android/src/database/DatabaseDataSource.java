@@ -175,23 +175,92 @@ public class DatabaseDataSource {
 		  return id;
 	  }
 	  
+	  /**
+	   * Add generated money into database
+	   * 
+	   * @param moneyGen
+	   */
 	  public void addMoneyGenerated(MoneyGenerated moneyGen)
 	  {
 		  
+		  int accountID = this.getAccountID(moneyGen.getAccount());
+		  
+		  ContentValues values = new ContentValues();
+		  values.put(DatabaseContract.MiscContract.COLUMN_NAME_ACCOUNTID, accountID);
+		  values.put(DatabaseContract.MiscContract.COLUMN_NAME_NAME, moneyGen.getName());
+		  values.put(DatabaseContract.MiscContract.COLUMN_NAME_VALUE, moneyGen.getValue());
+		  
+		  db.insert(DatabaseContract.MiscContract.TABLE_NAME,
+				  null,
+				  values);
 	  }
 	  
+	  /**
+	   * Gets all money generations for an account currently in the database
+	   * 
+	   * @param account
+	   * @return
+	   */
 	  public ArrayList<MoneyGenerated> getMoneyGenerates(Account account)
 	  {
-		  return null;
+		  ArrayList<MoneyGenerated> list = new ArrayList<MoneyGenerated>();
+		  
+		  
+		  String columns[] = new String[] {DatabaseContract.MiscContract.COLUMN_NAME_ACCOUNTID,
+				  							DatabaseContract.MiscContract.COLUMN_NAME_NAME,
+				  							DatabaseContract.MiscContract.COLUMN_NAME_VALUE,
+				  							DatabaseContract.MiscContract._ID};
+		  
+		  int accountID = getAccountID(account);
+		  
+		  String where = DatabaseContract.MiscContract.COLUMN_NAME_ACCOUNTID + " = " + accountID;
+		  
+		  Cursor cursor = db.query(DatabaseContract.MiscContract.TABLE_NAME,
+				  columns,
+				  where,
+				  null,
+				  null, null, null);
+		
+		  cursor.moveToFirst();
+		  while(!cursor.isAfterLast())
+		  {
+			 int valueCol = cursor.getColumnIndex(DatabaseContract.MiscContract.COLUMN_NAME_VALUE);
+			 int idCol = cursor.getColumnIndex(DatabaseContract.MiscContract._ID);
+			  
+			 int value = cursor.getInt(valueCol);
+			 int id = cursor.getInt(idCol);
+			 
+			 MoneyGenerated moneyGen = new MoneyGenerated(value, id);
+			 list.add(moneyGen);
+			 cursor.moveToNext();
+		  }
+		  
+		  
+		  cursor.close();
+		  return list;
 	  }
 	  
+	  /**
+	   * Remove a money generation based on an id
+	   * 
+	   * @param generateID
+	   */
 	  public void removeMoneyGenerate(int generateID)
 	  {
+		  String where = DatabaseContract.MiscContract._ID + " = " + generateID;
 		  
+		  db.delete(DatabaseContract.MiscContract.TABLE_NAME,
+				  where,
+				  null);
 	  }
 	  
 	  
-	  
+	  /**
+	   * Callback that occurs after the database has been properly set-up.
+	   * 
+	   * @author dddurand
+	   *
+	   */
 	  private class LoginDatabaseAsyncCallBack implements RetrieveDatabaseAsyncCallBack 
 	  {
 

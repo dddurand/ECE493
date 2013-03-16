@@ -22,7 +22,7 @@ public class DatabaseContract {
 	public static abstract class AccountContract implements BaseColumns {
 	    public static final String TABLE_NAME = "accounts";
 	    public static final String COLUMN_NAME_USERNAME = "username";
-	    public static final String COLUMN_NAME_AUTH_TOKEN = "auth_token";
+	    public static final String COLUMN_NAME_AUTH_TOKEN = "authToken";
 	    public static final String COLUMN_NAME_BALANCE = "balance";
 	}
 	
@@ -31,7 +31,7 @@ public class DatabaseContract {
 	 */
 	public static abstract class GameContract implements BaseColumns {
 	    public static final String TABLE_NAME = "game";
-	    public static final String COLUMN_NAME_ACCOUNT_ID = "acount_id";
+	    public static final String COLUMN_NAME_ACCOUNT_ID = "accountID";
 	    public static final String COLUMN_NAME_UUID = "uuid";
 	}
 	
@@ -55,7 +55,7 @@ public class DatabaseContract {
 	    public static final String TABLE_NAME = "misc";
 	    public static final String COLUMN_NAME_NAME = "name";
 	    public static final String COLUMN_NAME_VALUE = "value";
-	    public static final String COLUMN_NAME_ACCOUNTID = "account_id";
+	    public static final String COLUMN_NAME_ACCOUNTID = "accountID";
 	}
 	
 	private static final String TEXT_TYPE = " TEXT";
@@ -105,11 +105,11 @@ public class DatabaseContract {
 		    "CREATE TABLE " + DatabaseContract.MiscContract.TABLE_NAME + " (" +
 		    		DatabaseContract.MiscContract._ID + " INTEGER PRIMARY KEY," +
 		    		DatabaseContract.MiscContract.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-		    		DatabaseContract.MiscContract.COLUMN_NAME_VALUE + INTEGER_TYPE +
+		    		DatabaseContract.MiscContract.COLUMN_NAME_VALUE + INTEGER_TYPE + COMMA_SEP +
 		    		DatabaseContract.MiscContract.COLUMN_NAME_ACCOUNTID + INTEGER_TYPE +
 		    " );";
 	
-	private static final String SQL_CREATE = SQL_CREATE_ACCOUNT+SQL_CREATE_GAME_ACTION+SQL_CREATE_GAME+SQL_CREATE_MISC;
+	//private static final String SQL_CREATE = SQL_CREATE_ACCOUNT+SQL_CREATE_GAME_ACTION+SQL_CREATE_GAME+SQL_CREATE_MISC;
 	
 	/**
 	 * Async Task to retrieve Sqlite database
@@ -171,17 +171,31 @@ public class DatabaseContract {
 	 */
 	public static class DatabaseDBHelper extends SQLiteOpenHelper {
 	    // If you change the database schema, you must increment the database version.
-	    public static final int DATABASE_VERSION = 1;
+	    public static final int DATABASE_VERSION = 9;
 	    public static final String DATABASE_NAME = "Database.db";
 
 	    public DatabaseDBHelper(Context context) {
 	        super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	    }
 	    public void onCreate(SQLiteDatabase db) {
-	        db.execSQL(SQL_CREATE);
+	        db.execSQL(SQL_CREATE_ACCOUNT);
+	        db.execSQL(SQL_CREATE_GAME_ACTION);
+	        db.execSQL(SQL_CREATE_GAME);
+	        db.execSQL(SQL_CREATE_MISC);
 	    }
 	    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-	        //Nothing For Now.
+	       
+	    	String drop = " DROP TABLE IF EXISTS ";
+	    	String close = " ; ";
+	    	db.execSQL(drop+DatabaseContract.MiscContract.TABLE_NAME+close);
+	    	db.execSQL(drop+DatabaseContract.AccountContract.TABLE_NAME+close);
+	    	db.execSQL(drop+DatabaseContract.GameActionContract.TABLE_NAME+close);
+	    	db.execSQL(drop+DatabaseContract.GameContract.TABLE_NAME+close);
+	    	
+	    	 db.execSQL(SQL_CREATE_ACCOUNT);
+		        db.execSQL(SQL_CREATE_GAME_ACTION);
+		        db.execSQL(SQL_CREATE_GAME);
+		        db.execSQL(SQL_CREATE_MISC);
 	    }
 	}
 	

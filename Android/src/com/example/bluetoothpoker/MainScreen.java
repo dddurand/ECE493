@@ -1,7 +1,11 @@
 package com.example.bluetoothpoker;
 
+import java.util.ArrayList;
+
 import networking.ServerCodes;
+
 import dataModels.Account;
+import dataModels.MoneyGenerated;
 import database.DatabaseDataSource;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,11 +77,21 @@ public class MainScreen extends Activity {
 		PokerApplication application = (PokerApplication) this.getApplication();
 		DatabaseDataSource dataSource = application.getDataSource();
 		
+		
+		
 		Account account = dataSource.getAccount("Asef");
 	
 		int id = dataSource.getAccountID(account);
 		
-		int test = 0;
+		MoneyGenerated generate = new MoneyGenerated(1000, account);
+		dataSource.addMoneyGenerated(generate);
+		
+		ArrayList<MoneyGenerated> list = dataSource.getMoneyGenerates(account);
+		
+		for(MoneyGenerated money : list)
+		{
+			dataSource.removeMoneyGenerate(money.getId());
+		}
 	}
 	
 	@Override

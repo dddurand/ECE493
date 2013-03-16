@@ -14,6 +14,11 @@ public class MoneyGenerated {
 		this.value = value;
 	}
 
+	public MoneyGenerated(int value, int id)
+	{
+		this.id = id;
+		this.value = value;
+	}
 
 	public int getValue() {
 		return value;
