@@ -55,6 +55,7 @@ public class DatabaseContract {
 	    public static final String TABLE_NAME = "misc";
 	    public static final String COLUMN_NAME_NAME = "name";
 	    public static final String COLUMN_NAME_VALUE = "value";
+	    public static final String COLUMN_NAME_ACCOUNTID = "account_id";
 	}
 	
 	private static final String TEXT_TYPE = " TEXT";
@@ -105,6 +106,7 @@ public class DatabaseContract {
 		    		DatabaseContract.MiscContract._ID + " INTEGER PRIMARY KEY," +
 		    		DatabaseContract.MiscContract.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
 		    		DatabaseContract.MiscContract.COLUMN_NAME_VALUE + INTEGER_TYPE +
+		    		DatabaseContract.MiscContract.COLUMN_NAME_ACCOUNTID + INTEGER_TYPE +
 		    " );";
 	
 	private static final String SQL_CREATE = SQL_CREATE_ACCOUNT+SQL_CREATE_GAME_ACTION+SQL_CREATE_GAME+SQL_CREATE_MISC;
