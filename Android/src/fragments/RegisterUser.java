@@ -105,9 +105,8 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		
 		try {
 			//Check passwords first
-			if ((passwordStr.isEmpty())||(passwordConfirmStr.isEmpty())) showToast("Please enter a password");
+			if (passwordStr.compareTo(passwordConfirmStr)!=0) showToast("Password mismatch. Please ensure both passwords are the same");
 			else
-<<<<<<< HEAD
 				//Perform Request
 				if (sendRegisterRequest(usernameStr,passwordStr)){
 					//Successful if here
@@ -124,23 +123,6 @@ public class RegisterUser extends Fragment implements OnClickListener {
 				}
 				//Not a valid request
 				else showToast("Username '"+usernameStr+"' already taken.");
-=======
-				if (passwordStr.compareTo(passwordConfirmStr)!=0) showToast("Password mismatch. Please ensure both passwords are the same");
-				else
-					//Perform Request
-					if (sendRegisterRequest(usernameStr,passwordStr)){
-						//Successful if here
-						MainScreen.setUsername(usernameStr);
-						MainScreen.setPassword(passwordStr);
-						MainScreen.setLoggedIn(true);
-						//Show toast
-						showToast("New account created successfully");
-						//Change screens
-						((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
-					}
-			//Not a valid request
-					else showToast("Username '"+usernameStr+"' already taken. Please choose another username.");
->>>>>>> Fixed transparency issue in player fragment
 			
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
