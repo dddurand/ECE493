@@ -92,9 +92,13 @@ public final class R {
         public static final int button2=0x7f070026;
         public static final int button3=0x7f070028;
         public static final int buttons2_helper=0x7f07001f;
-        public static final int buttonsLayout=0x7f07002f;
+        public static final int buttonsLayout=0x7f07002e;
         public static final int buttons_helper=0x7f070015;
+<<<<<<< HEAD
         public static final int cardsHelper=0x7f07002c;
+=======
+        public static final int checkBox1=0x7f070013;
+>>>>>>> Fixed transparency issue in player fragment
         public static final int confirmRegistrationButton=0x7f07003a;
         public static final int createTableButton=0x7f070006;
         public static final int createTableIcon=0x7f070005;
@@ -109,7 +113,7 @@ public final class R {
         public static final int imageView1=0x7f070003;
         public static final int joinTableButton=0x7f070020;
         public static final int joinTableImage=0x7f07000c;
-        public static final int leftCard=0x7f07002d;
+        public static final int leftCard=0x7f07002c;
         public static final int loginButton=0x7f070014;
         public static final int loginErrorLabel=0x7f070018;
         public static final int loginProgressBar=0x7f070019;
@@ -138,8 +142,13 @@ public final class R {
         public static final int register_screen_helper=0x7f070032;
         public static final int register_screen_helper_3=0x7f070036;
         public static final int registrationIcon=0x7f070033;
+<<<<<<< HEAD
         public static final int remember_me_checkbox=0x7f070013;
         public static final int rightCard=0x7f07002e;
+=======
+        public static final int rightCard=0x7f07002d;
+        public static final int river=0x7f07002f;
+>>>>>>> Fixed transparency issue in player fragment
         public static final int screen_middle=0x7f07000e;
         public static final int tablesList=0x7f07000d;
         public static final int textView1=0x7f07002b;

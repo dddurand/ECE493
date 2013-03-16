@@ -8,8 +8,10 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -152,5 +154,19 @@ public class OnlineMode extends Fragment implements OnClickListener {
 		}
 
 	}
+	
+//	public void onBackPressed() {
+//	    new AlertDialog.Builder(getActivity())
+//	        .setTitle("Really Exit?")
+//	        .setMessage("Are you sure you want to exit?")
+//	        .setNegativeButton(android.R.string.no, null)
+//	        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//				
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					getActivity().super.onBackPressed();
+//				}
+//			}).create().show();
+//	}
 
 }

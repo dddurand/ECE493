@@ -2,27 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff0000ff" >
+    android:background="#00000000" >
 
-    <View
+<!--  <View
         android:id="@+id/cardsHelper"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerHorizontal="true"
-        />
+        />-->    
     
     <ImageView
         android:id="@+id/leftCard"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/cardsHelper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
         android:src="@drawable/back" />
     
     <ImageView
         android:id="@+id/rightCard"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@id/cardsHelper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/leftCard"
+        android:layout_alignTop="@id/leftCard"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="17dp"
         android:src="@drawable/back" />
     
 
