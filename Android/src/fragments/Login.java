@@ -2,12 +2,11 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
-import networking.NLogin;
-
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Networking.NLogin;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;

@@ -1,10 +1,14 @@
 package com.example.bluetoothpoker;
 
+import database.DatabaseDataSource;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
+import application.PokerApplication;
 import fragments.CreateTable;
 import fragments.JoinTable;
 import fragments.Login;
@@ -21,7 +25,17 @@ public class MainScreen extends Activity {
 	public final static int CREATE_TABLE_SCREEN = 5;
 	public final static int ONLINE_MODE = 6;
 	
-	
+	/**@TODO
+	 * I migrated these variables to PokerApplication so they can be retrieved in all activities,
+	 * without using static.
+	 * 
+	 * I'm not sure if you want to change them - if its complex then we can do it this way.
+	 * I'll leave it up to you Kenneth.
+	 * (I needed to do it for the datasource and didn't see these before I added them - 
+	 * if it's too difficult then just delete them from application.PokerApplication)
+	 * 
+	 * Dustin
+	 */
 	//This variable will contain the username. This will be set by the login or register fragment class
 	private static String username=null;
 	private static String password=null;
@@ -43,9 +57,29 @@ public class MainScreen extends Activity {
 			}
 			
 			this.switchFragment(MainScreen.LOGIN_SCREEN);
+			initializeDataSource();
+			
 		}
 	}
 
+	/**
+	 * Initializes the datasource interface for the whole application.
+	 * A "initializing" dialog may show up temporarily if the sql database takes too long to load.
+	 * 
+	 */
+	public void initializeDataSource()
+	{
+		Dialog dialog = new AlertDialog.Builder(this).
+				setMessage(R.string.initializing).
+				setCancelable(false).
+				create();
+		
+		DatabaseDataSource dataSource = new DatabaseDataSource(this.getApplicationContext(), dialog);
+		dataSource.open();
+		PokerApplication application = (PokerApplication) this.getApplication();
+		application.setDataSource(dataSource);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

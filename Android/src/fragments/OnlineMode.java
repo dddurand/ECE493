@@ -2,7 +2,7 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
-import networking.NLogout;
+import Networking.NLogout;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
