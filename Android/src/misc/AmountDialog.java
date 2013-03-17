@@ -1,5 +1,17 @@
 package misc;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+import application.PokerApplication;
+
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
@@ -7,20 +19,12 @@ import dataModels.MoneyGenerated;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import application.PokerApplication;
-
+/**
+ * The dialog that allows a user to add money to their account.
+ * 
+ * @author dddurand
+ *
+ */
 public class AmountDialog extends Dialog {
 
 	private SeekBar seekBar;
@@ -33,6 +37,13 @@ public class AmountDialog extends Dialog {
 	private SharedPreferences preferences;
 	private BalanceUpdatable viewUpdatable;
 	
+	/**
+	 * General Constructor
+	 * 
+	 * @param message The message presented in the dialog
+	 * @param activity The activity the dialog will be tied to.
+	 * @param viewUpdatable The viewable that will be called when an update occurs.
+	 */
 	public AmountDialog(String message, Activity activity, BalanceUpdatable viewUpdatable)
 	{
 		super(activity);
@@ -54,7 +65,7 @@ public class AmountDialog extends Dialog {
 		int max = Math.max(0, this.application.MAX_GEN_BALANCE - account.getBalance());
 		seekBar.setMax(max);
 		seekBar.setProgress(0);
-		seekBar.setOnSeekBarChangeListener(new SeekBarWatcher(R.id.amountSeekBar,this));
+		seekBar.setOnSeekBarChangeListener(new SeekBarWatcher());
 		
 		dbInterface = application.getDataSource();
 		preferences = activity.getPreferences(Context.MODE_PRIVATE);
@@ -62,14 +73,25 @@ public class AmountDialog extends Dialog {
 		setupListeners();
 	}
 	
+	/**
+	 * Sets up the listeners in the dialog
+	 * 
+	 */
 	private void setupListeners()
 	{ 
+		/*
+		 * Close the dialog when a user presses cancel
+		 */
 		dialogCancelButton.setOnClickListener(new View.OnClickListener() {
              public void onClick(View v) {
             	 AmountDialog.this.dismiss();
              }
          });
 		
+		/*
+		 * Add the appropriate ammount to the account's balance based on the
+		 * slider value.
+		 */
 		dialogOkayButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Account account = AmountDialog.this.application.getAccount();
@@ -102,17 +124,13 @@ public class AmountDialog extends Dialog {
 					
 	}
 	
+	/**
+	 * The Seek Bar that is used to choose the amount to add to the account.
+	 * 
+	 * @author dddurand
+	 *
+	 */
 	public class SeekBarWatcher implements OnSeekBarChangeListener {
-		
-		private int id;
-		private Dialog d;
-		
-		//Constructor
-		public SeekBarWatcher(int id, Dialog d)
-		{
-			this.id=id;
-			this.d=d;
-		}
 
 		//When the seekbar is modified by the user
 		@Override

@@ -121,22 +121,35 @@ public class DatabaseContract {
 	     
 		private RetrieveDatabaseAsyncCallBack callback;
 		
+		/**
+		 * General Constructor
+		 * @param callback
+		 */
 		public RetrieveDatabaseAsync(RetrieveDatabaseAsyncCallBack callback)
 		{
 			this.callback = callback;
 		}
 		
+		/**
+		 * The method that is called prior to running the task in the background.
+		 */
 	     @Override
 	    protected void onPreExecute() {
 	    	super.onPreExecute();
 	    }
 	     
+	     /**
+	      * The method that occurs after the background task has completed.
+	      */
 	     @Override
 	    protected void onPostExecute(SQLiteDatabase result) {
 	    	 callback.databaseAsyncCallBack(result);
 	    	super.onPostExecute(result);
 	    }
 
+	     /**
+	      * The task that gets the connection for the database.
+	      */
 		@Override
 		protected SQLiteDatabase doInBackground(DatabaseDBHelper... dbHelpers) {
 			if(dbHelpers.length == 0) return null;
@@ -149,7 +162,6 @@ public class DatabaseContract {
 			}
 			
 			callback.databaseAsyncCallBack(db);
-			
 			return db;
 		}
 	 }
@@ -176,15 +188,29 @@ public class DatabaseContract {
 	    public static final int DATABASE_VERSION = 10;
 	    public static final String DATABASE_NAME = "Database.db";
 
+	    /**
+	     * General Constructor
+	     * @param context The application context to be used to generate the DataSource
+	     */
 	    public DatabaseDBHelper(Context context) {
 	        super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	    }
+	    
+	    /**
+	     * Function that is runs if the database hasn't been created yet.
+	     * The function generates the SQLite table
+	     */
 	    public void onCreate(SQLiteDatabase db) {
 	        db.execSQL(SQL_CREATE_ACCOUNT);
 	        db.execSQL(SQL_CREATE_GAME_ACTION);
 	        db.execSQL(SQL_CREATE_GAME);
 	        db.execSQL(SQL_CREATE_MISC);
 	    }
+	    
+	    /**
+	     * On upgrade, we are simply destorying the tables, and rebuilding them from scratch.
+	     * 
+	     */
 	    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	       
 	    	String drop = " DROP TABLE IF EXISTS ";

@@ -15,6 +15,12 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * This file acts as the interface between the sqlite database and the android application.
+ * 
+ * @author dddurand
+ *
+ */
 public class DatabaseDataSource {
 
 	  // Database fields
@@ -35,9 +41,16 @@ public class DatabaseDataSource {
 	    this.loadingDialog = loadingDialog;
 	  }
 
+	  /**
+	   * THe function that opens the database, and loads it into the PokerApplication object
+	   * to be used by all activities.
+	   * @throws SQLException
+	   */
 	  public void open() throws SQLException {
 		  LoginDatabaseAsyncCallBack callback = new LoginDatabaseAsyncCallBack();
 		  RetrieveDatabaseAsync dbOpenTask = new RetrieveDatabaseAsync(callback);
+		 
+		  loadingDialog.show();
 		  try {
 			dbOpenTask.execute(dbHelper).get();
 		} catch (InterruptedException e) {
@@ -47,10 +60,13 @@ public class DatabaseDataSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		  loadingDialog.show();
+		  
 		  
 	  }
 
+	  /**
+	   * Closes the connection to the database.
+	   */
 	  public void close() {
 	    dbHelper.close();
 	  }

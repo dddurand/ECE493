@@ -1,5 +1,12 @@
 package dataModels;
 
+/**
+ * This class acts as a data representation of an user account. 
+ * This includes online and offline accounts.
+ * 
+ * @author dddurand
+ *
+ */
 public class Account {
 
 	private String username;
@@ -16,6 +23,9 @@ public class Account {
 		this.clear();
 	}
 	
+	/**
+	 * Clears all details within the current account object.
+	 */
 	public void clear()
 	{
 		this.username = "";
@@ -25,14 +35,28 @@ public class Account {
 		this.password = "";
 	}
 	
+	/**
+	 * Retrieves the password for the account.
+	 * This field is not automatically loaded through any contstructor,
+	 * and is only present when added manually.
+	 * @return
+	 */
 	public String getPassword() {
 		return password;
 	}
 
+	/**
+	 * Sets the accounts current password.
+	 * @param password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
+	/**
+	 * Retrieves the current username of the account
+	 * @return
+	 */
 	public String getUsername() {
 		return username;
 	}
@@ -63,28 +87,67 @@ public class Account {
 		this.isOnline = false;
 	}
 	
+	/**
+	 * Username setter
+	 * @param username
+	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
+	/**
+	 * Get Auth Token
+	 * @return
+	 */
 	public String getAuthenticationToken() {
 		return authenticationToken;
 	}
+	
+	/**
+	 * Set Auth Token
+	 * @param authenticationToken
+	 */
 	public void setAuthenticationToken(String authenticationToken) {
 		this.authenticationToken = authenticationToken;
 	}
+	
+	/**
+	 * Gets current balance
+	 * @return
+	 */
 	public int getBalance() {
 		return balance;
 	}
+	
+	/**
+	 * Set current balance
+	 * @param balance
+	 */
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
+	
+	/**
+	 * Returns whether the current account is an online or offline account.
+	 * @return
+	 */
 	public boolean isOnline() {
 		return isOnline;
 	}
+	
+	/**
+	 * Set whether the current account is online or offline.
+	 * 
+	 * @param isOnline
+	 */
 	public void setOnline(boolean isOnline) {
 		this.isOnline = isOnline;
 	}
 	
+	/**
+	 * Adds a given amount to the account balance.
+	 * @param balance
+	 */
 	public void addBalance(int balance) {
 		this.balance += balance;
 	}
