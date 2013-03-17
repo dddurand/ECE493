@@ -152,9 +152,9 @@ public class Login extends Fragment implements OnClickListener {
 				{
 					this.processSuccessfulLogin(response);
 					
-				} else this.showLoginError(serverCodes.getErrorMessage(code));
+				} else this.showToast(serverCodes.getErrorMessage(code));
 			} 
-			else this.showLoginError("Timeout. Please ensure you're connected to the Internet");
+			else this.showToast("Timeout. Please ensure you're connected to the Internet");
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -241,10 +241,10 @@ public class Login extends Fragment implements OnClickListener {
 		case R.id.offlineButton:
 			//TODO Back door to playing area, remove!!
 			//((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
-			//Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
+			Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
 			//Add stuff here?
-			//startActivity(i);
-			((MainScreen) this.getActivity()).test();
+			startActivity(i);
+//			((MainScreen) this.getActivity()).test();
 			break;
 		
 		/*****Register button action***/

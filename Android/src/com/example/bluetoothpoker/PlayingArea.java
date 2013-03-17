@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import fragments.PlayerFragment;
 import fragments.River;
+import game.GameData;
 
 public class PlayingArea extends Activity implements OnClickListener {
 	
@@ -20,7 +21,6 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private PlayerFragment[] playerObjects;
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
-	private int totalPlayers=6;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -53,27 +53,28 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    //River
 	    riverLayout = (FrameLayout)findViewById(R.id.riverLayout);
 	    
-	    /**********Instatiate Objecst*******/
-	    playerObjects = new PlayerFragment[totalPlayers];
-	    //Local Player
-	    playerObjects[0] = new PlayerFragment(true,"local");
-	    //Rest of players
-	    for (int i=1;i<totalPlayers;i++) playerObjects[i] = new PlayerFragment(false,"Player "+Integer.toString(i));
+	    /**********Instantiate Players Array*******/
+	    playerObjects = new PlayerFragment[maxPlayers];
 	    
-	    initialize();
+	    playerObjects[0] = new PlayerFragment(true,"local");
+	    for (int i=1;i<maxPlayers;i++)
+	    {
+	    	playerObjects[i] = new PlayerFragment(false,"Player "+Integer.toString(i));
+	    }
+	    
+	    initializeFragments(maxPlayers);
 	}
 	
 	/**
-	 * Initializes the playing area by placing downfacing cards for other players and the received cards
-	 * for the local player. Also sets the river to 3 down facing cards.
+	 * Initializes the playing area by placing the fragments. only called by constructor
 	 */
-	private void initialize(){
+	private void initializeFragments(int totalPlayers){
 		
 		//Transaction begins here
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.setTransitionStyle(FragmentTransaction.TRANSIT_NONE);
 		
-		//Place all fragments
+		//First create the new player object, then replace its respective fragment.
 		for (int i=0;i<totalPlayers;i++)
 		{
 			transaction.replace(playerLayouts[i].getId(), playerObjects[i]);
@@ -84,15 +85,73 @@ public class PlayingArea extends Activity implements OnClickListener {
 		transaction.replace(riverLayout.getId(),riverObject);
 		
 		transaction.commit();
+		fm.executePendingTransactions();
 	}
 	
+	/*********************************************************Methods for Game Mechanics***********************************************************/
+	
+	/**
+	 * Method that updates everything in the view according to what's passed in the data object.
+	 * This is the primary method to be used from the game mechanics.
+	 * @param data
+	 */
+	public void updateAll(GameData data){
+		//Clear all players first
+		clearAllPlayers();
+		//Then clear the river
+		clearRiver();
+		//Then make all the players visible
+		setVisiblePlayers(data.getTotalPlayers());
+	}
+	
+	/**
+	 * Sets the number of players that are visible on the playing area
+	 * @param totalPlayers
+	 */
+	private void setVisiblePlayers(int totalPlayers){
+		
+		for (int i=0;i<totalPlayers;i++){
+			playerLayouts[i].setVisibility(View.VISIBLE);
+		}
+	}
+	
+	/**
+	 * Sets the desired card into the river
+	 */
 	public void updateRiver(){
-		
 	}
 	
-	public void updatePlayers(){
-		
+	/**
+	 * Sets the first 3 cards of the river to the face down image, and removes the last 2.
+	 */
+	public void clearRiver(){
+		riverObject.setCard(0, "back");
+		riverObject.setCard(1, "back");
+		riverObject.setCard(2, "back");
+		riverObject.removeCard(3);
+		riverObject.removeCard(4);
 	}
+	
+	/**
+	 * Sets a player card according to player number [0,totalPlayers] (0 means the local player), the card number (0 for left, 1 for right)
+	 * and the card name (according to convention)
+	 */
+	public void setPlayerCard(int playerNumber, int cardNumber, String c){
+		playerObjects[playerNumber].setCard(cardNumber, c);
+	}
+	
+	/**
+	 * Sets ALL players to invisible.
+	 */
+	private void clearAllPlayers(){
+		for (int i=0;i<this.maxPlayers;i++)
+		{
+			playerObjects[i].setCard(0, "back");
+			playerObjects[i].setCard(1, "back");
+			playerLayouts[i].setVisibility(View.INVISIBLE);
+		}
+	}
+	
 
 	@Override
 	public void onClick(View v) {
@@ -100,8 +159,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 		switch (v.getId()){
 		
 		case R.id.button1:
-			riverObject.setCard(1, "s1");
-			playerObjects[3].setCard(0, "c1");
+			//test commands
+			GameData d = new GameData(5);
+			updateAll(d);
+			setPlayerCard(2,0,"c5");
+			setPlayerCard(0,0,"hk");
+			setPlayerCard(0,1,"hq");
 			break;
 			
 		case R.id.button2:

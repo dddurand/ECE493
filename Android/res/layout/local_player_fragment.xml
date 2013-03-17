@@ -5,7 +5,7 @@
     android:background="#00000000" >
 
     <ImageView
-        android:id="@+id/localLeftCard"
+        android:id="@+id/leftCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -13,11 +13,11 @@
         android:src="@drawable/sk" />
     
     <ImageView
-        android:id="@+id/localRightCard"
+        android:id="@+id/rightCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/localLeftCard"
-        android:layout_toRightOf="@id/localLeftCard"
+        android:layout_alignTop="@id/leftCard"
+        android:layout_toRightOf="@id/leftCard"
         android:src="@drawable/h1" />
     
 

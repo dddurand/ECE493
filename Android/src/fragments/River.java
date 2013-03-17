@@ -48,6 +48,18 @@ public class River extends Fragment {
 		ImageView iv = (ImageView)this.view.findViewById(id);
 		iv.setImageResource(resId);
 	}
+	
+	public void removeCard(int pos){
+		int id;
+		
+		/********Get ImageView Resource*********/
+		String viewName = "river"+Integer.toString(pos);
+		id = getActivity().getResources().getIdentifier(viewName, "id", getActivity().getPackageName());
+		
+		//Get ImageView and set image
+		ImageView iv = (ImageView)this.view.findViewById(id);
+		iv.setImageResource(0);
+	}
 
 
 }
