@@ -85,6 +85,9 @@ public class Account {
 		this.isOnline = isOnline;
 	}
 	
+	public void addBalance(int balance) {
+		this.balance += balance;
+	}
 	
 	
 }

@@ -2,6 +2,8 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
+import misc.AmountDialog;
+import misc.BalanceUpdatable;
 import networking.NLogout;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -32,7 +34,7 @@ import dataModels.Account;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
-public class OnlineMode extends Fragment implements OnClickListener {
+public class OnlineMode extends Fragment implements OnClickListener, BalanceUpdatable {
 	
 	private View view;
 	private final String timeoutMessage = "Operation Timed Out. Please try again.";
@@ -40,7 +42,7 @@ public class OnlineMode extends Fragment implements OnClickListener {
 	private Account account;
 	private SharedPreferences preferences;
 	private DatabaseDataSource dbInterface;
-	
+	private TextView balanceLabel;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,16 +60,19 @@ public class OnlineMode extends Fragment implements OnClickListener {
 		TextView usernameLabel = (TextView)view.findViewById(R.id.onlineModeUsername);
 		usernameLabel.setText(account.getUsername());
 		
-		TextView balanceLabel = (TextView)view.findViewById(R.id.onlineBalance);
+		balanceLabel = (TextView)view.findViewById(R.id.onlineBalance);
 		
-		String balance = this.getString(R.string.current_balance_prefix) + account.getBalance();
-		balanceLabel.setText(balance);
+		updateBalance();
 		
 		/******************Set listener for buttons******************/
 		ImageButton logoutButton = (ImageButton) view.findViewById(R.id.logoutButton);
+		ImageButton addFunds = (ImageButton) view.findViewById(R.id.addFundsButtonOnline);
+		
+		
 //		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);
 //		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
 		logoutButton.setOnClickListener(this);
+		addFunds.setOnClickListener(this);
 //		joinTableButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
 		
@@ -93,6 +98,11 @@ public class OnlineMode extends Fragment implements OnClickListener {
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			}
+			break;
+			
+		/*****Add funds button***/
+		case R.id.addFundsButtonOnline:
+			this.showAmountDialog("How much do you want to add to your balance?");
 			break;
 		}
 		
@@ -161,6 +171,8 @@ public class OnlineMode extends Fragment implements OnClickListener {
 					account.setAuthenticationToken("");
 					
 					dbInterface.updateAccount(account);
+
+					this.application.getAccount().clear();
 					
 					Editor editor = preferences.edit();
 					editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
@@ -175,6 +187,21 @@ public class OnlineMode extends Fragment implements OnClickListener {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Method for displaying a dialog for the funds and obtaining amount from user
+	 */
+	private void showAmountDialog(String message){	
+		AmountDialog dialog = new AmountDialog(message, this.getActivity(), this);
+		dialog.show();
+	}
+	
+	@Override
+	public void updateBalance() {
+		Account account = application.getAccount();
+		String balance = this.getString(R.string.current_balance_prefix) + account.getBalance();
+		balanceLabel.setText(balance);
 	}
 
 }

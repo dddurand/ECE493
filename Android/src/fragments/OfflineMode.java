@@ -1,8 +1,11 @@
 package fragments;
 
-import misc.SeekBarWatcher;
-import android.app.Dialog;
+import misc.AmountDialog;
+import misc.BalanceUpdatable;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,21 +15,22 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
+import android.widget.TextView;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
-import database.DatabaseDataSource;
+import database.PreferenceConstants;
 
-public class OfflineMode extends Fragment implements OnClickListener,TextWatcher {
+public class OfflineMode extends Fragment implements OnClickListener,TextWatcher, BalanceUpdatable {
 	
 	private View view;
 	private PokerApplication application;
-	private DatabaseDataSource dbInterface;
-	
+	private SharedPreferences preferences;
+	private EditText offlineUsername;
+	private TextView offlineBalance;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,11 +47,18 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		joinTableButton.setOnClickListener(this);
 		createTableButton.setOnClickListener(this);
 		/***Set listener for edittext***/
-		EditText offlineUsername = (EditText) view.findViewById(R.id.offlineUsernameTextField);
+		offlineUsername = (EditText) view.findViewById(R.id.offlineUsernameTextField);
+		offlineBalance = (TextView) view.findViewById(R.id.fundsAmountTextview);
+		
 		offlineUsername.addTextChangedListener(this);
 		
+		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 		this.application = (PokerApplication) this.getActivity().getApplication();
-		this.dbInterface = this.application.getDataSource();
+		Account account = application.getAccount();
+		
+		updateBalance();
+		
+		offlineUsername.setText(account.getUsername());
 		
 		return view;
 	}
@@ -67,14 +78,16 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 
 		/*****Add funds button***/
 		case R.id.addFundsButton:
-			this.showAmountDialog("Choose desired initial amount");
+			this.showAmountDialog("How much do you want to add to your balance?");
 			break;
 			
 		case R.id.joinTableButton:
+			updateOfflineUsername();
 			((MainScreen) getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
 			
 		case R.id.createTableButton:
+			updateOfflineUsername();
 			((MainScreen) getActivity()).switchFragment(MainScreen.CREATE_TABLE_SCREEN);
 			break;
 			
@@ -82,6 +95,13 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		
 	}
 
+	private void updateOfflineUsername()
+	{
+		Editor editor = preferences.edit();
+		editor.putString(PreferenceConstants.OFFLINE_USER_NAME, offlineUsername.getText().toString());
+		editor.commit();
+	}
+	
 	@Override
 	public void afterTextChanged(Editable arg0) {
 		// TODO Auto-generated method stub
@@ -98,31 +118,15 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 	/**
 	 * Method for displaying a dialog for the funds and obtaining amount from user
 	 */
-	private void showAmountDialog(String message){
-		
-		//Initialize dialog
-		final Dialog d = new Dialog(getActivity());
-		d.setContentView(R.layout.funds_dialog);
-		d.setTitle(message);
-		
-		//Set listeners for different components
-		//Cancel Button Listener
-		ImageButton dialogCancelButton = (ImageButton)d.findViewById(R.id.fundsDialogCancelButton);
-		dialogCancelButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v){
-				d.dismiss();
-			}
-		});
-		//Seekbar listener
-		SeekBar sb = (SeekBar)d.findViewById(R.id.amountSeekBar);
-		Account account = this.application.getAccount();
-		
-		sb.setMax(this.application.MAX_GEN_BALANCE - account.getBalance());
-		sb.setOnSeekBarChangeListener(new SeekBarWatcher(R.id.amountSeekBar,d));
-		
-		d.show();
-		
+	private void showAmountDialog(String message){	
+		AmountDialog dialog = new AmountDialog(message, this.getActivity(), this);
+		dialog.show();
+	}
+
+	@Override
+	public void updateBalance() {
+		Account account = application.getAccount();
+		offlineBalance.setText(Integer.toString(account.getBalance()));
 	}
 
 

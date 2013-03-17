@@ -51,7 +51,6 @@ public class Login extends Fragment implements OnClickListener {
 	private DatabaseDataSource dbInterface;
 	private Account account;
 	
-	
 	private boolean rememberMe = false;
 	private boolean rememberUsername = false;
 	
@@ -178,6 +177,8 @@ public class Login extends Fragment implements OnClickListener {
 		Account account = application.getAccount();
 		Editor editor = preferences.edit();
 		
+		account = dbInterface.getAccount(account.getUsername());
+		
 		if(rememberMe)
 		{
 			editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, true);
@@ -197,7 +198,9 @@ public class Login extends Fragment implements OnClickListener {
 		String authToken = (String) response.get("AuthenticationToken");
 		account.setAuthenticationToken(authToken);
 		
+		this.application.setAccount(account);
 		dbInterface.updateAccount(account);
+		
 		
 		//set auth in account
 		//update account
@@ -241,16 +244,24 @@ public class Login extends Fragment implements OnClickListener {
 	 */
 	@Override
 	public void onClick(View v) {
+		
+		Account account;
 		switch(v.getId()) {
 		
 		/*****Offline mode button action***/
 		case R.id.offlineButton:
 			//TODO Back door to playing area, remove!!
-			//((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
-			Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
+			
+			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "OfflinePlayer");
+			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
+			account = new Account(offlineUsername, balance);
+			this.application.setAccount(account);
+			
+			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
+			//Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
 			//Add stuff here?
-			startActivity(i);
-//			((MainScreen) this.getActivity()).test();
+			//startActivity(i);
+			//((MainScreen) this.getActivity()).test();
 			break;
 		
 		/*****Register button action***/
@@ -268,7 +279,7 @@ public class Login extends Fragment implements OnClickListener {
 				//Already logged in. Get username and password from class vars.
 				if (application.isLoggedIn())
 				{
-					Account account = application.getAccount();
+					account = application.getAccount();
 					userString = account.getUsername();
 					passwordString = account.getPassword();
 				}
