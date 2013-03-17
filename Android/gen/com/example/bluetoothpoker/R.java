@@ -123,6 +123,7 @@ public final class R {
         public static final int newUsernameField=0x7f070039;
         public static final int offlineButton=0x7f070019;
         public static final int offlineUsernameTextField=0x7f07001f;
+        public static final int onlineBalance=0x7f07002d;
         public static final int onlineModePicture=0x7f070023;
         public static final int onlineModeUsername=0x7f070026;
         public static final int onlineWhiteSpace=0x7f070029;
@@ -152,7 +153,6 @@ public final class R {
         public static final int riverLayout=0x7f070030;
         public static final int screen_middle=0x7f070010;
         public static final int tablesList=0x7f07000d;
-        public static final int textView1=0x7f07002d;
         public static final int usernameField=0x7f070012;
         public static final int validPasswordsIcon=0x7f07003e;
         public static final int validUsernameIcon=0x7f07003a;
@@ -180,6 +180,7 @@ public final class R {
         public static final int createTableHint=0x7f04000e;
         public static final int createTableString=0x7f040007;
         public static final int currentFundsString=0x7f04000c;
+        public static final int current_balance_prefix=0x7f040016;
         public static final int fundsDialogMessage=0x7f04000a;
         public static final int hello_world=0x7f040001;
         public static final int initialFundsAmount=0x7f04000d;

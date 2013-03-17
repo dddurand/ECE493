@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
@@ -22,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
@@ -151,6 +154,9 @@ public class Login extends Fragment implements OnClickListener {
 				if (responseSuccess.compareTo("TRUE")==0 && code == Codes.SUCCESS) 
 				{
 					this.processSuccessfulLogin(response);
+					//Hide Keyboard
+					InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE); 
+					inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
 					
 				} else this.showToast(serverCodes.getErrorMessage(code));
 			} 
