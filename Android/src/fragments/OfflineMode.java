@@ -13,14 +13,21 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
+import dataModels.Account;
+import database.DatabaseDataSource;
+
 public class OfflineMode extends Fragment implements OnClickListener,TextWatcher {
 	
 	private View view;
-
+	private PokerApplication application;
+	private DatabaseDataSource dbInterface;
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -38,6 +45,9 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		/***Set listener for edittext***/
 		EditText offlineUsername = (EditText) view.findViewById(R.id.offlineUsernameTextField);
 		offlineUsername.addTextChangedListener(this);
+		
+		this.application = (PokerApplication) this.getActivity().getApplication();
+		this.dbInterface = this.application.getDataSource();
 		
 		return view;
 	}
@@ -106,6 +116,9 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		});
 		//Seekbar listener
 		SeekBar sb = (SeekBar)d.findViewById(R.id.amountSeekBar);
+		Account account = this.application.getAccount();
+		
+		sb.setMax(this.application.MAX_GEN_BALANCE - account.getBalance());
 		sb.setOnSeekBarChangeListener(new SeekBarWatcher(R.id.amountSeekBar,d));
 		
 		d.show();
