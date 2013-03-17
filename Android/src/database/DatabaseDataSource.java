@@ -1,6 +1,7 @@
 package database;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import dataModels.Account;
 import dataModels.MoneyGenerated;
@@ -37,8 +38,17 @@ public class DatabaseDataSource {
 	  public void open() throws SQLException {
 		  LoginDatabaseAsyncCallBack callback = new LoginDatabaseAsyncCallBack();
 		  RetrieveDatabaseAsync dbOpenTask = new RetrieveDatabaseAsync(callback);
+		  try {
+			dbOpenTask.execute(dbHelper).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		  loadingDialog.show();
-		  dbOpenTask.execute(dbHelper);
+		  
 	  }
 
 	  public void close() {

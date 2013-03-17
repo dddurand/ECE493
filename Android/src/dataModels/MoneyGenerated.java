@@ -6,17 +6,16 @@ public class MoneyGenerated {
 	private int value;
 	private Account account;
 	private int id;
-	
-	
-	public MoneyGenerated(int value, Account account)
-	{
-		this.account = account;
-		this.value = value;
-	}
 
 	public MoneyGenerated(int value, int id)
 	{
 		this.id = id;
+		this.value = value;
+	}
+	
+	public MoneyGenerated(int value, Account account)
+	{
+		this.account = account;
 		this.value = value;
 	}
 

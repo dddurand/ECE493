@@ -148,6 +148,8 @@ public class DatabaseContract {
 				if(db != null) break;
 			}
 			
+			callback.databaseAsyncCallBack(db);
+			
 			return db;
 		}
 	 }
@@ -171,7 +173,7 @@ public class DatabaseContract {
 	 */
 	public static class DatabaseDBHelper extends SQLiteOpenHelper {
 	    // If you change the database schema, you must increment the database version.
-	    public static final int DATABASE_VERSION = 9;
+	    public static final int DATABASE_VERSION = 10;
 	    public static final String DATABASE_NAME = "Database.db";
 
 	    public DatabaseDBHelper(Context context) {

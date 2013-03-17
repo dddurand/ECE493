@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -27,6 +29,8 @@ import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
+import database.DatabaseDataSource;
+import database.PreferenceConstants;
 
 public class OnlineMode extends Fragment implements OnClickListener {
 	
@@ -34,6 +38,9 @@ public class OnlineMode extends Fragment implements OnClickListener {
 	private final String timeoutMessage = "Operation Timed Out. Please try again.";
 	private PokerApplication application;
 	private Account account;
+	private SharedPreferences preferences;
+	private DatabaseDataSource dbInterface;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,10 +51,17 @@ public class OnlineMode extends Fragment implements OnClickListener {
 		
 		application = (PokerApplication) this.getActivity().getApplication();
 		account = application.getAccount();
+		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		dbInterface = this.application.getDataSource();
 		
 		/**Change User Label**/
 		TextView usernameLabel = (TextView)view.findViewById(R.id.onlineModeUsername);
 		usernameLabel.setText(account.getUsername());
+		
+		TextView balanceLabel = (TextView)view.findViewById(R.id.onlineBalance);
+		
+		String balance = this.getString(R.string.current_balance_prefix) + account.getBalance();
+		balanceLabel.setText(balance);
 		
 		/******************Set listener for buttons******************/
 		ImageButton logoutButton = (ImageButton) view.findViewById(R.id.logoutButton);
@@ -142,8 +156,18 @@ public class OnlineMode extends Fragment implements OnClickListener {
 					showToast("You have successfully logged out");
 					//Tell mainscreen that user is no longer logged in
 					application.setLoggedIn(false);
+					
+					Account account = this.application.getAccount();
+					account.setAuthenticationToken("");
+					
+					dbInterface.updateAccount(account);
+					
+					Editor editor = preferences.edit();
+					editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
+					editor.apply();
+					
 					((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
-				} else showToast("Something went wrong");
+				} else showToast("Logout Failed");
 			} 
 			else showToast(timeoutMessage);
 

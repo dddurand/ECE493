@@ -29,6 +29,8 @@ import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
+import dataModels.MoneyGenerated;
+import database.DatabaseDataSource;
 
 @SuppressLint("ValidFragment")
 public class RegisterUser extends Fragment implements OnClickListener {
@@ -36,6 +38,7 @@ public class RegisterUser extends Fragment implements OnClickListener {
 	private View view;
 	private PokerApplication application;
 	private ServerCodes codes;
+	private DatabaseDataSource dataSource;
 	
 	public RegisterUser(ServerCodes codes)
 	{
@@ -60,6 +63,7 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		passwordConfirmField.addTextChangedListener(new GenericTextWatcher(R.id.passwordConfirmField,view));
 		
 		application = (PokerApplication) this.getActivity().getApplication();
+		dataSource = application.getDataSource();
 		
 		return view;
 	}
@@ -129,6 +133,13 @@ public class RegisterUser extends Fragment implements OnClickListener {
 
 					application.setAccount(account);
 					account.setPassword(passwordStr);
+					
+					
+					dataSource.updateAccount(account);
+					
+					account.setBalance(application.MAX_GEN_BALANCE);
+					MoneyGenerated moneyGen = new MoneyGenerated(account.getBalance(), account);
+					dataSource.addMoneyGenerated(moneyGen);
 					
 					application.setLoggedIn(true);
 					//Show toast

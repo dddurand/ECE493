@@ -7,7 +7,8 @@ import database.DatabaseDataSource;
 public class PokerApplication extends Application {
 
 	
-	private final String PREFS_NAME = "SETTINGS";
+	public final int MAX_GEN_BALANCE = 1000;
+	public final String PREFS_NAME = "SETTINGS";
 	private Account account = new Account();
 	private DatabaseDataSource dataSource;
 	private boolean isLoggedIn = false;

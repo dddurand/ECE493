@@ -1,7 +1,6 @@
 package fragments;
 
 import android.app.Fragment;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

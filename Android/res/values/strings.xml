@@ -24,6 +24,7 @@
     <string name="server_invalid_password">Invalid password</string>
     <string name="server_unregistered">Username not registered</string>
     <string name="server_unknown">Unable to contact server.</string>
+    <string name="current_balance_prefix">Current:$</string>
     
     
 </resources>

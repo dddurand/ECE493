@@ -105,12 +105,11 @@
             android:src="@drawable/ic_add_funds"/>
         
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/onlineBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="Current:$500"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </RelativeLayout>

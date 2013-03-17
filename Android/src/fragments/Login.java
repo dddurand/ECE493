@@ -2,17 +2,19 @@ package fragments;
 
 import java.util.concurrent.ExecutionException;
 
+import networking.NLogin;
+import networking.ServerCodes;
+import networking.ServerCodes.Codes;
+
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import networking.NLogin;
-import networking.ServerCodes;
-import networking.ServerCodes.Codes;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -29,23 +31,28 @@ import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
-import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
 import database.DatabaseDataSource;
+import database.PreferenceConstants;
 
 public class Login extends Fragment implements OnClickListener {
 	
 	private View view;
-
+	
 	private ServerCodes serverCodes;
 	CheckBox rememberMeCheckBox;
 	
 	private PokerApplication application;
-	private boolean rememberMe;
 	private DatabaseDataSource dbInterface;
 	private Account account;
+	
+	
+	private boolean rememberMe = false;
+	private boolean rememberUsername = false;
+	
+	SharedPreferences preferences;
 	
 	@SuppressLint("ValidFragment")
 	public Login(ServerCodes codes){
@@ -73,19 +80,8 @@ public class Login extends Fragment implements OnClickListener {
 		application = (PokerApplication) (this.getActivity().getApplication());
 		dbInterface = application.getDataSource();
 		account = application.getAccount();
-		
-		//@TODO
-		//remember username
-		if(true)
-		{
-			EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
-			EditText passf = (EditText) this.view.findViewById(R.id.passwordField);
-			//get from value-pair
-			userField.setText("Asef");
-			passf.setText("asdf");
-			
-		}
-		
+		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+
 		//Perform login button action if user is logged in
 		if (application.isLoggedIn())
 		{
@@ -93,6 +89,32 @@ public class Login extends Fragment implements OnClickListener {
 		}
 		
 		return view;
+	}
+	
+
+	@Override
+	public void onResume() {
+		boolean isRememberedAccount = preferences.getBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
+
+		if(isRememberedAccount)
+		{
+			String username = preferences.getString(PreferenceConstants.REMEMBERED_USERNAME, "");
+			Account account = dbInterface.getAccount(username);
+			this.application.setAccount(account);
+			this.application.setLoggedIn(true);
+			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
+		}
+		
+		boolean isRememberedUsername = preferences.getBoolean(PreferenceConstants.IS_REMEMBERED_USERNAME, false);
+		
+		if(isRememberedUsername)
+		{
+			String username = preferences.getString(PreferenceConstants.REMEMBERED_USERNAME, "");
+			EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
+			userField.setText(username);
+			
+		}
+		super.onResume();
 	}
 	
 	private void sendLoginRequest(String userString, String passwordString) throws JSONException, InterruptedException, ExecutionException, ConnectTimeoutException {
@@ -147,18 +169,25 @@ public class Login extends Fragment implements OnClickListener {
 		//Clear Label
 		this.showLoginError("");
 		
+		Account account = application.getAccount();
+		Editor editor = preferences.edit();
+		
 		if(rememberMe)
 		{
-			//store in name, auth, remember me indicator in name-values
+			editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, true);
+			editor.putString(PreferenceConstants.REMEMBERED_USERNAME, account.getUsername());
+			
 		}
 		
 		//remember username
-		if(true)
+		if(rememberUsername)
 		{
-			//store remember username indicator and username
+			editor.putBoolean(PreferenceConstants.IS_REMEMBERED_USERNAME, true);
+			editor.putString(PreferenceConstants.REMEMBERED_USERNAME, account.getUsername());
 		}
 		
-		Account account = application.getAccount();
+		editor.commit();
+		
 		String authToken = (String) response.get("AuthenticationToken");
 		account.setAuthenticationToken(authToken);
 		
