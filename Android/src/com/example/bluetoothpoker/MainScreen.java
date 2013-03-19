@@ -9,6 +9,8 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import application.PokerApplication;
+import dataModels.Account;
+import dataModels.MoneyGenerated;
 import database.DatabaseDataSource;
 import fragments.CreateTable;
 import fragments.JoinTable;

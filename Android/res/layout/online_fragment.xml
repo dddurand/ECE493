@@ -46,19 +46,27 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+    
+    
+<!--         android:textColor="#ffffff"
+        android:background="#333333"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" -->
+    
     <Button
         android:id="@+id/button1"
+        android:drawableLeft="@drawable/ic_join_table"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="Join Table" />
+        android:text="Join Table"/>
 
     <Button
         android:id="@+id/button2"
+        android:drawableLeft="@drawable/ic_create_table_game"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
