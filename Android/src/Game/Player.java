@@ -5,10 +5,17 @@ public class Player {
 	private int id;
 	private int money;
 	private int active;
+	private String username;
 	
-	public Player(int id, int money) {
+	public Player(int id, String username, int money) {
 		this.id=id;
 		this.money = money;
+	}
+	
+	
+	public String getUsername()
+	{
+		return this.username;
 	}
 	
 	public int getId() {

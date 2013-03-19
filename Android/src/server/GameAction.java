@@ -5,6 +5,23 @@ import java.io.Serializable;
 
 public class GameAction implements Serializable {
 
+	
+	private String testMessage = "DEFAULT";
+	
+	public GameAction()
+	{
+	}
+	
+	public GameAction(String test)
+	{
+		this.testMessage = test;
+	}
+	
+	public String getMessage()
+	{
+		return this.testMessage;
+	}
+	
 	/**
 	 * 
 	 */

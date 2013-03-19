@@ -1,12 +1,6 @@
 package com.example.bluetoothpoker;
 
-import java.util.ArrayList;
-
 import networking.ServerCodes;
-
-import dataModels.Account;
-import dataModels.MoneyGenerated;
-import database.DatabaseDataSource;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,6 +9,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import application.PokerApplication;
+import database.DatabaseDataSource;
 import fragments.CreateTable;
 import fragments.JoinTable;
 import fragments.Login;
@@ -70,28 +65,6 @@ public class MainScreen extends Activity {
 		dataSource.open();
 		PokerApplication application = (PokerApplication) this.getApplication();
 		application.setDataSource(dataSource);
-	}
-	
-	public void test()
-	{
-		PokerApplication application = (PokerApplication) this.getApplication();
-		DatabaseDataSource dataSource = application.getDataSource();
-		
-		
-		
-		Account account = dataSource.getAccount("Asef");
-	
-		int id = dataSource.getAccountID(account);
-		
-		MoneyGenerated generate = new MoneyGenerated(1000, account);
-		dataSource.addMoneyGenerated(generate);
-		
-		ArrayList<MoneyGenerated> list = dataSource.getMoneyGenerates(account);
-		
-		for(MoneyGenerated money : list)
-		{
-			dataSource.removeMoneyGenerate(money.getId());
-		}
 	}
 	
 	@Override

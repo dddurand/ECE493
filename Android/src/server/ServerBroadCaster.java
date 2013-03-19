@@ -10,7 +10,7 @@ import java.util.concurrent.BlockingQueue;
 
 import android.app.Activity;
 
-public class ServerBroadCaster extends ListenableThread {
+public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 
 	private final BlockingQueue<GameState> queue;
 	private final Hashtable<Player, ObjectOutputStream> players;

@@ -1,5 +1,5 @@
 package game;
-import java.util.*;
+import java.util.Comparator;
 
 public class Card {
 	private int rank, suit;
@@ -28,7 +28,7 @@ public class Card {
     	return this.rank;
     }
     public String toString() {
-    	return this.ranks[this.rank]+ " of " + this.suits[this.suit]; 
+    	return ranks[this.rank]+ " of " + suits[this.suit]; 
     }
 	
 }

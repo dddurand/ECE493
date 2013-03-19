@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.bluetoothpoker.R;
 
@@ -23,8 +22,8 @@ public class JoinTable extends Fragment implements OnClickListener {
 		this.view = inflater.inflate(R.layout.join_table_fragment,container, false);
 		
 		/***Populate List***/
-		ListView list = (ListView) view.findViewById(R.id.tablesList);
-		String[] values = {"lol","wut","My little Pony","I Like turtles"};
+//		ListView list = (ListView) view.findViewById(R.id.tablesList);
+//		String[] values = {"lol","wut","My little Pony","I Like turtles"};
 		
 //		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,null,null,values);
 		

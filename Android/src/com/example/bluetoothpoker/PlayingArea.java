@@ -1,9 +1,15 @@
 package com.example.bluetoothpoker;
 
+import java.io.IOException;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import client.Client;
+import server.GameAction;
+import server.GameState;
+import server.Server;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +17,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import fragments.PlayerFragment;
 import fragments.River;
-import game.GameData;
 
 public class PlayingArea extends Activity implements OnClickListener {
 	
@@ -21,15 +26,22 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private PlayerFragment[] playerObjects;
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
+	
+	private boolean debugServer = true;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    
+	    
+	    if(debugServer)
+	    	this.debugServer();
+	    
+	    
 	    setContentView(R.layout.playing_area);
 	    //Get intent
-	    Intent intent = getIntent();
+	   // Intent intent = getIntent();
 	    
 	    /***********Set listeners for buttons****************/
 	    Button b1 = (Button)findViewById(R.id.button1);
@@ -65,6 +77,22 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    initializeFragments(maxPlayers);
 	}
 	
+	private void debugServer()
+	{
+		LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
+		Server server = new Server(this);
+		try {
+			Client client = new Client(this, server, actionQueue);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		GameAction action = new GameAction();
+		actionQueue.add(action);
+		
+	}
+	
 	/**
 	 * Initializes the playing area by placing the fragments. only called by constructor
 	 */
@@ -95,7 +123,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 * This is the primary method to be used from the game mechanics.
 	 * @param data
 	 */
-	public void updateAll(GameData data){
+	public void updateAll(GameState data){
 		//Clear all players first
 		clearAllPlayers();
 		//Then clear the river
@@ -160,7 +188,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		case R.id.button1:
 			//test commands
-			GameData d = new GameData(5);
+			GameState d = new GameState(5);
 			updateAll(d);
 			setPlayerCard(2,0,"c5");
 			setPlayerCard(0,0,"hk");

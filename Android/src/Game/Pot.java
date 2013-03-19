@@ -3,7 +3,6 @@ package game;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 
 public class Pot {
 	private int amount;

@@ -10,7 +10,6 @@ import java.io.StreamCorruptedException;
 import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import server.ServerClientListener.PlayerTaskListener;
 import android.app.Activity;
 
 public class Server implements PlayerTaskListener {
@@ -109,6 +108,7 @@ public class Server implements PlayerTaskListener {
 		this.removePlayer(player);
 	}
 	
+
 	
 	
 }

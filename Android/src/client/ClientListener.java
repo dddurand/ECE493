@@ -1,32 +1,29 @@
-package server;
-
-import game.Player;
+package client;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
-import java.util.concurrent.BlockingQueue;
 
-import android.app.Activity;
+import server.GameState;
+import server.ListenableThread;
 import android.util.Log;
 
-public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
+import com.example.bluetoothpoker.PlayingArea;
+
+public class ClientListener extends ListenableThread<ClientTaskListener> {
 
 	private ObjectInputStream objectInputStream;
 	private boolean cancelled = false;
 	private boolean userCancelled = false;
-	private BlockingQueue<GameAction> queue;
-	private Player player;
+	private PlayingArea activity;
 	
-	public ServerClientListener(InputStream inStream, BlockingQueue<GameAction> queue, Player player, Activity activity) 
+	public ClientListener(InputStream inStream, PlayingArea activity) 
 			throws StreamCorruptedException, IOException
 	{
 		super(activity);
-		objectInputStream = new ObjectInputStream(inStream);
-		this.queue = queue;
-		this.player = player;
+		this.activity = activity;
 	}
 
 	@Override
@@ -35,8 +32,10 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 		while(!cancelled || !userCancelled)
 		{
 			try {
-				GameAction gameAction = (GameAction) objectInputStream.readObject();
-				this.queue.add(gameAction);
+				GameState gameState = (GameState) objectInputStream.readObject();
+
+				UpdateGUIRunnable guiUpdate = new UpdateGUIRunnable(gameState, activity);
+				this.activity.runOnUiThread(guiUpdate);
 	
 			} catch (OptionalDataException e) {
 				Log.e("Optional Data Exception:", "ServerClientListener");
@@ -50,7 +49,7 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 			}
 		}
 		
-		PlayerTaskCompleteNotify runnable = new PlayerTaskCompleteNotify(player);
+		ClientListenerTaskCompleteNotify runnable = new ClientListenerTaskCompleteNotify();
 		informListeners(runnable);
 		
 	}
@@ -60,8 +59,23 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 		this.cancelled = true;
 	}
 	
+	private class UpdateGUIRunnable implements Runnable
+	{
+		private PlayingArea activity;
+		private GameState state;
+		
+		public UpdateGUIRunnable(GameState state, PlayingArea activity)
+		{
+			this.state = state;
+			this.activity = activity;
+		}
+		
+		@Override
+		public void run() {
+			this.activity.updateAll(state);
+		}
+		
+	}
 	
-	
-
 	
 }
