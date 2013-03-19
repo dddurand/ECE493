@@ -38,7 +38,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignRight="@id/rightCard"
         android:layout_below="@id/rightCard"
-        android:paddingTop="2dp"/>
+        android:max="7000"
+        android:paddingTop="2dp"
+        android:visibility="invisible" />
     
     <TextView
         android:id="@+id/moneyAmountText"

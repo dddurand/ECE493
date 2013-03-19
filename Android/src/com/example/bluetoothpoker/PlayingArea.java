@@ -3,7 +3,6 @@ package com.example.bluetoothpoker;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import client.Client;
 import server.GameAction;
 import server.GameState;
 import server.Server;
@@ -11,10 +10,13 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+import client.Client;
 import fragments.PlayerFragment;
 import fragments.River;
 
@@ -46,8 +48,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    /***********Set listeners for buttons****************/
 	    Button b1 = (Button)findViewById(R.id.button1);
 	    Button b2 = (Button)findViewById(R.id.button2);
+	    Button b3 = (Button)findViewById(R.id.button3);
 	    b1.setOnClickListener(this);
 	    b2.setOnClickListener(this);
+	    b3.setOnClickListener(this);
 	    
 	    
 	    /**********************Initialize fragment related variables************************/
@@ -180,6 +184,30 @@ public class PlayingArea extends Activity implements OnClickListener {
 		}
 	}
 	
+	/**
+	 * Animates the progress bar for the given player in the parameter.
+	 * @param player
+	 */
+	public void animateProgressBar(int player){
+		//Get view
+		final ProgressBar pb = (ProgressBar) playerLayouts[player].findViewById(R.id.progressBarTimeLeft);
+		//Set it visible
+		pb.setVisibility(View.VISIBLE);
+		
+		//Start the countdown timer and start
+		new CountDownTimer(7000,1){
+			
+			public void onTick(long millisUntilFinished){
+				pb.setProgress((int)millisUntilFinished);
+			}
+			
+			public void onFinish(){
+				pb.setVisibility(View.INVISIBLE);
+			}
+		}.start();
+		
+	}
+	
 
 	@Override
 	public void onClick(View v) {
@@ -200,6 +228,13 @@ public class PlayingArea extends Activity implements OnClickListener {
 			riverObject.setCard(3, "hk");
 			riverObject.setCard(4, "hq");
 			playerObjects[3].setCard(1, "sk");
+			break;
+			
+		case R.id.button3:
+			animateProgressBar(0);
+			animateProgressBar(1);
+			animateProgressBar(2);
+			animateProgressBar(5);
 			break;
 		
 		}

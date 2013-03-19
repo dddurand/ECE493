@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
