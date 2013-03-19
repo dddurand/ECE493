@@ -27,7 +27,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
 	
-	private boolean debugServer = true;
+	private boolean debugServer = false;
 
 	/** Called when the activity is first created. */
 	@Override

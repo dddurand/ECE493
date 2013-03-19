@@ -134,10 +134,9 @@ public class RegisterUser extends Fragment implements OnClickListener {
 					application.setAccount(account);
 					account.setPassword(passwordStr);
 					
-					
+					account.setBalance(application.MAX_GEN_BALANCE);
 					dataSource.updateAccount(account);
 					
-					account.setBalance(application.MAX_GEN_BALANCE);
 					MoneyGenerated moneyGen = new MoneyGenerated(account.getBalance(), account);
 					dataSource.addMoneyGenerated(moneyGen);
 					

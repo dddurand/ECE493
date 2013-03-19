@@ -35,6 +35,7 @@ import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
+import dataModels.MoneyGenerated;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
@@ -175,7 +176,18 @@ public class Login extends Fragment implements OnClickListener {
 		Account account = application.getAccount();
 		Editor editor = preferences.edit();
 		
-		account = dbInterface.getAccount(account.getUsername());
+		if(dbInterface.accountExists(account))
+		{
+			account = dbInterface.getAccount(account.getUsername());
+		}
+		else
+		{
+			account.setBalance(application.MAX_GEN_BALANCE);
+			dbInterface.updateAccount(account);
+			MoneyGenerated moneyGen = new MoneyGenerated(account.getBalance(), account);
+			dbInterface.addMoneyGenerated(moneyGen);
+		}
+		
 		
 		if(rememberMe)
 		{
