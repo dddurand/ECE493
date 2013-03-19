@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
@@ -262,15 +264,16 @@ public class Login extends Fragment implements OnClickListener {
 		case R.id.offlineButton:
 			//TODO Back door to playing area, remove!!
 			
-			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "OfflinePlayer");
-			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
-			account = new Account(offlineUsername, balance);
-			this.application.setAccount(account);
+//			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "OfflinePlayer");
+//			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
+//			account = new Account(offlineUsername, balance);
+//			this.application.setAccount(account);
 			
-			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
-			//Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
+//			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
+			
+			Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
 			//Add stuff here?
-			//startActivity(i);
+			startActivity(i);
 			//((MainScreen) this.getActivity()).test();
 			break;
 		

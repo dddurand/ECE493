@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import client.Client;
+import dataModels.Account;
 import server.GameAction;
 import server.GameState;
 import server.Server;
@@ -11,12 +12,15 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import application.PokerApplication;
 import fragments.PlayerFragment;
 import fragments.River;
+import game.Player;
 
 public class PlayingArea extends Activity implements OnClickListener {
 	
@@ -79,6 +83,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	private void debugServer()
 	{
+		Account account = ((PokerApplication) this.getApplication()).getAccount();
+		account.setUsername("BOB");
+		account.setBalance(25);
+		
 		LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
 		Server server = new Server(this);
 		try {
@@ -88,9 +96,30 @@ public class PlayingArea extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
 		
-		GameAction action = new GameAction();
-		actionQueue.add(action);
+		Player player = new Player(0, account.getUsername(), account.getBalance());
 		
+		GameAction action = new GameAction("BAM");
+		actionQueue.add(action);
+		server.testState(player);
+		actionQueue.add(action);
+		actionQueue.add(action);
+		actionQueue.add(action);
+		actionQueue.add(action);
+		actionQueue.add(action);
+		server.testState(player);
+		server.testState(player);
+		server.testState(player);
+		server.testState(player);
+		
+		actionQueue.add(action);
+		server.testState(player);
+		actionQueue.add(action);
+		server.testState(player);
+		actionQueue.add(action);
+		server.testState(player);
+		actionQueue.add(action);
+		server.testState(player);
+		actionQueue.add(action);
 	}
 	
 	/**
@@ -124,6 +153,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 * @param data
 	 */
 	public void updateAll(GameState data){
+		
+		Log.d("GUI UPDATE CALLED", "TotalPlayers: " + data.getTotalPlayers());
+		
 		//Clear all players first
 		clearAllPlayers();
 		//Then clear the river

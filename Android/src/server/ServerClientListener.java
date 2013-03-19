@@ -20,6 +20,17 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 	private BlockingQueue<GameAction> queue;
 	private Player player;
 	
+	/**
+	 * 
+	 * A single runnable that waits for communication from clients.
+	 * 
+	 * @param inStream The inputstream for a given player
+	 * @param queue The queue of GameActions where recieved gameActions will be placed
+	 * @param player The player that this thread is for.
+	 * @param activity The activity to be used as context.
+	 * @throws StreamCorruptedException
+	 * @throws IOException
+	 */
 	public ServerClientListener(InputStream inStream, BlockingQueue<GameAction> queue, Player player, Activity activity) 
 			throws StreamCorruptedException, IOException
 	{
@@ -29,10 +40,13 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 		this.player = player;
 	}
 
+	/**
+	 * The method that continually waits for new GameActions from clients, and adds them to the game mechanics.
+	 */
 	@Override
 	public void run() {
 		
-		while(!cancelled || !userCancelled)
+		while(!cancelled && !userCancelled)
 		{
 			try {
 				GameAction gameAction = (GameAction) objectInputStream.readObject();
@@ -55,6 +69,9 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 		
 	}
 	
+	/**
+	 * Causes the thread to cancel.
+	 */
 	public void cancel()
 	{
 		this.cancelled = true;

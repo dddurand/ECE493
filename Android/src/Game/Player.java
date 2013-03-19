@@ -1,6 +1,9 @@
 package game;
 
-public class Player {
+import java.io.IOException;
+import java.io.Serializable;
+
+public class Player implements Serializable{
 	private Card[] hand = new Card[2];
 	private int id;
 	private int money;
@@ -10,6 +13,7 @@ public class Player {
 	public Player(int id, String username, int money) {
 		this.id=id;
 		this.money = money;
+		this.username = username;
 	}
 	
 	
@@ -56,4 +60,20 @@ public class Player {
 	public String toString() {
 		return "id: " + this.id + "\nmoney: " + this.money + "\nhand: " + this.hand[0].toString() + " and " + this.hand[1].toString();
 	}
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.write(id);
+		out.write(money);
+		out.write(active);
+		out.writeUTF(username);
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		this.id = in.readInt();
+		this.money = in.readInt();
+		this.active = in.readInt();
+		this.username = in.readUTF();
+	}
+	
 }

@@ -7,31 +7,59 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 
+/**
+ * The Main thread that handles all communications to the clients.
+ * The object continually waits for new GameActions, and sends them to a corresponding client.
+ * 
+ * @author dddurand
+ *
+ */
 public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 
 	private final BlockingQueue<GameState> queue;
-	private final Hashtable<Player, ObjectOutputStream> players;
+	private final Hashtable<Integer, ObjectOutputStream> players;
 	private boolean canceled = false;
+	private TimeUnit timeUnit = TimeUnit.SECONDS;
+	private long time = 5;
 	
+	/**
+	 * General Constructor
+	 * @param queue The queue of GameActions to wait on.
+	 * @param activity The activity that is used for context
+	 */
 	public ServerBroadCaster(BlockingQueue<GameState> queue, Activity activity)
 	{
 		super(activity);
 		this.queue = queue;
-		players = new Hashtable<Player, ObjectOutputStream>();
+		players = new Hashtable<Integer, ObjectOutputStream>();
 	}
 	
+	/**
+	 * Adds a player to people to broadcast to.
+	 * 
+	 * @param player The player to broadcast to.
+	 * @param stream The players associated output stream
+	 * @throws IOException
+	 */
 	public void addPlayer(Player player, OutputStream stream) throws IOException
 	{
 		ObjectOutputStream objStream = new ObjectOutputStream(stream);
+		objStream.flush();
 		
 		synchronized (this) {
-			players.put(player, objStream);
+			players.put(player.getId(), objStream);
 		}
 	}
 	
+	/**
+	 * Removes a given player from the broadcast object
+	 * 
+	 * @param player
+	 */
 	public void removePlayer(Player player)
 	{
 		synchronized (this) {
@@ -39,23 +67,42 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 		}
 	}
 	
+	/**
+	 * Causes the broadcast thread to terminate
+	 */
 	public void cancel()
 	{
 		this.canceled = true;
 	}
 	
-	
+	/**
+	 * The method that continually waits for new GameActions. Once a new one is recieved
+	 * it is sent to the corresponding client.
+	 */
 	@Override
 	public void run() 
 	{
 			ObjectOutputStream stream;
 			while(!canceled)
 			{
-				GameState state = queue.remove();
+				
+				GameState state;
+				try {
+					state = queue.poll(this.time, this.timeUnit);
+					if(state == null) continue;
+				} catch (InterruptedException e1) {
+					continue;
+				}
+				
 				synchronized (this) 
 				{
 					Player player = state.getPlayer();
-					stream = players.get(player);
+					
+					if(player == null) continue;
+					
+					stream = players.get(player.getId());
+					
+					if(stream == null) continue;
 					
 					try {
 						stream.writeObject(state);

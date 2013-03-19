@@ -1,7 +1,6 @@
 package client;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
@@ -12,6 +11,15 @@ import android.util.Log;
 
 import com.example.bluetoothpoker.PlayingArea;
 
+/**
+ * This runnable continually waits on the provided input stream,
+ * and attempts to read game state objects.
+ * 
+ * When a game state is retrieved, the activity is informed and updated.
+ * 
+ * @author dddurand
+ *
+ */
 public class ClientListener extends ListenableThread<ClientTaskListener> {
 
 	private ObjectInputStream objectInputStream;
@@ -19,13 +27,28 @@ public class ClientListener extends ListenableThread<ClientTaskListener> {
 	private boolean userCancelled = false;
 	private PlayingArea activity;
 	
-	public ClientListener(InputStream inStream, PlayingArea activity) 
+	/**
+	 * General Constructor
+	 * 
+	 * @param inStream The input stream to continually read on.
+	 * @param activity The activity to be updated when a game state object is recieved
+	 * @throws StreamCorruptedException
+	 * @throws IOException
+	 */
+	public ClientListener(ObjectInputStream inStream, PlayingArea activity) 
 			throws StreamCorruptedException, IOException
 	{
 		super(activity);
 		this.activity = activity;
+		this.objectInputStream = inStream;
 	}
 
+	/**
+	 * The workhorse of the runnable, that blocks on the stream.
+	 * Upon receiving a new game state a new update runnable is created
+	 * and given to the activity.
+	 * 
+	 */
 	@Override
 	public void run() {
 		
@@ -38,38 +61,59 @@ public class ClientListener extends ListenableThread<ClientTaskListener> {
 				this.activity.runOnUiThread(guiUpdate);
 	
 			} catch (OptionalDataException e) {
-				Log.e("Optional Data Exception:", "ServerClientListener");
+				Log.e("Optional Data Exception:", "ClientListener");
 				this.cancelled = true;
 			} catch (ClassNotFoundException e) {
-				Log.e("ClassNotFoundException:", "ServerClientListener");
+				Log.e("ClassNotFoundException:", "ClientListener");
 				this.cancelled = true;
 			} catch (IOException e) {
-				Log.e("IOException", "ServerClientListener");
+				Log.e("IOException", "ClientListener");
 				this.cancelled = true;
 			}
 		}
 		
+		/**
+		 * Notify listeners that the runnable has stopped.
+		 */
 		ClientListenerTaskCompleteNotify runnable = new ClientListenerTaskCompleteNotify();
 		informListeners(runnable);
 		
 	}
 	
+	/**
+	 * Causes the runnable to terminate.
+	 */
 	public void cancel()
 	{
 		this.cancelled = true;
 	}
 	
+	/**
+	 * A GUI Runnable that thats an update function in the activity with a provided
+	 * GameState object.
+	 * 
+	 * @author dddurand
+	 *
+	 */
 	private class UpdateGUIRunnable implements Runnable
 	{
 		private PlayingArea activity;
 		private GameState state;
 		
+		/**
+		 * General Constructor
+		 * @param state The GameState to be given to the activity to update the GUI.
+		 * @param activity The Activity to be updated.
+		 */
 		public UpdateGUIRunnable(GameState state, PlayingArea activity)
 		{
 			this.state = state;
 			this.activity = activity;
 		}
 		
+		/**
+		 * Calls the update method on the activity.
+		 */
 		@Override
 		public void run() {
 			this.activity.updateAll(state);

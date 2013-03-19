@@ -5,6 +5,17 @@ import game.Player;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * 
+ * This object represents the state of the game, and contains all information needed
+ * to update the GUI of the clients.
+ * 
+ * This includes players, balances, pots, community cards, your cards, etc.
+ * It also contains a list of actions & contexts(history) made by current user.
+ * 
+ * @author dddurand
+ *
+ */
 public class GameState implements Serializable  {
 
 	private static final long serialVersionUID = -4305757269635174737L;
@@ -17,6 +28,9 @@ public class GameState implements Serializable  {
 	//current bet amount
 	//my current bet
 	//etc....
+	
+	//We also need a list of actions and their contexts for each user for statistics
+	//AKA the history of actions for this game for this user
 	
 			
 	public GameState(int numberPlayers)
@@ -40,14 +54,29 @@ public class GameState implements Serializable  {
 		this.totalPlayers = totalPlayers;
 	}
 	
-	
+	/**
+	 * This method serializes the current object.
+	 * 
+	 * @param out
+	 * @throws IOException
+	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		// write 'this' to 'out'...
+		out.writeInt(totalPlayers);
+		//out.writeObject(player);
 		
 	}
 
+	/**
+	 * This method deserializes the current object.
+	 * 
+	 * @param out
+	 * @throws IOException
+	 */
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
+		this.totalPlayers=in.readInt();
+		//this.player = (Player) in.readObject();
+		
 	}
 	
 	

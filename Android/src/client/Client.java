@@ -4,6 +4,8 @@ import game.Player;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -12,7 +14,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import server.GameAction;
-import server.GameState;
 import server.Server;
 import application.PokerApplication;
 
@@ -20,11 +21,19 @@ import com.example.bluetoothpoker.PlayingArea;
 
 import dataModels.Account;
 
+/**
+ * Acts as the interface between the server and the GUI. This class
+ * listens for game state updates from the server, and sends broadcasts
+ * of actions made by the user.
+ * 
+ * @author dddurand
+ *
+ */
 public class Client implements ClientTaskListener {
 
 	private PlayingArea activity;
-	private InputStream inStream;
-	private OutputStream outStream;
+	private ObjectInputStream inStream;
+	private ObjectOutputStream outStream;
 	private int LOCAL_PIPE_BUFFER = 8000;
 	
 	private BlockingQueue<GameAction> queue;
@@ -53,36 +62,65 @@ public class Client implements ClientTaskListener {
 	 */
 	public Client(PlayingArea activity, InputStream inStream, OutputStream outStream, LinkedBlockingQueue<GameAction> queue) throws StreamCorruptedException, IOException {
 		this.activity = activity;
-		this.inStream = inStream;
-		this.outStream = outStream;
+		this.inStream = new ObjectInputStream(inStream);
+		this.outStream = new ObjectOutputStream(outStream);
+		outStream.flush();
+		
 		this.queue = queue;
 		initialize();
 	}
 	
+	/**
+	 * Initialize that is used by both constructor.
+	 * Should be called at the end.
+	 * 
+	 * @throws StreamCorruptedException
+	 * @throws IOException
+	 */
 	private void initialize() throws StreamCorruptedException, IOException
 	{
 		listener = new ClientListener(this.inStream, this.activity);
+		Thread listenerThread = new Thread(listener);
+		listenerThread.start();
+		
 		broadCaster = new ClientBroadCaster(queue, activity, outStream);
+		Thread broadCasterThread = new Thread(broadCaster);
+		broadCasterThread.start();
 	}
 	
+	/**
+	 * Specialized Constructor for the case when the client is on the server device.
+	 * We are generating pipes to mimic bluetooth communication
+	 * 
+	 * @param server
+	 * @throws IOException
+	 */
 	private void intializeLocalClient(Server server) throws IOException
 	{
 		PipedInputStream keepInStream = new PipedInputStream(LOCAL_PIPE_BUFFER);
 		PipedInputStream sendInStream = new PipedInputStream(LOCAL_PIPE_BUFFER);
 		
 		PipedOutputStream keepOutStream = new PipedOutputStream(sendInStream);
-		PipedOutputStream sendOutStream = new PipedOutputStream(keepInStream);
+		keepOutStream.flush();
 		
-		this.inStream = keepInStream;
-		this.outStream = keepOutStream;
+		PipedOutputStream sendOutStream = new PipedOutputStream(keepInStream);
+		sendOutStream.flush();
+		
+		this.outStream = new ObjectOutputStream(keepOutStream);
+		this.outStream.flush();
 		
 		PokerApplication app = (PokerApplication) activity.getApplication();
 		Account account = app.getAccount();
 		Player player = new Player(0, account.getUsername(), account.getBalance());
 		
 		server.addPlayer(player, sendInStream, sendOutStream);
+		this.inStream = new ObjectInputStream(keepInStream);
 	}
 
+	/**
+	 * The function called when something fails
+	 * 
+	 */
 	@Override
 	public void onPlayerTaskClose() {
 		//signal activity that we disconnected
