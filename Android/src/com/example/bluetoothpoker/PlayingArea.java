@@ -191,6 +191,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 			GameState d = new GameState(5);
 			updateAll(d);
 			setPlayerCard(2,0,"c5");
+			setPlayerCard(2,1,"s1");
 			setPlayerCard(0,0,"hk");
 			setPlayerCard(0,1,"hq");
 			break;

@@ -30,4 +30,26 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/back" />
 
+    <ProgressBar
+        android:id="@+id/progressBarTimeLeft"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@id/rightCard"
+        android:layout_below="@id/rightCard"
+        android:paddingTop="2dp"/>
+    
+    <TextView
+        android:id="@+id/moneyAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rightCard"
+        android:layout_alignLeft="@id/leftCard"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="2dp"
+        android:textColor="#ffffe0"
+        android:text="500"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </RelativeLayout>

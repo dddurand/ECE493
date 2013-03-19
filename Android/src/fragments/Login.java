@@ -276,7 +276,10 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Register button action***/
 		case R.id.registerButton:
-			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
+			Intent intent = new Intent(getActivity(),PlayingArea.class);
+			startActivity(intent);
+//TODO Remove this
+//			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
 			break;
 			
 		/*****Login Button******/	

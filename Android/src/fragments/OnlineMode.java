@@ -67,6 +67,7 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		/******************Set listener for buttons******************/
 		ImageButton logoutButton = (ImageButton) view.findViewById(R.id.logoutButton);
 		ImageButton addFunds = (ImageButton) view.findViewById(R.id.addFundsButtonOnline);
+//		ImageButton joinTable = (ImageButton) view.findViewById(id);
 		
 		
 //		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);

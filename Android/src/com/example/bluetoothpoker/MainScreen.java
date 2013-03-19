@@ -9,6 +9,11 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import application.PokerApplication;
+<<<<<<< HEAD
+=======
+import dataModels.Account;
+import dataModels.MoneyGenerated;
+>>>>>>> Foundation for progress bar animator class
 import database.DatabaseDataSource;
 import fragments.CreateTable;
 import fragments.JoinTable;
