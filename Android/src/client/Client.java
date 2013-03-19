@@ -83,9 +83,13 @@ public class Client implements ClientTaskListener {
 		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
 		
+		listener.addListener(this);
+		
 		broadCaster = new ClientBroadCaster(queue, activity, outStream);
 		Thread broadCasterThread = new Thread(broadCaster);
 		broadCasterThread.start();
+		
+		broadCaster.addListener(this);
 	}
 	
 	/**
