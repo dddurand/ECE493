@@ -82,7 +82,8 @@ public final class R {
         public static final int sj=0x7f020044;
         public static final int sk=0x7f020045;
         public static final int sq=0x7f020046;
-        public static final int table_bg=0x7f020047;
+        public static final int stats_bg=0x7f020047;
+        public static final int table_bg=0x7f020048;
     }
     public static final class id {
         public static final int addFundsButton=0x7f070021;
@@ -105,6 +106,7 @@ public final class R {
         public static final int fundsDialogCancelButton=0x7f07000b;
         public static final int fundsDialogOKButton=0x7f07000a;
         public static final int fundsTextview=0x7f07001d;
+        public static final int globalStats=0x7f07004b;
         public static final int imageView1=0x7f070003;
         public static final int joinTableButton=0x7f070023;
         public static final int joinTableImage=0x7f07000c;
@@ -118,7 +120,7 @@ public final class R {
         public static final int logoutProgressBar=0x7f070026;
         public static final int mainscreenHelper=0x7f070000;
         public static final int mainscreenLeft=0x7f070001;
-        public static final int menu_settings=0x7f070048;
+        public static final int menu_settings=0x7f07004c;
         public static final int moneyAmountText=0x7f070030;
         public static final int newOfflineUserName=0x7f07001f;
         public static final int newUsernameField=0x7f07003b;
@@ -133,6 +135,7 @@ public final class R {
         public static final int passwordField=0x7f070015;
         public static final int passwordIcon=0x7f07003e;
         public static final int password_icon=0x7f070014;
+        public static final int personalStats=0x7f070049;
         public static final int player2=0x7f070034;
         public static final int player3=0x7f070035;
         public static final int player4=0x7f070036;
@@ -140,6 +143,7 @@ public final class R {
         public static final int player6=0x7f070038;
         public static final int playerNameText=0x7f07002f;
         public static final int progressBarTimeLeft=0x7f070010;
+        public static final int rankingStats=0x7f07004a;
         public static final int registerButton=0x7f070019;
         public static final int registerResponseLabel=0x7f070042;
         public static final int register_screen_helper=0x7f070039;
@@ -154,6 +158,7 @@ public final class R {
         public static final int river4=0x7f070047;
         public static final int riverLayout=0x7f070032;
         public static final int screen_middle=0x7f070011;
+        public static final int tabHost=0x7f070048;
         public static final int tablesList=0x7f07000d;
         public static final int usernameField=0x7f070013;
         public static final int validPasswordsIcon=0x7f070040;
@@ -172,6 +177,7 @@ public final class R {
         public static final int playing_area=0x7f030009;
         public static final int register_fragment=0x7f03000a;
         public static final int river_fragment=0x7f03000b;
+        public static final int stats_screen=0x7f03000c;
     }
     public static final class menu {
         public static final int activity_main_screen=0x7f060000;
