@@ -29,6 +29,7 @@ public class GameAction implements Serializable {
 	public GameAction(int position, PokerAction action)
 	{
 		this.action = action;
+		this.position = position;
 	}
 	
 	/**
@@ -37,6 +38,8 @@ public class GameAction implements Serializable {
 	public GameAction(int position, PokerAction action, int value)
 	{
 		this.action = action;
+		this.position = position;
+		this.value = value;
 	}
 	
 	/**
