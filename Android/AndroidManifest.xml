@@ -33,7 +33,11 @@
             android:screenOrientation="sensorLandscape" 
             android:name="com.example.bluetoothpoker.PlayingArea"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"></activity>
-        <activity android:name="com.example.bluetoothpoker.Stats" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" android:screenOrientation="sensorLandscape"></activity>
+        <activity 
+            android:name="com.example.bluetoothpoker.Stats"
+            android:label="Statistics" 
+            android:theme="@android:style/Theme.Holo" 
+            android:screenOrientation="sensorLandscape"></activity>
     </application>
 
 </manifest>

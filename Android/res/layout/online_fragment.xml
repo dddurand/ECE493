@@ -82,7 +82,7 @@
         />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/statsButtonOnlineMode"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

@@ -6,11 +6,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Intent;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.Toast;
 import application.PokerApplication;
 import database.DatabaseDataSource;
 import fragments.CreateTable;
@@ -20,7 +20,7 @@ import fragments.OfflineMode;
 import fragments.OnlineMode;
 import fragments.RegisterUser;
 
-public class MainScreen extends Activity implements OnClickListener{
+public class MainScreen extends Activity{
 	
 	public final static int LOGIN_SCREEN = 0;
 	public final static int OFFLINE_SCREEN = 1;
@@ -30,6 +30,7 @@ public class MainScreen extends Activity implements OnClickListener{
 	public final static int ONLINE_MODE = 6;
 	
 	private ServerCodes serverCodes;
+	private int currentScreen;
 	
 	
 	@Override
@@ -45,11 +46,6 @@ public class MainScreen extends Activity implements OnClickListener{
 			if (savedInstanceState != null) {
 				return;
 			}
-			
-			/*TODO*/
-			/******BACK DOOR FOR TESTING STUFF. REMOVEEE!!!!!!!!!!!!!!********/
-			View backDoor = (View)findViewById(R.id.mainscreenLeft);
-			backDoor.setOnClickListener(this);
 			
 			this.serverCodes = new ServerCodes(this);
 			this.switchFragment(MainScreen.LOGIN_SCREEN);
@@ -88,6 +84,7 @@ public class MainScreen extends Activity implements OnClickListener{
 	 */
 	public void switchFragment(int screen) {
 		Fragment newFragment;
+		this.currentScreen=screen;
 		
 		//Set the fragment object appropriately
 		switch (screen) {
@@ -131,11 +128,21 @@ public class MainScreen extends Activity implements OnClickListener{
 	}
 
 	@Override
-	public void onClick(View arg0) {
-		
-		Intent i = new Intent(this,Stats.class);
-		startActivity(i);
-		
+	public void onBackPressed() {
+		if (currentScreen==MainScreen.ONLINE_MODE)
+		{
+			new AlertDialog.Builder(this)
+			.setTitle("Really Exit?")
+			.setMessage("Are you sure you want to log out?")
+			.setNegativeButton(android.R.string.no, null)
+			.setPositiveButton(android.R.string.yes, new OnClickListener() {
+
+				public void onClick(DialogInterface arg0, int arg1) {
+					Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_SHORT).show();
+				}
+			}).create().show();
+		}
+		else MainScreen.super.onBackPressed();
 	}
 
 }

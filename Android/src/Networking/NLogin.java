@@ -23,7 +23,7 @@ import fragments.Login;
 
 public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
 	
-	private int TIMEOUT_MILLISEC = 5000; //5 seconds
+	private int TIMEOUT_MILLISEC = 10000; //10 seconds
 	private String serverUrl="http://labtest.ece.ualberta.ca/login";
 	
 	protected HttpParams httpParams;

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
+import com.example.bluetoothpoker.Stats;
 
 import dataModels.Account;
 import database.DatabaseDataSource;
@@ -67,13 +70,14 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		/******************Set listener for buttons******************/
 		ImageButton logoutButton = (ImageButton) view.findViewById(R.id.logoutButton);
 		ImageButton addFunds = (ImageButton) view.findViewById(R.id.addFundsButtonOnline);
-//		ImageButton joinTable = (ImageButton) view.findViewById(id);
+		Button statsButton = (Button) view.findViewById(R.id.statsButtonOnlineMode);
 		
 		
 //		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);
 //		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
 		logoutButton.setOnClickListener(this);
 		addFunds.setOnClickListener(this);
+		statsButton.setOnClickListener(this);
 //		joinTableButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
 		
@@ -104,6 +108,12 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		/*****Add funds button***/
 		case R.id.addFundsButtonOnline:
 			this.showAmountDialog("How much do you want to add to your balance?");
+			break;
+			
+		/*******START THE NEW ACTIVITY FOR THE STATS*******/
+		case R.id.statsButtonOnlineMode:
+			Intent i = new Intent(getActivity(),Stats.class);
+			startActivity(i);
 			break;
 		}
 		
@@ -204,5 +214,6 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		String balance = this.getString(R.string.current_balance_prefix) + account.getBalance();
 		balanceLabel.setText(balance);
 	}
+	
 
 }

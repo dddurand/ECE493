@@ -41,6 +41,7 @@ import dataModels.MoneyGenerated;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
+
 @SuppressLint("ValidFragment")
 public class Login extends Fragment implements OnClickListener {
 	
@@ -279,10 +280,7 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Register button action***/
 		case R.id.registerButton:
-			Intent intent = new Intent(getActivity(),PlayingArea.class);
-			startActivity(intent);
-//TODO Remove this
-//			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
+			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
 			break;
 			
 		/*****Login Button******/	

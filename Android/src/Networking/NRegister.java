@@ -20,7 +20,7 @@ import android.os.AsyncTask;
 
 public class NRegister extends AsyncTask<JSONObject,Integer,JSONObject> {
 	
-	private int TIMEOUT_MILLISEC = 5000;
+	private int TIMEOUT_MILLISEC = 10000;
 	private String serverUrl="http://labtest.ece.ualberta.ca/register";
 	
 	protected HttpParams httpParams;

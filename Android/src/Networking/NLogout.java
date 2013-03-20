@@ -23,7 +23,7 @@ import fragments.OnlineMode;
 
 public class NLogout extends AsyncTask<JSONObject,Integer,JSONObject>{
 	
-	private int TIMEOUT_MILLISEC = 5000; //5 seconds
+	private int TIMEOUT_MILLISEC = 10000; //5 seconds
 	private String serverUrl="http://labtest.ece.ualberta.ca/logout";
 	
 	protected HttpParams httpParams;
