@@ -49,10 +49,10 @@ public class PokerEngineTask implements Runnable {
 				
 				if(action == null) continue;
 				
-				Log.d("------", "");
-				Log.d("PokerEngineTask", "GOT GAME ACTION");
-				Log.d("PokerEngineTask", action.getMessage());
-				Log.d("------", "");
+//				Log.d("------", "");
+//				Log.d("PokerEngineTask", "GOT GAME ACTION");
+//				Log.d("PokerEngineTask", action.getMessage());
+//				Log.d("------", "");
 				//Give GameEngine the action object
 				//For new players, remove players, game actions, start game, end game etc....
 				

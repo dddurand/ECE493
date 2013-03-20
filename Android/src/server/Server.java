@@ -10,6 +10,8 @@ import java.io.StreamCorruptedException;
 import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import server.GameAction.PokerAction;
+
 import android.app.Activity;
 
 /**
@@ -104,7 +106,7 @@ public class Server implements PlayerTaskListener {
 	{
 		
 		//Generate game action to remove player
-		GameAction endGameAction = new GameAction();
+		GameAction endGameAction = new GameAction(PokerAction.STOPTABLE);
 		gameActionQueue.add(endGameAction);
 
 	}
@@ -116,7 +118,7 @@ public class Server implements PlayerTaskListener {
 	{
 		
 		//Generate game action to remove player
-		GameAction startGameAction = new GameAction();
+		GameAction startGameAction = new GameAction(PokerAction.STARTTABLE);
 		gameActionQueue.add(startGameAction);
 		
 		
@@ -132,7 +134,7 @@ public class Server implements PlayerTaskListener {
 		if(playerListenerTasks.contains(player))
 		{
 		//Generate game action to remove player
-		GameAction removePlayerAction = new GameAction();
+		GameAction removePlayerAction = new GameAction(player, false);
 		
 		
 		ServerClientListener task = playerListenerTasks.remove(player);

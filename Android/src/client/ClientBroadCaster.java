@@ -85,6 +85,10 @@ public class ClientBroadCaster extends ListenableThread<ClientTaskListener> {
 			 */
 			ClientListenerTaskCompleteNotify runnable = new ClientListenerTaskCompleteNotify();
 			informListeners(runnable);
+			
+			try {
+				objStream.close();
+			} catch (IOException e) {}
 	}
 
 }

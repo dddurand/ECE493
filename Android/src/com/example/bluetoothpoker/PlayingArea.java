@@ -86,6 +86,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    initializeFragments(maxPlayers);
 	}
 	
+	/**
+	 * A test for the server instrastructure
+	 */
 	private void debugServer()
 	{
 		Account account = ((PokerApplication) this.getApplication()).getAccount();
@@ -103,28 +106,28 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		Player player = new Player(0, account.getUsername(), account.getBalance());
 		
-		GameAction action = new GameAction("BAM");
-		actionQueue.add(action);
-		server.testState(player);
-		actionQueue.add(action);
-		actionQueue.add(action);
-		actionQueue.add(action);
-		actionQueue.add(action);
-		actionQueue.add(action);
-		server.testState(player);
-		server.testState(player);
-		server.testState(player);
-		server.testState(player);
-		
-		actionQueue.add(action);
-		server.testState(player);
-		actionQueue.add(action);
-		server.testState(player);
-		actionQueue.add(action);
-		server.testState(player);
-		actionQueue.add(action);
-		server.testState(player);
-		actionQueue.add(action);
+//		GameAction action = new GameAction("BAM");
+//		actionQueue.add(action);
+//		server.testState(player);
+//		actionQueue.add(action);
+//		actionQueue.add(action);
+//		actionQueue.add(action);
+//		actionQueue.add(action);
+//		actionQueue.add(action);
+//		server.testState(player);
+//		server.testState(player);
+//		server.testState(player);
+//		server.testState(player);
+//		
+//		actionQueue.add(action);
+//		server.testState(player);
+//		actionQueue.add(action);
+//		server.testState(player);
+//		actionQueue.add(action);
+//		server.testState(player);
+//		actionQueue.add(action);
+//		server.testState(player);
+//		actionQueue.add(action);
 	}
 	
 	/**

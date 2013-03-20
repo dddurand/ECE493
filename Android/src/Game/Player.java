@@ -4,11 +4,19 @@ import java.io.IOException;
 import java.io.Serializable;
 
 public class Player implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3606637057497020633L;
 	private Card[] hand = new Card[2];
 	private int id;
 	private int money;
 	private int active;
 	private String username;
+	
+	public static final int FOLDED = 0;
+	public static final int ALL_IN = 1;
+	public static final int CURRENT = 2;
 	
 	public Player(int id, String username, int money) {
 		this.id=id;

@@ -67,6 +67,10 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 		PlayerTaskCompleteNotify runnable = new PlayerTaskCompleteNotify(player);
 		informListeners(runnable);
 		
+		try {
+			objectInputStream.close();
+		} catch (IOException e) {}
+		
 	}
 	
 	/**

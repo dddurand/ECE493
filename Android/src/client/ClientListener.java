@@ -78,6 +78,10 @@ public class ClientListener extends ListenableThread<ClientTaskListener> {
 		ClientListenerTaskCompleteNotify runnable = new ClientListenerTaskCompleteNotify();
 		informListeners(runnable);
 		
+		try {
+			objectInputStream.close();
+		} catch (IOException e) {}
+		
 	}
 	
 	/**

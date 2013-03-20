@@ -1,4 +1,5 @@
 package game;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,13 +7,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import server.GameAction;
+import server.GameAction.PokerAction;
 
+/**
+ * 
+ * @author lawton
+ *
+ *
+ * At Lawton:
+ * Going to need help with this one.
+ * 
+ * I spent a little while trying to understand / adapt this code to work with the server,
+ * but I'm going to need help or comments.
+ * 
+ * I got it working for the basic cases, but there are a few issues I'll need help with.
+ * 
+ *
+ */
 public class GameMechanics {
 	private Deck myDeck = new Deck();
 	private ArrayList<Player> playerList = new ArrayList<Player>();
 	private int id;
-	private int currentPlayer;
-	private int currentTurn;
+	public int positionOfCurrentPlayer;
+	private int currentTurn = -1;
 	private int currentDealer;
 	private int blindAmount;
 	private Pot mainPot;
@@ -23,6 +41,15 @@ public class GameMechanics {
 	private Card[] communityCards = new Card[5];
 	boolean noBets =false;
 	
+	boolean isAllFolded = false;
+	private ArrayList<Integer> playerBetsInARound;
+	
+	private ArrayList<Player> outGoingList = new ArrayList<Player>();
+	
+	public static final int ACTION_FOLD = -1;
+	
+	private boolean lastGame = false;
+	
 	public String getcommunityCards() {
 		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString();
 	}
@@ -32,6 +59,171 @@ public class GameMechanics {
 	public String getcommunityCards3() {
 		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString()+" "+ this.communityCards[4].toString();
 	}
+
+	public static void main(String[] args) {
+		
+		GameMechanics mech = new GameMechanics(new Player[6], 0, 30);
+		
+		Player player = new Player(0, "BOB", 1000);
+		Player player1 = new Player(1, "Fred", 1000);
+		Player player2 = new Player(2, "John", 1000);
+		
+		
+		
+		GameAction addPlayer0 = new GameAction(player, true);
+		GameAction addPlayer1 = new GameAction(player1, true);
+		
+		mech.processGameAction(addPlayer0);
+		mech.processGameAction(addPlayer1);
+		
+		GameAction actionStart = new GameAction(PokerAction.STARTTABLE);
+		mech.processGameAction(actionStart);
+		
+		while(true)
+			{
+			int position = mech.positionOfCurrentPlayer;
+			int bet = mech.gui(position);
+			GameAction x = new GameAction(position, PokerAction.CALL, bet);
+			mech.processGameAction(x);
+			}
+		
+		//GameAction action = new GameAction(player, true);
+		
+	}
+	
+	public void processGameAction(GameAction action)
+	{
+		PokerAction pokerAction = action.getAction();
+		
+		switch(pokerAction)
+		{
+		case ADDPLAYER:
+			Player player = action.getPlayer();
+			player.setActive(Player.FOLDED);
+			this.addPlayer(player);
+			break;
+		
+		case REMOVEPLAYER:
+			this.outGoingList.add(action.getPlayer());
+			int position = action.getPlayer().getId();
+			if(positionOfCurrentPlayer == position)
+				this.processBet(ACTION_FOLD);
+			break;
+
+		case STARTTABLE:
+			currentTurn = 0;
+			this.startGame();
+			break;
+			
+		case STOPTABLE:
+			this.lastGame = true;
+			break;
+		
+			
+		case TIMEOUT:
+			this.processBet(ACTION_FOLD);
+			break;
+			
+		default:
+			break;
+		
+		
+		}
+		
+		//If incorrect player ignore!
+		if(this.positionOfCurrentPlayer != action.getPosition())
+			return;
+		
+		switch(pokerAction)
+		{
+			
+		case CALL:
+		case BET:
+		case RAISE:
+		case RERAISE:
+			this.processBet(action.getValue());
+			break;
+		
+		case FOLD:
+			this.processBet(ACTION_FOLD);
+			break;
+			
+		case CHECK:
+			this.processBet(0);
+			break;
+			
+		default:
+			break;
+		
+		
+		}
+		
+	}
+	
+	public int getValidPlayerCount()
+	{
+		int count = 0;
+		
+		for(int i = 0; i < this.playerList.size(); i++)
+		{
+			if(this.playerList.get(i) != null) count++;
+		}
+		
+		return count;
+	}
+	
+	public int getNextPositionTurn()
+	{	
+		int temp = this.positionOfCurrentPlayer;
+		while(true)
+		{
+			temp++;
+			int next = (temp) % playerList.size();
+			
+			if(next == this.positionOfCurrentPlayer)
+				{
+				//Log.e("GameMechanics", "Player turn ended at original person");
+				return this.positionOfCurrentPlayer;
+				}
+			
+			Player player = playerList.get(next);
+			if(player == null) continue;
+			
+			if(player.getActive() == Player.CURRENT)
+				return next;
+		}
+	}
+	
+	public int getValidUser(int position)
+	{
+		int temp = position;
+		while(true)
+		{
+			temp++;
+			int next = (temp) % playerList.size();
+			
+			if(next == position)
+				{
+				//Log.e("GameMechanics", "Next Dealer ended at original person");
+				return position;
+				}
+			
+			Player player = playerList.get(next);
+			if(player == null) continue;
+			
+			return next;
+		}
+	}
+	
+	public void updateState()
+	{
+		for(Player player : playerList)
+		{
+			//create gamestate
+			//put on broadcast queue
+		}
+	}
+	
 	/**
 	 * create game mechanics
 	 * @param playerList
@@ -42,9 +234,6 @@ public class GameMechanics {
 		this.playerList = new ArrayList<Player>(Arrays.asList(playerList));;
 		this.currentDealer = Dealer;
 		this.blindAmount = blindAmount;
-		for(int i=0; this.playerList.size()>i;i++) {
-			this.playerList.get(i).setActive(2);
-		}
 	}
 	
 	/**
@@ -52,13 +241,13 @@ public class GameMechanics {
 	 * @param p - player to be added
 	 * @return the new size of the game or -1 if already full
 	 */
-	public int addPlayer(Player p) {
-		if(this.playerList.size() ==6) {
-			return -1;
-		} else {
-			this.playerList.add(p);
-			return this.playerList.size();
-		}
+	public void addPlayer(Player p) {
+			this.playerList.add(p.getId(), p);
+			
+			if(this.getValidPlayerCount() == 1 && this.currentTurn == 0)
+			{
+				this.startGame();
+			}
 	}
 	
 	/**
@@ -66,23 +255,36 @@ public class GameMechanics {
 	 * @param p - player removed
 	 * @return new list of players present
 	 */
-	public int removePlayer(Player p) {
-		for (int i =0; i<this.playerList.size(); i++) {
-			if(p.getId() == this.playerList.get(i).getId()) {
-				this.playerList.remove(i);
-				return this.playerList.size();
-			}
-		}
-		return -1;
+	public void removePlayer(Player p) {
+		this.playerList.remove(p.getId());
+		
 	}
 	
 	/**
 	 * set up the game
 	 */
 	public void startGame() {
+		
+		for(Player player : this.outGoingList)
+		{
+			this.playerList.remove(player.getId());
+		}
+		
+		if(this.getValidPlayerCount() == 1) return;
+		
+		for(int i=0; this.playerList.size()>i;i++) {
+			Player player = this.playerList.get(i);
+			if(player == null) continue;
+			player.setActive(Player.CURRENT);
+		}
+		
+		this.currentDealer = getValidUser(this.currentDealer);
+		
 		this.myDeck.shuffle();
 		this.mainPot = new Pot(this.playerList.get(0).getId(), 0);
-		for(int i =1; this.playerList.size()>i;i++) {
+		for(int i=0; this.playerList.size()>i;i++) {
+			Player player = this.playerList.get(i);
+			if(player == null) continue;
 			this.mainPot.addParticipants(this.playerList.get(i).getId());
 		}
 		this.mainPot.mainPot();
@@ -91,10 +293,15 @@ public class GameMechanics {
 		this.currentTurn=1;
 		for (int i = 0; i<this.playerList.size(); i++) {
 			Player p = this.playerList.get(i);
+			if(p == null) continue;
+			
 			p.setCard(this.myDeck.getCard(), 0);
 			p.setCard(this.myDeck.getCard(), 1);
 		}
+		
+		this.nextTurn();
 		this.blinds();
+		
 	}
 	
 	/**
@@ -103,30 +310,57 @@ public class GameMechanics {
 	public void nextTurn() {
 		if (this.currentTurn%2 == 1){
 			this.mainPot.resetPlayerAmount();
-			this.mainPot.setAmount(this.blindAmount);
-			this.startBetting();
+			//first round only
+			if(currentTurn == 1)
+				this.mainPot.setAmount(this.blindAmount);
+			else
+				this.mainPot.setAmount(0);
+			this.playerBetsInARound = new ArrayList<Integer>();
+			this.currentTurn++;
 		} else if(this.currentTurn ==2) {
 			this.communityCards[0] = this.myDeck.getCard();
 			this.communityCards[1] = this.myDeck.getCard();
 			this.communityCards[2] = this.myDeck.getCard();
+			
+			//Display something
+			this.currentTurn++;
+			this.nextTurn();
+			
 		} else if (this.currentTurn ==4) {
 			this.communityCards[3] = this.myDeck.getCard();
+			
+			//Display something
+			this.currentTurn++;
+			this.nextTurn();
+			
 		} else if (this.currentTurn == 6) {
 			this.communityCards[4] = this.myDeck.getCard();
+			
+			//Display something
+			this.currentTurn++;
+			this.nextTurn();
+			
 		} else {
 			System.out.println("End Game");
+			this.currentTurn = 0;
 			this.endGame();
 		}
-		this.currentTurn++;
+		
 	}
 	/**
 	 * finish the game and give the winner their money
 	 */
 	private void endGame() {
+		
+		isAllFolded = false;
+		
 		ArrayList<Player>currentPlayer = new ArrayList<Player>();
 		for (int i =0; i<this.playerList.size(); i++) {
-			if (this.playerList.get(i).getActive()!=0) {
-				currentPlayer.add(this.playerList.get(i));
+			Player player = this.playerList.get(i);
+			if(player == null) continue;
+			
+			if (player.getActive()!=Player.FOLDED) {
+				currentPlayer.add(player);
 			}
 		}
 		for (int i = 0; i<this.sidePots.size();i++) {
@@ -139,6 +373,7 @@ public class GameMechanics {
 				System.out.println("Players" +winners[j] + "Won");
 				winners[j].addMoney(this.sidePots.get(i).getTotal()/winners.length);
 			}
+			/*WTF - why is this player folding? - ASK LAWTON*/
 			this.playerList.get(i).setActive(0);
 		}
 		Player[] winners = determineWinners();
@@ -146,6 +381,9 @@ public class GameMechanics {
 			System.out.println("Players" +winners[j].getId() + "Won");
 			winners[j].addMoney(this.mainPot.getTotal()/winners.length);
 		}
+		
+		if(!lastGame)
+			this.startGame();
 		
 	}
 
@@ -157,11 +395,14 @@ public class GameMechanics {
 		int rank[] = {11,11,11,11,11,11,11};
 		int highcard[] = {-1,-1,-1,-1,-1,-1,-1};
 		for (int i=0; i<this.playerList.size();i++) {
+			
 			Player CPlayer = this.playerList.get(i);
+			if(CPlayer == null) continue;
+
 			Card hand[] = {CPlayer.getCard(0),CPlayer.getCard(1), this.communityCards[0], this.communityCards[1], this.communityCards[2], this.communityCards[3], this.communityCards[4]};
 			Comparator rankcompare = new rankComparator();
 			Comparator suitcompare = new suitComparator();
-			if (this.playerList.get(i).getActive()!=0) {
+			if (CPlayer.getActive()!=Player.FOLDED) {
 				boolean flush = false;
 				boolean straight = false;
 				boolean fullhouse = false;
@@ -319,71 +560,112 @@ public class GameMechanics {
 		return BestPlayer;
 	}
 
+	public void placeBet(int bet)
+	{
+		int isCurrentPlayer = this.playerList.get(positionOfCurrentPlayer).getActive();
+		int playerCurrentBetInPot = this.mainPot.getPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId());
+		
+
+//		/*BROKEN FOR RERAISING - in case that amount == amount but user is attempting to reraise on his turn*/
+		if(isCurrentPlayer!=Player.CURRENT || this.mainPot.getAmount()== playerCurrentBetInPot && bet == 0) {
+			return;
+		}
+		
+
+		if(bet==ACTION_FOLD) {
+			this.playerList.get(positionOfCurrentPlayer).setActive(Player.FOLDED);
+			if(checkForFolds()){
+				isAllFolded = true;
+				noBets=true;
+				return;
+			}
+		} else{
+			System.out.println(this.playerList.get(positionOfCurrentPlayer).getActive());
+			this.playerList.get(positionOfCurrentPlayer).removeMoney(bet);
+			for(int j=0; j<this.currentSidePots.size();j++) {
+				Pot sidePot = this.currentSidePots.get(j);
+				if(bet>=sidePot.getAmount() &&!sidePot.exist(this.playerList.get(positionOfCurrentPlayer).getId())) {
+					bet-=sidePot.getAmount();
+					sidePot.addTotal(sidePot.getAmount());
+					sidePot.addParticipants(this.playerList.get(positionOfCurrentPlayer).getId());
+				} else {
+					sidePot.setAmount(sidePot.getAmount()-bet);
+					sidePot.take(bet*sidePot.size());
+					this.currentSidePots.add(j, new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), bet));
+					this.currentSidePots.get(j).addList(sidePot.getParticipants());
+					this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+					break;
+				}
+			}
+			if (this.playerList.get(positionOfCurrentPlayer).getActive()!=1) {
+				int totalbet = this.mainPot.getPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId()) + bet;
+				int amountOwing = this.mainPot.getAmount()-this.mainPot.getPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId());
+				if(totalbet>this.mainPot.getAmount()) {
+					this.mainPot.setAmount(totalbet);
+					this.mainPot.setPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId(), totalbet);
+					this.mainPot.addTotal(bet);
+				} else if (totalbet==this.mainPot.getAmount()) {
+					this.mainPot.addTotal(bet);
+					this.mainPot.setPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId(),totalbet);
+				} else {
+					this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), totalbet));
+					this.currentSidePots.get(this.currentSidePots.size()-1).addList(this.mainPot.getMainParticipants());
+					this.mainPot.decrementPlayerAmount(totalbet);
+					this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Start off the betting round
 	 */
-	private void startBetting() {
-
-		if(noBets)
+	private void processBet(int bet) {
+		
+		if(isAllFolded)
+		{
+			this.nextTurn();
+			if(isAllFolded)
+				this.processBet(0);
 			return;
-		int start = (this.currentDealer+3)%this.playerList.size();
-		for(int i =0; i<this.playerList.size();i++) {
-			if(this.playerList.get(i).getActive()!=2 || this.mainPot.getAmount()==this.mainPot.getPlayerAmount(this.playerList.get(i).getId())) {
-				continue;
-			}
-			int bet = gui(this.playerList.get(i).getId());
-			if(bet==-1) {
-				this.playerList.get(i).setActive(0);
-				if(checkForFolds()){
-					//determineWinners();
-					noBets=true;
-					break;
-				}
-			} else{
-				System.out.println("HERE");
-				System.out.println(this.playerList.get(i).getActive());
-				this.playerList.get(i).removeMoney(bet);
-				for(int j=0; j<this.currentSidePots.size();j++) {
-					Pot sidePot = this.currentSidePots.get(j);
-					if(bet>=sidePot.getAmount() &&!sidePot.exist(this.playerList.get(i).getId())) {
-						bet-=sidePot.getAmount();
-						sidePot.addTotal(sidePot.getAmount());
-						sidePot.addParticipants(this.playerList.get(i).getId());
-					} else {
-						sidePot.setAmount(sidePot.getAmount()-bet);
-						sidePot.take(bet*sidePot.size());
-						this.currentSidePots.add(j, new Pot(this.playerList.get(i).getId(), bet));
-						this.currentSidePots.get(j).addList(sidePot.getParticipants());
-						this.playerList.get(i).setActive(1);
-						break;
-					}
-				}
-				if (this.playerList.get(i).getActive()!=1) {
-					int totalbet = this.mainPot.getPlayerAmount(this.playerList.get(i).getId()) + bet;
-					int amountOwing = this.mainPot.getAmount()-this.mainPot.getPlayerAmount(this.playerList.get(i).getId());
-					if(totalbet>this.mainPot.getAmount()) {
-						this.mainPot.setAmount(totalbet);
-						this.mainPot.setPlayerAmount(this.playerList.get(i).getId(), totalbet);
-						this.mainPot.addTotal(bet);
-					} else if (totalbet==this.mainPot.getAmount()) {
-						this.mainPot.addTotal(bet);
-						this.mainPot.setPlayerAmount(this.playerList.get(i).getId(),totalbet);
-					} else {
-						this.currentSidePots.add(new Pot(this.playerList.get(i).getId(), totalbet));
-						this.currentSidePots.get(this.currentSidePots.size()-1).addList(this.mainPot.getMainParticipants());
-						this.mainPot.decrementPlayerAmount(totalbet);
-						this.playerList.get(i).setActive(1);
-					}
-				}
-			}
-			
 		}
 		
-		if(!this.mainPot.checkPlayersBet()&&!noBets) {
-			startBetting();
+		this.placeBet(bet);
+		int next = this.getNextPositionTurn();
+		
+		if(isAllFolded)
+		{
+			this.processBet(0);
+			return;
 		}
-		//this.mainPot.decrementPlayerAmount(this.mainPot.getAmount());
-		//this.mainPot.setAmount(0);
+
+		/*If we have already seen a this person bet, and the above 
+		 * !this.mainPot.checkPlayersBet()&&!noBets evaluated false
+		 * 
+		 * -We know it time for the next round.
+		 */
+		System.out.println(positionOfCurrentPlayer+": ");
+		System.out.print("[");
+		for(Integer i : playerBetsInARound)
+		{
+			System.out.print(i+",");
+		}
+		System.out.println("]");
+		
+		if(playerBetsInARound.contains(next))
+		{
+			if(this.mainPot.checkPlayersBet() || noBets)
+				{
+				this.nextTurn();
+				}
+			else 
+				playerBetsInARound.clear();
+		}else
+		{
+			playerBetsInARound.add(this.positionOfCurrentPlayer);
+		}
+
+		this.positionOfCurrentPlayer = next;
 	}
 	/**
 	 * Checks to see if all other players have folded
@@ -392,10 +674,13 @@ public class GameMechanics {
 	private boolean checkForFolds() {
 		int countfolds =0;
 		for(int i=0; i<this.playerList.size();i++) {
-			if(this.playerList.get(i).getActive()<=1)
+			Player player = this.playerList.get(i);
+			if(player == null) continue;
+			
+			if(player.getActive()<=1)
 				countfolds++;
 		}
-		if(countfolds==(this.playerList.size()-1)) {
+		if(countfolds==(getValidPlayerCount()-1)) {
 			return true;
 		} else {
 			return false;
@@ -439,20 +724,8 @@ public class GameMechanics {
 	private void blinds(){
 		int bigBlind;
 		int smallBlind;
-		smallBlind = (this.currentDealer+1)%this.playerList.size();
-		bigBlind = (this.currentDealer+2)%this.playerList.size();
-		/*
-		if(this.currentDealer == 0) {
-			smallBlind = this.playerList.size()-1;
-			bigBlind = this.playerList.size()-2;
-		} else if(this.currentDealer ==1) {
-			smallBlind = 0;
-			bigBlind = this.playerList.size()-1;
-		} else {
-			smallBlind = this.currentDealer-1;
-			bigBlind = this.currentDealer -2;
-		}
-		*/
+		smallBlind = getValidUser(this.currentDealer);
+		bigBlind = getValidUser(smallBlind);
 		
 		bigBlind(bigBlind);
 		smallBlind(smallBlind);
@@ -469,8 +742,10 @@ public class GameMechanics {
 			p.removeMoney(this.blindAmount/2);
 		} else {
 			this.tempBets[smallBlind] = p.getAmountMoney();
-			p.setActive(1);
+			p.setActive(Player.ALL_IN);
 		}
+		
+		this.mainPot.setPlayerAmount(smallBlind, this.tempBets[smallBlind]);
 	}
 	
 	/**
@@ -484,8 +759,10 @@ public class GameMechanics {
 			p.removeMoney(this.blindAmount);
 		} else {
 			this.tempBets[bigBlind] = p.getAmountMoney();
-			p.setActive(1);
+			p.setActive(Player.ALL_IN);
 		}
+		
+		this.mainPot.setPlayerAmount(bigBlind, this.tempBets[bigBlind]);
 		
 	}
 }
