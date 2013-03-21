@@ -106,6 +106,7 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 					
 					try {
 						stream.writeObject(state);
+						stream.flush();
 					} catch (IOException e) {
 						PlayerTaskCompleteNotify runnable = new PlayerTaskCompleteNotify(player);
 						informListeners(runnable);

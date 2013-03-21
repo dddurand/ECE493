@@ -1,10 +1,18 @@
 package game;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-public class Pot {
+public class Pot implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5740591961315229336L;
+	
+	
 	private int amount;
 	private int totalAmount=0;
 	private ArrayList<Integer> participants = new ArrayList<Integer>();
@@ -112,6 +120,32 @@ public class Pot {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * This method is used in the serialization of the object
+	 * 
+	 * @param out
+	 * @throws IOException
+	 */
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.writeInt(this.amount);
+		out.writeInt(this.totalAmount);
+		out.writeObject(this.playeramount);
+	}
+
+	
+	/**
+	 * This method is used in the deserialization of the object
+	 * 
+	 * @param out
+	 * @throws IOException
+	 */
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		this.amount = in.readInt();
+		this.totalAmount = in.readInt();
+		this.playeramount = (Hashtable<Integer, Integer>) in.readObject();
 	}
 
 	

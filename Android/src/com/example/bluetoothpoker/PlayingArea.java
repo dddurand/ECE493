@@ -1,6 +1,7 @@
 package com.example.bluetoothpoker;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import client.Client;
@@ -8,6 +9,7 @@ import dataModels.Account;
 import server.GameAction;
 import server.GameState;
 import server.Server;
+import server.GameAction.PokerAction;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -23,6 +25,7 @@ import client.Client;
 import application.PokerApplication;
 import fragments.PlayerFragment;
 import fragments.River;
+import game.Card;
 import game.Player;
 
 public class PlayingArea extends Activity implements OnClickListener {
@@ -34,18 +37,13 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
 	
-	private boolean debugServer = false;
+	private boolean debugServer = true;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    
-	    
-	    if(debugServer)
-	    	this.debugServer();
-	    
-	    
+	      
 	    setContentView(R.layout.playing_area);
 	    //Get intent
 	   // Intent intent = getIntent();
@@ -84,51 +82,19 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    }
 	    
 	    initializeFragments(maxPlayers);
+	    //clearRiver();
+	    
+	    if(debugServer)
+	    	{
+	    	Thread thread = new Thread(new DebugRunnable());
+	    	thread.start();
+	    	}
 	}
 	
 	/**
 	 * A test for the server instrastructure
 	 */
-	private void debugServer()
-	{
-		Account account = ((PokerApplication) this.getApplication()).getAccount();
-		account.setUsername("BOB");
-		account.setBalance(25);
-		
-		LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
-		Server server = new Server(this);
-		try {
-			Client client = new Client(this, server, actionQueue);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		Player player = new Player(0, account.getUsername(), account.getBalance());
-		
-//		GameAction action = new GameAction("BAM");
-//		actionQueue.add(action);
-//		server.testState(player);
-//		actionQueue.add(action);
-//		actionQueue.add(action);
-//		actionQueue.add(action);
-//		actionQueue.add(action);
-//		actionQueue.add(action);
-//		server.testState(player);
-//		server.testState(player);
-//		server.testState(player);
-//		server.testState(player);
-//		
-//		actionQueue.add(action);
-//		server.testState(player);
-//		actionQueue.add(action);
-//		server.testState(player);
-//		actionQueue.add(action);
-//		server.testState(player);
-//		actionQueue.add(action);
-//		server.testState(player);
-//		actionQueue.add(action);
-	}
+	
 	
 	/**
 	 * Initializes the playing area by placing the fragments. only called by constructor
@@ -162,40 +128,85 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 */
 	public void updateAll(GameState data){
 		
-		Log.d("GUI UPDATE CALLED", "TotalPlayers: " + data.getTotalPlayers());
+		//Log.d("GUI UPDATE CALLED", "TotalPlayers: " + data.getTotalPlayers());
 		
 		//Clear all players first
 		clearAllPlayers();
 		//Then clear the river
 		clearRiver();
 		//Then make all the players visible
-		setVisiblePlayers(data.getTotalPlayers());
+		//setVisiblePlayers(data.getTotalPlayers());
+		
+		ArrayList<Player> players = data.getPlayers();
+		
+		setVisiblePlayers(players);
+		
+		for(Player player : players)
+		{
+			if(player == null) continue;
+			
+			if(player.getCard(0) == null)
+			{
+				this.setPlayerCard(player.getId(), 0, "back");
+				this.setPlayerCard(player.getId(), 1, "back");
+				continue;
+			}
+			
+			Card card = player.getCard(0);
+			this.setPlayerCard(player.getId(), 0, card.toString().toLowerCase());
+			
+			card = player.getCard(1);
+			this.setPlayerCard(player.getId(), 1, card.toString().toLowerCase());
+		}
+		
+		Card comm[] = data.getCommunity();
+		updateRiver(comm);
 	}
 	
 	/**
 	 * Sets the number of players that are visible on the playing area
 	 * @param totalPlayers
 	 */
-	private void setVisiblePlayers(int totalPlayers){
+	private void setVisiblePlayers(ArrayList<Player> players){
 		
-		for (int i=0;i<totalPlayers;i++){
-			playerLayouts[i].setVisibility(View.VISIBLE);
+		/**
+		 * This won't work.
+		 * Itterate over the given list of players in the gamestate and check which arn't null
+		 * Dustin
+		 * 
+		 */
+		for(Player player : players)
+		{
+			playerLayouts[player.getId()].setVisibility(View.VISIBLE);
 		}
 	}
 	
 	/**
 	 * Sets the desired card into the river
 	 */
-	public void updateRiver(){
+	public void updateRiver(Card comm[]){
+		
+		for(int i = 0; i < comm.length; i++)
+		{
+			if(comm[i]==null) break;
+			riverObject.setCard(i, comm[i].toString().toLowerCase());
+			
+		}	
+		int test = 0;;
+		test++;
 	}
 	
 	/**
 	 * Sets the first 3 cards of the river to the face down image, and removes the last 2.
 	 */
 	public void clearRiver(){
-		riverObject.setCard(0, "back");
-		riverObject.setCard(1, "back");
-		riverObject.setCard(2, "back");
+//		riverObject.setCard(0, "back");
+//		riverObject.setCard(1, "back");
+//		riverObject.setCard(2, "back");
+		
+		riverObject.removeCard(0);
+		riverObject.removeCard(1);
+		riverObject.removeCard(2);
 		riverObject.removeCard(3);
 		riverObject.removeCard(4);
 	}
@@ -252,8 +263,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		case R.id.button1:
 			//test commands
-			GameState d = new GameState(5);
-			updateAll(d);
+			//GameState d = new GameState(5);
+			//updateAll(d);
 			setPlayerCard(2,0,"c5");
 			setPlayerCard(2,1,"s1");
 			setPlayerCard(0,0,"hk");
@@ -276,6 +287,106 @@ public class PlayingArea extends Activity implements OnClickListener {
 		}
 		
 		
+	}
+	
+	private class DebugRunnable implements Runnable
+	{
+		public void run()
+		{
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
+			LinkedBlockingQueue<GameAction> actionQueue2 = new LinkedBlockingQueue<GameAction>();
+			Server server = new Server(PlayingArea.this);
+			try {
+				Account account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
+				account.setUsername("BOB1");
+				account.setBalance(500);
+				Client client = new Client(PlayingArea.this, server, actionQueue, 0);
+				
+				account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
+				account.setUsername("BOB2");
+				account.setBalance(500);
+				Client client2 = new Client(PlayingArea.this, server, actionQueue2, 1);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			ArrayList<GameAction> actions = new ArrayList<GameAction>();
+			
+			server.gameStart();
+			
+			GameAction action = new GameAction(0, PokerAction.BET, 15);
+			actions.add(action);
+			
+			action = new GameAction(0, PokerAction.BET, 15);
+			actions.add(action);
+			
+			action = new GameAction(1, PokerAction.BET, 5);
+			actions.add(action);
+			
+			action = new GameAction(0, PokerAction.CALL, 5);
+			actions.add(action);
+			
+			action = new GameAction(1, PokerAction.CHECK, 0);
+			actions.add(action);
+			
+			action = new GameAction(0, PokerAction.CHECK, 0);
+			actions.add(action);
+			
+			action = new GameAction(1, PokerAction.CHECK, 0);
+			actions.add(action);
+			
+			action = new GameAction(0, PokerAction.CHECK, 0);
+			actions.add(action);
+			
+			action = new GameAction(1, PokerAction.CHECK, 0);
+			actions.add(action);
+			
+			action = new GameAction(0, PokerAction.CHECK, 0);
+			actions.add(action);
+			
+			action = new GameAction(1, PokerAction.CHECK, 0);
+			actions.add(action);
+
+			for(int i = 0; i < actions.size(); i++)
+			{
+				GameAction temp = actions.get(i);
+				
+				Log.e("ACTION: ", i+"");
+				Log.e("ACTION: ", (i % 2)+"");
+				if(i % 2 == 1)
+				{
+					Log.e("queue2", (i % 2)+"");
+					actionQueue2.add(temp);
+				}
+				else
+				{
+					Log.e("queue", (i % 2)+"");
+					actionQueue.add(temp);	
+				}
+					
+				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}
+			
+			
+			
+		}
 	}
 	
 }

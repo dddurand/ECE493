@@ -1,11 +1,18 @@
 package game;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class Card {
+public class Card implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2383050262268152649L;
+
 	private int rank, suit;
 	
-	private static String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-    private static String[] suits = {"Diamonds", "Clubs", "Hearts", "Spades"};
+	private static String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"};
+    private static String[] suits = {"D", "C", "H", "S"};
     
     public Card(int rank, int suit) {
     	this.rank = rank;
@@ -28,10 +35,37 @@ public class Card {
     	return this.rank;
     }
     public String toString() {
-    	return ranks[this.rank]+ " of " + suits[this.suit]; 
+    	return suits[this.suit] + ranks[this.rank];
     }
+    
+    
+	/**
+	 * This method is used in the serialization of the object
+	 * 
+	 * @param out
+	 * @throws IOException
+	 */
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.writeInt(this.rank);
+		out.writeInt(this.suit);
+	}
+
+	
+	/**
+	 * This method is used in the deserialization of the object
+	 * 
+	 * @param out
+	 * @throws IOException
+	 */
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		this.rank = in.readInt();
+		this.suit = in.readInt();
+	}
 	
 }
+
+
 
 class rankComparator implements Comparator<Object>{
     public int compare(Object card1, Object card2) throws ClassCastException{
@@ -61,4 +95,5 @@ class suitComparator implements Comparator<Object>{
 
         return suit1 - suit2;
     }
+    
 }

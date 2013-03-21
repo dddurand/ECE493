@@ -49,14 +49,7 @@ public class PokerEngineTask implements Runnable {
 				
 				if(action == null) continue;
 				
-//				Log.d("------", "");
-//				Log.d("PokerEngineTask", "GOT GAME ACTION");
-//				Log.d("PokerEngineTask", action.getMessage());
-//				Log.d("------", "");
-				//Give GameEngine the action object
-				//For new players, remove players, game actions, start game, end game etc....
-				
-				//Assuming the game engine will contain the correct queue for the player
+				gameEngine.processGameAction(action);
 				
 			} catch (InterruptedException e) {
 				//When timeout occurs, just restart listening

@@ -162,9 +162,9 @@ public class GameAction implements Serializable {
 	 * @throws IOException
 	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.write(this.position);
-		out.write(this.value);
-		out.writeUnshared(this.action.getValue());
+		out.writeInt(this.position);
+		out.writeInt(this.value);
+		out.writeUTF(this.action.getValue());
 		out.writeObject(this.player);
 	}
 

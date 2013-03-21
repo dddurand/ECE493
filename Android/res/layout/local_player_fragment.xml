@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/leftCard"
         android:layout_toRightOf="@id/leftCard"
-        android:src="@drawable/h1" />
+        android:src="@drawable/ha" />
 
     <ProgressBar
         android:id="@+id/progressBarTimeLeft"

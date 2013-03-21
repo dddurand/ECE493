@@ -32,7 +32,9 @@ public class Server implements PlayerTaskListener {
 	private LinkedBlockingDeque<GameState> gameBroadCastQueue;
 	
 	private Activity activity;
-	private Hashtable<Player, ServerClientListener> playerListenerTasks;
+	private Hashtable<Integer, ServerClientListener> playerListenerTasks;
+	
+	private Player serverPlayer;
 	
 	/**
 	 * General Constructor
@@ -41,6 +43,7 @@ public class Server implements PlayerTaskListener {
 	public Server(Activity activity)
 	{
 		this.activity = activity;
+		this.serverPlayer = new Player(GameMechanics.SERVER_POSITION, "", 0);
 		initialize();
 	}
 	
@@ -50,10 +53,10 @@ public class Server implements PlayerTaskListener {
 	 */
 	private void initialize()
 	{
-		GameMechanics gameEngine = new GameMechanics(new Player[0], 0, 20);
-		gameActionQueue = new LinkedBlockingDeque<GameAction>();
-		playerListenerTasks = new Hashtable<Player, ServerClientListener>();
 		gameBroadCastQueue = new LinkedBlockingDeque<GameState>();
+		GameMechanics gameEngine = new GameMechanics(new Player[0], 0, 30, gameBroadCastQueue);
+		gameActionQueue = new LinkedBlockingDeque<GameAction>();
+		playerListenerTasks = new Hashtable<Integer, ServerClientListener>();
 		
 		
 		gameEngineTask = new PokerEngineTask(gameActionQueue, gameEngine);
@@ -80,13 +83,14 @@ public class Server implements PlayerTaskListener {
 		
 		try {
 			ServerClientListener task = new ServerClientListener(inStream, gameActionQueue, player, activity);
-			playerListenerTasks.put(player, task);
+			playerListenerTasks.put(player.getId(), task);
 			gameBroadCaster.addPlayer(player, outStream);
 			
 			task.addListener(this);
 			
-			//GameAction removePlayerAction = new GameAction();
-			//gameActionQueue.add(removePlayerAction);
+			GameAction addPlayerAction = new GameAction(player, true);
+			addPlayerAction.setPosition(this.serverPlayer.getId());
+			gameActionQueue.add(addPlayerAction);
 			
 			Thread clientThread = new Thread(task);
 			clientThread.start();
@@ -107,6 +111,8 @@ public class Server implements PlayerTaskListener {
 		
 		//Generate game action to remove player
 		GameAction endGameAction = new GameAction(PokerAction.STOPTABLE);
+		endGameAction.setPlayer(this.serverPlayer);
+		endGameAction.setPosition(this.serverPlayer.getId());
 		gameActionQueue.add(endGameAction);
 
 	}
@@ -119,6 +125,8 @@ public class Server implements PlayerTaskListener {
 		
 		//Generate game action to remove player
 		GameAction startGameAction = new GameAction(PokerAction.STARTTABLE);
+		startGameAction.setPlayer(this.serverPlayer);
+		startGameAction.setPosition(this.serverPlayer.getId());
 		gameActionQueue.add(startGameAction);
 		
 		
@@ -135,7 +143,8 @@ public class Server implements PlayerTaskListener {
 		{
 		//Generate game action to remove player
 		GameAction removePlayerAction = new GameAction(player, false);
-		
+		removePlayerAction.setPlayer(this.serverPlayer);
+		removePlayerAction.setPosition(this.serverPlayer.getId());
 		
 		ServerClientListener task = playerListenerTasks.remove(player);
 		task.cancel();
@@ -161,9 +170,9 @@ public class Server implements PlayerTaskListener {
 	 */
 	public void testState(Player player)
 	{
-		GameState test = new GameState(43);
-		test.setPlayer(player);
-		gameBroadCastQueue.add(test);
+		//GameState test = new GameState(43);
+		//test.setPlayer(player);
+		//gameBroadCastQueue.add(test);
 	}
 	
 

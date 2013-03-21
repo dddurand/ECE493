@@ -6,8 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
 
 import server.GameAction;
+import server.GameState;
 import server.GameAction.PokerAction;
 
 /**
@@ -15,17 +18,10 @@ import server.GameAction.PokerAction;
  * @author lawton
  *
  *
- * At Lawton:
- * Going to need help with this one.
- * 
- * I spent a little while trying to understand / adapt this code to work with the server,
- * but I'm going to need help or comments.
- * 
- * I got it working for the basic cases, but there are a few issues I'll need help with.
- * 
- *
  */
 public class GameMechanics {
+
+	public static final int SERVER_POSITION = -3;
 	private Deck myDeck = new Deck();
 	private ArrayList<Player> playerList = new ArrayList<Player>();
 	private int id;
@@ -40,138 +36,178 @@ public class GameMechanics {
 	private int currentBet;
 	private Card[] communityCards = new Card[5];
 	boolean noBets =false;
-	
+
+	private GameAction lastPokerGameAction;
+	private UUID gameUUID;
+
 	boolean isAllFolded = false;
 	private ArrayList<Integer> playerBetsInARound;
-	
-	private ArrayList<Player> outGoingList = new ArrayList<Player>();
-	
-	public static final int ACTION_FOLD = -1;
-	
-	private boolean lastGame = false;
-	
-	public String getcommunityCards() {
-		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString();
-	}
-	public String getcommunityCards2() {
-		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString();
-	}
-	public String getcommunityCards3() {
-		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString()+" "+ this.communityCards[4].toString();
-	}
 
+	private ArrayList<Player> outGoingList = new ArrayList<Player>();
+
+	public static final int ACTION_FOLD = -1;
+
+	private boolean lastGame = false;
+
+	BlockingQueue<GameState> queue;
+
+	private void newGameReset()
+	{
+		currentTurn = -1;
+		sidePots = new ArrayList<Pot>();
+		currentSidePots = new ArrayList<Pot>();
+		tempBets = new int[6];
+		communityCards = new Card[5];
+	}
+	
 	public static void main(String[] args) {
-		
-		GameMechanics mech = new GameMechanics(new Player[6], 0, 30);
-		
+
+		GameMechanics mech = new GameMechanics(new Player[6], 0, 30, null);
+
 		Player player = new Player(0, "BOB", 1000);
 		Player player1 = new Player(1, "Fred", 1000);
 		Player player2 = new Player(2, "John", 1000);
-		
-		
-		
+
+
+
 		GameAction addPlayer0 = new GameAction(player, true);
 		GameAction addPlayer1 = new GameAction(player1, true);
-		
+
 		mech.processGameAction(addPlayer0);
 		mech.processGameAction(addPlayer1);
-		
+
 		GameAction actionStart = new GameAction(PokerAction.STARTTABLE);
 		mech.processGameAction(actionStart);
-		
+
 		while(true)
-			{
+		{
 			int position = mech.positionOfCurrentPlayer;
 			int bet = mech.gui(position);
 			GameAction x = new GameAction(position, PokerAction.CALL, bet);
 			mech.processGameAction(x);
-			}
-		
+		}
+
 		//GameAction action = new GameAction(player, true);
-		
+
 	}
-	
+
+	/**
+	 * The main interface for processing actions from the clients.
+	 * 
+	 * These GameActions provided to this object drivse the whole GameMechanics engine, 
+	 * and must be processed through this interface.
+	 * 
+	 * 
+	 * @param action
+	 */
 	public void processGameAction(GameAction action)
 	{
 		PokerAction pokerAction = action.getAction();
-		
-		switch(pokerAction)
-		{
-		case ADDPLAYER:
-			Player player = action.getPlayer();
-			player.setActive(Player.FOLDED);
-			this.addPlayer(player);
-			break;
-		
-		case REMOVEPLAYER:
-			this.outGoingList.add(action.getPlayer());
-			int position = action.getPlayer().getId();
-			if(positionOfCurrentPlayer == position)
-				this.processBet(ACTION_FOLD);
-			break;
 
-		case STARTTABLE:
-			currentTurn = 0;
-			this.startGame();
-			break;
-			
-		case STOPTABLE:
-			this.lastGame = true;
-			break;
-		
-			
-		case TIMEOUT:
-			this.processBet(ACTION_FOLD);
-			break;
-			
-		default:
-			break;
-		
-		
+		/*
+		 * Some basic commands that are more server based
+		 */
+		if(action.getPosition() == SERVER_POSITION)
+		{
+			switch(pokerAction)
+
+			{
+			case ADDPLAYER:
+				Player player = action.getPlayer();
+				player.setActive(Player.FOLDED);
+				this.addPlayer(player);
+				break;
+
+			case REMOVEPLAYER:
+				this.outGoingList.add(action.getPlayer());
+				int position = action.getPlayer().getId();
+				if(positionOfCurrentPlayer == position)
+					this.processBet(ACTION_FOLD);
+				break;
+
+			case STARTTABLE:
+				currentTurn = 0;
+				this.startGame();
+				updateState();
+				break;
+
+			case STOPTABLE:
+				this.lastGame = true;
+				break;
+
+
+			case TIMEOUT:
+				this.processBet(ACTION_FOLD);
+				updateState();
+				break;
+
+			default:
+				break;
+
+
+			}
+			return;
 		}
 		
 		//If incorrect player ignore!
 		if(this.positionOfCurrentPlayer != action.getPosition())
 			return;
-		
+
+		lastPokerGameAction = action;
+
+		/*
+		 * Player based Game Actions
+		 */
 		switch(pokerAction)
 		{
-			
+
 		case CALL:
 		case BET:
 		case RAISE:
 		case RERAISE:
 			this.processBet(action.getValue());
+			updateState();
 			break;
-		
+
 		case FOLD:
 			this.processBet(ACTION_FOLD);
+			updateState();
 			break;
-			
+
 		case CHECK:
 			this.processBet(0);
+			updateState();
 			break;
-			
+
 		default:
 			break;
-		
-		
+
 		}
-		
+
 	}
-	
+
+	/**
+	 * Returns the number of players that are actually present
+	 * 
+	 * @return
+	 */
 	public int getValidPlayerCount()
 	{
 		int count = 0;
-		
+
 		for(int i = 0; i < this.playerList.size(); i++)
 		{
 			if(this.playerList.get(i) != null) count++;
 		}
-		
+
 		return count;
 	}
-	
+
+	/**
+	 * Retreves the next user that is not all in or folded
+	 * 
+	 * @return
+	 */
 	public int getNextPositionTurn()
 	{	
 		int temp = this.positionOfCurrentPlayer;
@@ -179,21 +215,27 @@ public class GameMechanics {
 		{
 			temp++;
 			int next = (temp) % playerList.size();
-			
+
 			if(next == this.positionOfCurrentPlayer)
-				{
+			{
 				//Log.e("GameMechanics", "Player turn ended at original person");
 				return this.positionOfCurrentPlayer;
-				}
-			
+			}
+
 			Player player = playerList.get(next);
 			if(player == null) continue;
-			
+
 			if(player.getActive() == Player.CURRENT)
 				return next;
 		}
 	}
-	
+
+	/**
+	 * Retrieves the next valid user afer the given position
+	 * 
+	 * @param position
+	 * @return
+	 */
 	public int getValidUser(int position)
 	{
 		int temp = position;
@@ -201,55 +243,118 @@ public class GameMechanics {
 		{
 			temp++;
 			int next = (temp) % playerList.size();
-			
+
 			if(next == position)
-				{
+			{
 				//Log.e("GameMechanics", "Next Dealer ended at original person");
 				return position;
-				}
-			
+			}
+
 			Player player = playerList.get(next);
 			if(player == null) continue;
-			
+
 			return next;
 		}
 	}
-	
-	public void updateState()
+
+	/**
+	 * Generates the GameState for each client and adds them to queue
+	 * 
+	 */
+	public void updateState(boolean unfilteredCurrentPlayers)
 	{
+		ArrayList<Player> playersData = new ArrayList<Player>();
+
+		/*
+		 * For each player generate update
+		 */
 		for(Player player : playerList)
 		{
-			//create gamestate
-			//put on broadcast queue
+			if(player == null) continue;
+			playersData.clear();
+			/*
+			 * Add player with without their cards, unless ALL IN or is the current player
+			 */
+			for(int i = 0; i < playerList.size(); i++)
+			{
+				Player temp = playerList.get(i);
+				if(temp == null) continue;
+				
+				Player limitedPlayerData = new Player(temp.getId(), temp.getUsername(), temp.getAmountMoney());
+				
+				/*
+				 * If all in or current player - include cards
+				 * 
+				 * Or if unfiltered - include all players who are all in or current (GAME WON)
+				 * 
+				 */
+				if((temp.getActive() == Player.ALL_IN || limitedPlayerData.getId() == player.getId())
+						||
+					((temp.getActive() == Player.ALL_IN || temp.getActive() == Player.CURRENT) && unfilteredCurrentPlayers)
+						)
+				{
+					limitedPlayerData.setCard(temp.getCard(0), 0);
+					limitedPlayerData.setCard(temp.getCard(1), 1);
+				}
+
+				limitedPlayerData.setActive(player.getActive());
+
+				playersData.add(limitedPlayerData);	
+			}
+			GameState gameState = new GameState(
+					gameUUID,
+					player, 
+					null, 
+					this.positionOfCurrentPlayer, 
+					(ArrayList<Player>)playersData.clone(), 
+					currentDealer, 
+					blindAmount, 
+					mainPot, 
+					currentSidePots, 
+					this.communityCards.clone(), 
+					this.lastPokerGameAction,
+					30);
+
+			this.queue.add(gameState);
 		}
 	}
 	
+	/**
+	 * Generates the GameState for each client and adds them to queue
+	 * 
+	 */
+	public void updateState()
+	{
+		updateState(false);
+	}
+
 	/**
 	 * create game mechanics
 	 * @param playerList
 	 * @param Dealer
 	 * @param blindAmount
 	 */
-	public GameMechanics(Player[] playerList, int Dealer, int blindAmount) {
+	public GameMechanics(Player[] playerList, int Dealer, int blindAmount, BlockingQueue<GameState> queue) {
 		this.playerList = new ArrayList<Player>(Arrays.asList(playerList));;
 		this.currentDealer = Dealer;
 		this.blindAmount = blindAmount;
+		this.queue = queue;
 	}
-	
+
 	/**
 	 * add player to game
 	 * @param p - player to be added
 	 * @return the new size of the game or -1 if already full
 	 */
 	public void addPlayer(Player p) {
-			this.playerList.add(p.getId(), p);
-			
-			if(this.getValidPlayerCount() == 1 && this.currentTurn == 0)
-			{
-				this.startGame();
-			}
+		this.playerList.add(p.getId(), p);
+
+		if(this.getValidPlayerCount() == 1 && this.currentTurn == 0)
+		{
+			this.startGame();
+		}
 	}
-	
+
 	/**
 	 * remove player from game
 	 * @param p - player removed
@@ -257,29 +362,34 @@ public class GameMechanics {
 	 */
 	public void removePlayer(Player p) {
 		this.playerList.remove(p.getId());
-		
+
 	}
-	
+
 	/**
 	 * set up the game
 	 */
 	public void startGame() {
-		
+
+		this.gameUUID = UUID.randomUUID();
+
 		for(Player player : this.outGoingList)
 		{
 			this.playerList.remove(player.getId());
 		}
-		
+		this.outGoingList.clear();
+
 		if(this.getValidPlayerCount() == 1) return;
-		
+
 		for(int i=0; this.playerList.size()>i;i++) {
 			Player player = this.playerList.get(i);
 			if(player == null) continue;
 			player.setActive(Player.CURRENT);
 		}
-		
+
 		this.currentDealer = getValidUser(this.currentDealer);
-		
+
+		newGameReset();
+		myDeck.resetDeck();
 		this.myDeck.shuffle();
 		this.mainPot = new Pot(this.playerList.get(0).getId(), 0);
 		for(int i=0; this.playerList.size()>i;i++) {
@@ -294,16 +404,16 @@ public class GameMechanics {
 		for (int i = 0; i<this.playerList.size(); i++) {
 			Player p = this.playerList.get(i);
 			if(p == null) continue;
-			
+
 			p.setCard(this.myDeck.getCard(), 0);
 			p.setCard(this.myDeck.getCard(), 1);
 		}
-		
+
 		this.nextTurn();
 		this.blinds();
-		
+		updateState();
 	}
-	
+
 	/**
 	 * go to the next round
 	 */
@@ -321,44 +431,44 @@ public class GameMechanics {
 			this.communityCards[0] = this.myDeck.getCard();
 			this.communityCards[1] = this.myDeck.getCard();
 			this.communityCards[2] = this.myDeck.getCard();
-			
+
 			//Display something
 			this.currentTurn++;
 			this.nextTurn();
-			
+
 		} else if (this.currentTurn ==4) {
 			this.communityCards[3] = this.myDeck.getCard();
-			
+
 			//Display something
 			this.currentTurn++;
 			this.nextTurn();
-			
+
 		} else if (this.currentTurn == 6) {
 			this.communityCards[4] = this.myDeck.getCard();
-			
+
 			//Display something
 			this.currentTurn++;
 			this.nextTurn();
-			
+
 		} else {
 			System.out.println("End Game");
 			this.currentTurn = 0;
 			this.endGame();
 		}
-		
+
 	}
 	/**
 	 * finish the game and give the winner their money
 	 */
 	private void endGame() {
-		
+
 		isAllFolded = false;
-		
+
 		ArrayList<Player>currentPlayer = new ArrayList<Player>();
 		for (int i =0; i<this.playerList.size(); i++) {
 			Player player = this.playerList.get(i);
 			if(player == null) continue;
-			
+
 			if (player.getActive()!=Player.FOLDED) {
 				currentPlayer.add(player);
 			}
@@ -368,7 +478,7 @@ public class GameMechanics {
 			for(int j=0; j<winners.length; j++) {
 				//int pos=-1;
 				//for(int k=0; k<this.playerList.size();k++) {
-					//if(this.playerList.get(k).getId()==winners)
+				//if(this.playerList.get(k).getId()==winners)
 				//}
 				System.out.println("Players" +winners[j] + "Won");
 				winners[j].addMoney(this.sidePots.get(i).getTotal()/winners.length);
@@ -381,10 +491,16 @@ public class GameMechanics {
 			System.out.println("Players" +winners[j].getId() + "Won");
 			winners[j].addMoney(this.mainPot.getTotal()/winners.length);
 		}
+
+		updateState(true);
+
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {}
 		
 		if(!lastGame)
 			this.startGame();
-		
+
 	}
 
 	/**
@@ -395,7 +511,7 @@ public class GameMechanics {
 		int rank[] = {11,11,11,11,11,11,11};
 		int highcard[] = {-1,-1,-1,-1,-1,-1,-1};
 		for (int i=0; i<this.playerList.size();i++) {
-			
+
 			Player CPlayer = this.playerList.get(i);
 			if(CPlayer == null) continue;
 
@@ -434,7 +550,7 @@ public class GameMechanics {
 				} else{
 					st_hand = hand;
 				}
-				
+
 				//straight
 				count =0;
 				Arrays.sort(st_hand, rankcompare);
@@ -451,7 +567,7 @@ public class GameMechanics {
 							straight=true;
 							break;
 						}
-						
+
 					} else if(tempCard.getRank()==last){
 						continue;
 					} else {
@@ -463,7 +579,7 @@ public class GameMechanics {
 					rank[i]=1;
 					continue;
 				} 
-				
+
 				//pairs
 				int pairs =0;
 				boolean triple=false;
@@ -492,7 +608,7 @@ public class GameMechanics {
 					count=1;
 					last =tempCard.getRank();
 				}
-				
+
 				Arrays.sort(hand, rankcompare);
 				System.out.println("HERE IS THERE HAND:");
 				for(int k=0; k<hand.length;k++) {	
@@ -523,13 +639,13 @@ public class GameMechanics {
 					highcard[i]=hand[hand.length-1].getRank();
 				}
 				System.out.println("\n HERE IS THE RANK" + rank[i]);
-				
+
 			}
 		}
 		int max=10;
 		boolean tie=false;
 		ArrayList<Player> BestPlayers = new ArrayList<Player>();
-		
+
 		//Player[] BestPlayer = new Player[1];
 		int curHigh =-1;
 		for(int i=0; i<rank.length;i++) {
@@ -564,13 +680,13 @@ public class GameMechanics {
 	{
 		int isCurrentPlayer = this.playerList.get(positionOfCurrentPlayer).getActive();
 		int playerCurrentBetInPot = this.mainPot.getPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId());
-		
 
-//		/*BROKEN FOR RERAISING - in case that amount == amount but user is attempting to reraise on his turn*/
+
+		//		/*BROKEN FOR RERAISING - in case that amount == amount but user is attempting to reraise on his turn*/
 		if(isCurrentPlayer!=Player.CURRENT || this.mainPot.getAmount()== playerCurrentBetInPot && bet == 0) {
 			return;
 		}
-		
+
 
 		if(bet==ACTION_FOLD) {
 			this.playerList.get(positionOfCurrentPlayer).setActive(Player.FOLDED);
@@ -616,11 +732,16 @@ public class GameMechanics {
 			}
 		}
 	}
-	
+
 	/**
 	 * Start off the betting round
 	 */
 	private void processBet(int bet) {
+
+		System.out.println("Who is in for " + this.mainPot.getPlayerAmount(positionOfCurrentPlayer));
+		System.out.println("Main Pot " + this.mainPot.getAmount());
+		System.out.println("Please enter bet for (-1 to fold): Player " + positionOfCurrentPlayer);
+		System.out.println("BET: "+bet);
 		
 		if(isAllFolded)
 		{
@@ -629,10 +750,10 @@ public class GameMechanics {
 				this.processBet(0);
 			return;
 		}
-		
+
 		this.placeBet(bet);
 		int next = this.getNextPositionTurn();
-		
+
 		if(isAllFolded)
 		{
 			this.processBet(0);
@@ -651,13 +772,13 @@ public class GameMechanics {
 			System.out.print(i+",");
 		}
 		System.out.println("]");
-		
+
 		if(playerBetsInARound.contains(next))
 		{
 			if(this.mainPot.checkPlayersBet() || noBets)
-				{
+			{
 				this.nextTurn();
-				}
+			}
 			else 
 				playerBetsInARound.clear();
 		}else
@@ -676,7 +797,7 @@ public class GameMechanics {
 		for(int i=0; i<this.playerList.size();i++) {
 			Player player = this.playerList.get(i);
 			if(player == null) continue;
-			
+
 			if(player.getActive()<=1)
 				countfolds++;
 		}
@@ -686,7 +807,7 @@ public class GameMechanics {
 			return false;
 		}
 	}
-	
+
 	private void winAllPots(int player) {
 		for(int i=0; this.sidePots.size()>i; i++) {
 			this.playerList.get(player).addMoney(this.sidePots.get(i).getTotal());
@@ -726,7 +847,7 @@ public class GameMechanics {
 		int smallBlind;
 		smallBlind = getValidUser(this.currentDealer);
 		bigBlind = getValidUser(smallBlind);
-		
+
 		bigBlind(bigBlind);
 		smallBlind(smallBlind);
 	}
@@ -744,10 +865,10 @@ public class GameMechanics {
 			this.tempBets[smallBlind] = p.getAmountMoney();
 			p.setActive(Player.ALL_IN);
 		}
-		
+
 		this.mainPot.setPlayerAmount(smallBlind, this.tempBets[smallBlind]);
 	}
-	
+
 	/**
 	 * get the big blind
 	 * @param bigBlind
@@ -761,8 +882,19 @@ public class GameMechanics {
 			this.tempBets[bigBlind] = p.getAmountMoney();
 			p.setActive(Player.ALL_IN);
 		}
-		
+
 		this.mainPot.setPlayerAmount(bigBlind, this.tempBets[bigBlind]);
-		
+
 	}
+
+	public String getcommunityCards() {
+		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString();
+	}
+	public String getcommunityCards2() {
+		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString();
+	}
+	public String getcommunityCards3() {
+		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString()+" "+ this.communityCards[4].toString();
+	}
+
 }

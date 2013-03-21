@@ -34,7 +34,7 @@ public class Client implements ClientTaskListener {
 	private PlayingArea activity;
 	private ObjectInputStream inStream;
 	private ObjectOutputStream outStream;
-	private int LOCAL_PIPE_BUFFER = 8000;
+	private int LOCAL_PIPE_BUFFER = 1000000;
 	
 	private BlockingQueue<GameAction> queue;
 	private ClientListener listener;
@@ -46,10 +46,10 @@ public class Client implements ClientTaskListener {
 	 * @param activity
 	 * @throws IOException 
 	 */
-	public Client(PlayingArea activity, Server server, LinkedBlockingQueue<GameAction> queue) throws IOException {
+	public Client(PlayingArea activity, Server server, LinkedBlockingQueue<GameAction> queue, int position) throws IOException {
 		this.activity = activity;
 		this.queue = queue;
-		intializeLocalClient(server);
+		intializeLocalClient(server, position);
 		initialize();
 	}
 	
@@ -99,7 +99,7 @@ public class Client implements ClientTaskListener {
 	 * @param server
 	 * @throws IOException
 	 */
-	private void intializeLocalClient(Server server) throws IOException
+	private void intializeLocalClient(Server server, int position) throws IOException
 	{
 		PipedInputStream keepInStream = new PipedInputStream(LOCAL_PIPE_BUFFER);
 		PipedInputStream sendInStream = new PipedInputStream(LOCAL_PIPE_BUFFER);
@@ -115,7 +115,7 @@ public class Client implements ClientTaskListener {
 		
 		PokerApplication app = (PokerApplication) activity.getApplication();
 		Account account = app.getAccount();
-		Player player = new Player(0, account.getUsername(), account.getBalance());
+		Player player = new Player(position, account.getUsername(), account.getBalance());
 		
 		server.addPlayer(player, sendInStream, sendOutStream);
 		this.inStream = new ObjectInputStream(keepInStream);
@@ -129,6 +129,12 @@ public class Client implements ClientTaskListener {
 	public void onPlayerTaskClose() {
 		//signal activity that we disconnected
 		
+	}
+	
+	public void close()
+	{
+		listener.cancel();
+		broadCaster.cancel();
 	}
 
 

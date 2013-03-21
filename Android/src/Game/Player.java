@@ -70,14 +70,16 @@ public class Player implements Serializable{
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.write(id);
-		out.write(money);
-		out.write(active);
+		out.writeObject(hand);
+		out.writeInt(id);
+		out.writeInt(money);
+		out.writeInt(active);
 		out.writeUTF(username);
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
+		this.hand = (Card[]) in.readObject();
 		this.id = in.readInt();
 		this.money = in.readInt();
 		this.active = in.readInt();
