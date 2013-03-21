@@ -6,16 +6,20 @@ import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.Toast;
 
-public class Stats extends Activity implements TabListener, OnClickListener {
+public class Stats extends Activity implements TabListener, OnGestureListener {
 	
-	private TabHost tabHost;
 	private ActionBar ab;
-	private int i=1;
+	private GestureDetector mDetector;
+	private int currentTabPos=0;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -24,6 +28,10 @@ public class Stats extends Activity implements TabListener, OnClickListener {
 	    
 	    setContentView(R.layout.stats_screen);
 	    
+	    //Get views and such
+	    mDetector = new GestureDetector(getApplicationContext(),this);
+	    
+	    //Get action bar
 	    ab = getActionBar();
 	    ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 	    
@@ -34,9 +42,6 @@ public class Stats extends Activity implements TabListener, OnClickListener {
 	    globalStatsTab.setIcon(R.drawable.ic_global_stats);
 	    ActionBar.Tab rankingStatsTab = ab.newTab().setText("Ranking");
 	    rankingStatsTab.setIcon(R.drawable.ic_ranking_stats);
-	    
-	    Button b = (Button)findViewById(R.id.statsButton);
-	    b.setOnClickListener(this);
 	    
 	    //Set the tab listeners to this class
 	    personalStatsTab.setTabListener(this);
@@ -53,11 +58,12 @@ public class Stats extends Activity implements TabListener, OnClickListener {
 	/***************************************TAB LISTENERS******************************************/
 	@Override
 	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-		
 	}
 
+	//Update current position when tab is selected
 	@Override
-	public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
+	public void onTabSelected(Tab t, FragmentTransaction arg1) {
+		currentTabPos=t.getPosition();
 	}
 
 	@Override
@@ -66,11 +72,63 @@ public class Stats extends Activity implements TabListener, OnClickListener {
 	/***************************************TAB LISTENERS END**************************************/
 	/**********************************************************************************************/
 	
+	@Override
+	public boolean onTouchEvent(MotionEvent me){
+		return mDetector.onTouchEvent(me);
+	}
+	
+	/**************************************************************************************************************/
+	/***************************************GESTURE LISTENERS******************************************************/
+
+	/**
+	 * Method for listening for flings/swipes in this activity.
+	 */
+	@Override
+	public boolean onFling(MotionEvent me0, MotionEvent me1, float arg2,
+			float arg3) {
+		
+		float x1 = me0.getX();
+		float x2 = me1.getX();
+		
+		//right swipe
+		if (x1<x2) currentTabPos++;
+		//else left swipe
+		else currentTabPos--;
+		
+		//Reset value of position if necessary
+		if (currentTabPos>2) currentTabPos=0;
+		if (currentTabPos<0) currentTabPos=2;
+		
+		//Set it
+		ab.setSelectedNavigationItem(currentTabPos);
+		
+		return false;
+	}
 	
 	@Override
-	public void onClick(View arg0) {
-		ab.setSelectedNavigationItem(i++);
-		if (i>2) i=0;
+	public boolean onDown(MotionEvent arg0) {
+		return false;
+	}
+	
+
+	@Override
+	public void onLongPress(MotionEvent arg0) {
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
+			float arg3) {
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent arg0) {
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent arg0) {
+		return false;
 	}
 	
 }

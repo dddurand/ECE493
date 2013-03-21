@@ -4,25 +4,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import client.Client;
-import dataModels.Account;
 import server.GameAction;
+import server.GameAction.PokerAction;
 import server.GameState;
 import server.Server;
-import server.GameAction.PokerAction;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import client.Client;
 import application.PokerApplication;
+import client.Client;
+import dataModels.Account;
+import fragments.OnlineMode;
 import fragments.PlayerFragment;
 import fragments.River;
 import game.Card;
@@ -287,6 +289,22 @@ public class PlayingArea extends Activity implements OnClickListener {
 		}
 		
 		
+	}
+	
+	@Override
+	public void onBackPressed(){
+		
+		new AlertDialog.Builder(this)
+		.setTitle("Really Exit?")
+		.setMessage("Are you sure you want to leave the game?")
+		.setNegativeButton(android.R.string.no, null)
+		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface arg0, int arg1) {
+				//Add stuff for cleaning up here
+				PlayingArea.super.onBackPressed();
+			}
+		}).create().show();
 	}
 	
 	private class DebugRunnable implements Runnable
