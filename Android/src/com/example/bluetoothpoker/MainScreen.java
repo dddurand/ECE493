@@ -138,7 +138,10 @@ public class MainScreen extends Activity{
 			.setPositiveButton(android.R.string.yes, new OnClickListener() {
 
 				public void onClick(DialogInterface arg0, int arg1) {
-					Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_SHORT).show();
+					//Get current fragment
+					OnlineMode f = (OnlineMode) getFragmentManager().findFragmentById(R.id.fragment_container);
+					//Simulate logout button press
+					f.onClick(findViewById(R.id.logoutButton));
 				}
 			}).create().show();
 		}
