@@ -9,12 +9,18 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 
-public class Stats extends Activity implements TabListener, OnGestureListener {
+public class Stats extends Activity implements TabListener, OnGestureListener, OnClickListener {
 	
 	private ActionBar ab;
-	private GestureDetector mDetector;
 	private int currentTabPos=0;
+	private GestureDetector detector;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -22,9 +28,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	    super.onCreate(savedInstanceState);
 	    
 	    setContentView(R.layout.stats_screen);
-	    
-	    //Get views and such
-	    mDetector = new GestureDetector(getApplicationContext(),this);
 	    
 	    //Get action bar
 	    ab = getActionBar();
@@ -37,6 +40,25 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	    globalStatsTab.setIcon(R.drawable.ic_global_stats);
 	    ActionBar.Tab rankingStatsTab = ab.newTab().setText("Ranking");
 	    rankingStatsTab.setIcon(R.drawable.ic_ranking_stats);
+	    
+	    Button b = (Button)findViewById(R.id.button1);
+	    b.setOnClickListener(this);
+	    
+	    //Gesture on list
+//	    gov = new GestureOverlayView(this);
+	    detector = new GestureDetector(this,this);
+	    ListView list = (ListView)findViewById(R.id.statsListView);
+	    list.setOnTouchListener(new OnTouchListener() {
+	    	
+	    	public boolean onTouch(View view, MotionEvent e){
+	    		detector.onTouchEvent(e);
+	    		return false;
+	    	}
+	    });
+//	    list.setOnScrollListener(this);
+//	    gov.addView(list);
+//	    gov.addOnGesturePerformedListener(this);
+	    
 	    
 	    //Set the tab listeners to this class
 	    personalStatsTab.setTabListener(this);
@@ -66,11 +88,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	}
 	/***************************************TAB LISTENERS END**************************************/
 	/**********************************************************************************************/
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent me){
-		return mDetector.onTouchEvent(me);
-	}
 	
 	/**************************************************************************************************************/
 	/***************************************GESTURE LISTENERS******************************************************/
@@ -125,5 +142,17 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	public boolean onSingleTapUp(MotionEvent arg0) {
 		return false;
 	}
-	
+
+	@Override
+	public void onClick(View arg0) {
+		ListView list = (ListView)findViewById(R.id.statsListView);
+		String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+				  "Linux", "OS/2" };
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.stats_list_element, R.id.statsEntryText,values);
+		
+		list.setAdapter(adapter);
+	}
+
 }
