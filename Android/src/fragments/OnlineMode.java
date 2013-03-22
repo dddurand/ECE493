@@ -237,7 +237,11 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 					editor.apply();
 					
 					((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
-				} else showToast("Logout Failed");
+				} else 
+					{
+						showToast("User information conflict. Please log in again.");
+						((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
+					}
 			} 
 			else showToast(timeoutMessage);
 

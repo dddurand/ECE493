@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -38,8 +39,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private PlayerFragment[] playerObjects;
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
+	private int current = 0;
 	
-	private boolean debugServer = true;
+	private boolean debugServer = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -199,13 +201,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	}
 	
 	/**
-	 * Sets the first 3 cards of the river to the face down image, and removes the last 2.
+	 * Removes all 5 cards from the river
 	 */
 	public void clearRiver(){
-//		riverObject.setCard(0, "back");
-//		riverObject.setCard(1, "back");
-//		riverObject.setCard(2, "back");
-		
 		riverObject.removeCard(0);
 		riverObject.removeCard(1);
 		riverObject.removeCard(2);
@@ -235,7 +233,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	/**
 	 * Animates the progress bar for the given player in the parameter.
-	 * @param player
+	 * @param player The player's progress bar to be animated
 	 */
 	public void animateProgressBar(int player){
 		//Get view
@@ -252,9 +250,37 @@ public class PlayingArea extends Activity implements OnClickListener {
 			
 			public void onFinish(){
 				pb.setVisibility(View.INVISIBLE);
+				//Player didnt take turn, fold
 			}
 		}.start();
 		
+	}
+	
+	/**
+	 * Changes background of selected player to indicate it's that player's turn.
+	 * @param n The player number [0 for local, 1-5 for the other 5]
+	 */
+	private void setActivePlayerBackground(int n){
+		playerLayouts[n].setBackgroundResource(R.drawable.active_player_border);
+	}
+	
+	/**
+	 * Resets the background of the selected player to a transparent one. This should be called
+	 * after each player's turn to clear the background
+	 * @param n
+	 */
+	private void clearActivePlayerBackground(int n){
+		playerLayouts[n].setBackgroundColor(Color.parseColor("#00000000"));
+	}
+	
+	private void animateAll(){
+		for (int i=0;i<this.maxPlayers;i++)
+			setActivePlayerBackground(i);
+	}
+	
+	private void clearAll(){
+		for (int i=0;i<this.maxPlayers;i++)
+			clearActivePlayerBackground(i);
 	}
 	
 
@@ -265,12 +291,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		case R.id.button1:
 			//test commands
-			//GameState d = new GameState(5);
-			//updateAll(d);
-			setPlayerCard(2,0,"c5");
-			setPlayerCard(2,1,"s1");
-			setPlayerCard(0,0,"hk");
-			setPlayerCard(0,1,"hq");
+			clearAll();
 			break;
 			
 		case R.id.button2:
@@ -280,10 +301,11 @@ public class PlayingArea extends Activity implements OnClickListener {
 			break;
 			
 		case R.id.button3:
-			animateProgressBar(0);
-			animateProgressBar(1);
-			animateProgressBar(2);
-			animateProgressBar(5);
+//			animateProgressBar(1);
+			if (current!=0) clearActivePlayerBackground(current-1);
+			if (current>=6) current=0;
+			setActivePlayerBackground(current);
+			animateProgressBar(current++);
 			break;
 		
 		}
