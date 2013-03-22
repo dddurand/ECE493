@@ -1,5 +1,8 @@
 package fragments;
 
+import game.Card;
+
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import misc.AmountDialog;
@@ -9,6 +12,8 @@ import networking.NLogout;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import server.GameAction.PokerAction;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -34,6 +39,7 @@ import com.example.bluetoothpoker.R;
 import com.example.bluetoothpoker.Stats;
 
 import dataModels.Account;
+import dataModels.GameJson;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
@@ -81,9 +87,50 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 //		joinTableButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
 		
+		application.getUploadServiceSemaphore().release();
+		
 		return view;
 	}
 
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		//test();
+		super.onActivityCreated(savedInstanceState);
+	}
+	
+	
+	
+	public void test()
+	{
+		String UUID = "123456789";
+		int id = dbInterface.addGame(UUID, account);
+		
+		int id2 = dbInterface.addGame(UUID, account);
+		
+		ArrayList<GameJson> games = dbInterface.getGames(account);
+		
+		Card hand[] = new Card[] {new Card(2,2),new Card(2,2)};
+		Card comm[] = new Card[] {};
+		
+		
+		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
+		
+		GameJson game = dbInterface.getGame(UUID, account);
+		
+		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
+		
+		game = dbInterface.getGame(UUID, account);
+		
+		dbInterface.removeGame(UUID, account);
+		
+		game = dbInterface.getGame(UUID, account);
+		
+		games = dbInterface.getGames(account);
+		
+		games.size();
+		
+	}
+	
 	@Override
 	public void onClick(View v) {
 		

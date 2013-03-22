@@ -40,12 +40,13 @@ public class DatabaseContract {
 	 */
 	public static abstract class GameActionContract implements BaseColumns {
 	    public static final String TABLE_NAME = "game_action";
-	    public static final String COLUMN_NAME_GAME_ID = "uuid";
+	    public static final String COLUMN_NAME_GAME_ID = "gameid";
 	    public static final String COLUMN_NAME_POT = "pot";
 	    public static final String COLUMN_NAME_BET = "bet";
 	    public static final String COLUMN_NAME_HAND = "hand";
 	    public static final String COLUMN_NAME_COMM = "comm";
 	    public static final String COLUMN_NAME_ACTION = "action";
+	    public static final String COLUMN_NAME_UPDATE_NUMBER = "update_num";
 	}
 	
 	/**
@@ -85,7 +86,8 @@ public class DatabaseContract {
 		    		DatabaseContract.GameActionContract.COLUMN_NAME_BET + INTEGER_TYPE + COMMA_SEP +
 		    		DatabaseContract.GameActionContract.COLUMN_NAME_HAND + TEXT_TYPE + COMMA_SEP +
 		    		DatabaseContract.GameActionContract.COLUMN_NAME_COMM + TEXT_TYPE + COMMA_SEP +
-		    		DatabaseContract.GameActionContract.COLUMN_NAME_ACTION + TEXT_TYPE +
+		    		DatabaseContract.GameActionContract.COLUMN_NAME_ACTION + TEXT_TYPE + COMMA_SEP +
+		    		DatabaseContract.GameActionContract.COLUMN_NAME_UPDATE_NUMBER + INTEGER_TYPE + 
 		    " );";
 	
 	/**
@@ -185,7 +187,7 @@ public class DatabaseContract {
 	 */
 	public static class DatabaseDBHelper extends SQLiteOpenHelper {
 	    // If you change the database schema, you must increment the database version.
-	    public static final int DATABASE_VERSION = 10;
+	    public static final int DATABASE_VERSION = 12;
 	    public static final String DATABASE_NAME = "Database.db";
 
 	    /**

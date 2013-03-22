@@ -1,5 +1,8 @@
 package dataModels;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * This class acts as a data representation of an user account. 
  * This includes online and offline accounts.
@@ -150,6 +153,21 @@ public class Account {
 	 */
 	public void addBalance(int balance) {
 		this.balance += balance;
+	}
+	
+	/**
+	 * Retrieves the json representation of the object
+	 * @return
+	 * @throws JSONException
+	 */
+	public JSONObject getJson() throws JSONException
+	{
+		JSONObject json = new JSONObject();
+		json.put("username", this.username);
+		json.put("password", this.password);
+		json.put("authenticationToken", this.authenticationToken);
+		
+		return json;
 	}
 	
 	

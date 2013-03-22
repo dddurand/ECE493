@@ -21,35 +21,42 @@ import server.GameAction.PokerAction;
  */
 public class GameMechanics {
 
+	public static final int ACTION_FOLD = -1;
 	public static final int SERVER_POSITION = -3;
+	
 	private Deck myDeck = new Deck();
-	private ArrayList<Player> playerList = new ArrayList<Player>();
+	
 	private int id;
-	public int positionOfCurrentPlayer;
+	private int positionOfCurrentPlayer;
 	private int currentTurn = -1;
 	private int currentDealer;
 	private int blindAmount;
-	private Pot mainPot;
-	private ArrayList<Pot> sidePots;
-	private ArrayList<Pot> currentSidePots;
+	
+	
 	private int[] tempBets = new int[6];
-	private int currentBet;
 	private Card[] communityCards = new Card[5];
-	boolean noBets =false;
+	
+	private int currentBet;
+	
+	private boolean lastGame = false;
+	private boolean noBets =false;
 
+	private Pot mainPot;
 	private GameAction lastPokerGameAction;
 	private UUID gameUUID;
+	
+	private int gameUpdateCount;
 
-	boolean isAllFolded = false;
+	private boolean isAllFolded = false;
+	
 	private ArrayList<Integer> playerBetsInARound;
-
 	private ArrayList<Player> outGoingList = new ArrayList<Player>();
-
-	public static final int ACTION_FOLD = -1;
-
-	private boolean lastGame = false;
-
-	BlockingQueue<GameState> queue;
+	private ArrayList<Player> playerList = new ArrayList<Player>();
+	private ArrayList<Pot> sidePots;
+	private ArrayList<Pot> currentSidePots;
+	private BlockingQueue<GameState> queue;
+	
+	//private ArrayList<Integer> playerBetsInARound;
 
 	private void newGameReset()
 	{
@@ -138,6 +145,7 @@ public class GameMechanics {
 
 			case TIMEOUT:
 				this.processBet(ACTION_FOLD);
+				this.lastPokerGameAction = new GameAction(positionOfCurrentPlayer, PokerAction.FOLD);
 				updateState();
 				break;
 
@@ -263,6 +271,7 @@ public class GameMechanics {
 	 */
 	public void updateState(boolean unfilteredCurrentPlayers)
 	{
+		gameUpdateCount++;
 		ArrayList<Player> playersData = new ArrayList<Player>();
 
 		/*
@@ -313,7 +322,8 @@ public class GameMechanics {
 					currentSidePots, 
 					this.communityCards.clone(), 
 					this.lastPokerGameAction,
-					30);
+					30,
+					gameUpdateCount);
 
 			this.queue.add(gameState);
 		}
@@ -371,7 +381,8 @@ public class GameMechanics {
 	public void startGame() {
 
 		this.gameUUID = UUID.randomUUID();
-
+		gameUpdateCount = 0;
+		
 		for(Player player : this.outGoingList)
 		{
 			this.playerList.remove(player.getId());
@@ -411,6 +422,7 @@ public class GameMechanics {
 
 		this.nextTurn();
 		this.blinds();
+		lastPokerGameAction = new GameAction(PokerAction.STARTGAME);
 		updateState();
 	}
 
@@ -492,6 +504,7 @@ public class GameMechanics {
 			winners[j].addMoney(this.mainPot.getTotal()/winners.length);
 		}
 
+		lastPokerGameAction = new GameAction(PokerAction.ENDGAME);
 		updateState(true);
 
 		try {

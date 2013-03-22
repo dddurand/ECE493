@@ -1,5 +1,8 @@
 package dataModels;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * An object representing a generation of money to an account.
  * 
@@ -96,4 +99,14 @@ public class MoneyGenerated {
 	public String getName() {
 		return name;
 	}
+	
+	public JSONObject getJson() throws JSONException
+	{
+		JSONObject obj = new JSONObject();
+		obj.put("name", this.name);
+		obj.put("value", this.value);
+		
+		return obj;
+	}
+	
 }

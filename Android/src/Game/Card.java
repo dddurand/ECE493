@@ -38,6 +38,25 @@ public class Card implements Serializable {
     	return suits[this.suit] + ranks[this.rank];
     }
     
+    public static String getCardsString(Card cards[])
+    {
+    	StringBuilder builder = new StringBuilder();
+    	for(int i = 0; i < cards.length; i++)
+    	{
+    		Card card = cards[i];
+    		if(card==null) continue;
+    		
+    		builder.append(card.toString());
+    		builder.append(";");
+    	}
+    	
+    	String result = builder.toString();
+    	
+    	if(result.length() > 0)
+    		result = result.substring(0, result.length()-1);
+    	
+    	return result;
+    }
     
 	/**
 	 * This method is used in the serialization of the object

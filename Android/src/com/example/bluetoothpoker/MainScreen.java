@@ -1,5 +1,7 @@
 package com.example.bluetoothpoker;
 
+import java.util.concurrent.Semaphore;
+
 import networking.ServerCodes;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,8 +12,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.Toast;
 import application.PokerApplication;
+import client.UploadService;
 import database.DatabaseDataSource;
 import fragments.CreateTable;
 import fragments.JoinTable;
@@ -50,15 +52,33 @@ public class MainScreen extends Activity{
 			this.serverCodes = new ServerCodes(this);
 			this.switchFragment(MainScreen.LOGIN_SCREEN);
 			initializeDataSource();
+			initializeUploadService();
+			
 		}
 	}
 
+
+	/**
+	 * Initializes the upload service for the whole application.
+	 */
+	private void initializeUploadService()
+	{
+		Semaphore sem = new Semaphore(0);
+		
+		PokerApplication application = (PokerApplication) this.getApplication();
+		application.setUploadServiceSemaphore(sem);
+		
+		UploadService uploadService = new UploadService(sem, application);
+		Thread thread = new Thread(uploadService);
+		thread.start();
+	}
+	
 	/**
 	 * Initializes the datasource interface for the whole application.
 	 * A "initializing" dialog may show up temporarily if the sql database takes too long to load.
 	 * 
 	 */
-	public void initializeDataSource()
+	private void initializeDataSource()
 	{
 		Dialog dialog = new AlertDialog.Builder(this).
 				setMessage(R.string.initializing).

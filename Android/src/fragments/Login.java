@@ -104,6 +104,13 @@ public class Login extends Fragment implements OnClickListener {
 		{
 			String username = preferences.getString(PreferenceConstants.REMEMBERED_USERNAME, "");
 			Account account = dbInterface.getAccount(username);
+			
+			if(account == null)
+			{
+				super.onResume();	
+				return;
+			}
+			
 			this.application.setAccount(account);
 			this.application.setLoggedIn(true);
 			((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);

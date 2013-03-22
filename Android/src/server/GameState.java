@@ -40,7 +40,8 @@ public class GameState implements Serializable  {
 	private Card[] community;
 	private java.util.UUID UUID;
 	private GameAction lastPokerGameAction;
-			
+	private int gameUpdateNumber;	
+	
 	public GameState(java.util.UUID UUID,
 					Player player, 
 					ArrayList<String> playerHistory,
@@ -52,7 +53,8 @@ public class GameState implements Serializable  {
 					ArrayList<Pot> sidePots,
 					Card[] community,
 					GameAction lastAction,
-					int timeoutSeconds
+					int timeoutSeconds,
+					int gameUpdateNumber
 					)
 	{
 		this.UUID = UUID;
@@ -67,12 +69,22 @@ public class GameState implements Serializable  {
 		this.community = community;
 		this.timeoutSeconds = timeoutSeconds;
 		this.lastPokerGameAction = lastAction;
+		this.gameUpdateNumber = gameUpdateNumber;
 	}
 	
 	
+	public int getGameUpdateNumber() {
+		return gameUpdateNumber;
+	}
 
-	
-	
+	public void setGameUpdateNumber(int gameUpdateNumber) {
+		this.gameUpdateNumber = gameUpdateNumber;
+	}
+
+
+
+
+
 	public GameAction getLastPokerGameAction() {
 		return lastPokerGameAction;
 	}

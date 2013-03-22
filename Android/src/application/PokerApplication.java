@@ -1,5 +1,7 @@
 package application;
 
+import java.util.concurrent.Semaphore;
+
 import android.app.Application;
 import dataModels.Account;
 import database.DatabaseDataSource;
@@ -19,7 +21,28 @@ public class PokerApplication extends Application {
 	private Account account = new Account();
 	private DatabaseDataSource dataSource;
 	private boolean isLoggedIn = false;
+	private Semaphore uploadServiceSemaphore;
 	
+	
+	/**
+	 * Retrieves the lock that used to trigger the upload thread to start.
+	 * 
+	 * @return
+	 */
+	public Semaphore getUploadServiceSemaphore() {
+		return uploadServiceSemaphore;
+	}
+
+
+	/**
+	 * Sets the lock that used to trigger the upload thread to start.
+	 * 
+	 * @return
+	 */
+	public void setUploadServiceSemaphore(Semaphore uploadServiceSemaphore) {
+		this.uploadServiceSemaphore = uploadServiceSemaphore;
+	}
+
 	/**
 	 * Returns if the user is logged in.
 	 * @return

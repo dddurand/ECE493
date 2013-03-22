@@ -9,11 +9,6 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TabHost;
-import android.widget.Toast;
 
 public class Stats extends Activity implements TabListener, OnGestureListener {
 	
