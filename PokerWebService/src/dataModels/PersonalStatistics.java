@@ -94,6 +94,10 @@ public class PersonalStatistics {
 	private int avgBet;
 	@SuppressWarnings("unused")
 	private int netMoneyRanking;
+	@SuppressWarnings("unused")
+	private int optimalityRanking;
+	@SuppressWarnings("unused")
+	private double optimality;
 	
 	/**
 	 * General Constructor
@@ -150,6 +154,8 @@ public class PersonalStatistics {
 		netMoneyRanking = getNetMoneyRank();
 		avgBet = getAvgBet();
 		totalNumberOfPots = getTotalNumberOfPots();
+		optimalityRanking = getOptimalityRanking();
+		optimality = getOptimality();
 	}
 	
 	public RankedDataRow getMyRating() throws DatabaseInterfaceException

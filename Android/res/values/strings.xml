@@ -26,5 +26,43 @@
     <string name="server_unknown">Unable to contact server.</string>
     <string name="current_balance_prefix">Current:$</string>
     
+    <!-- Personal Stats  -->
+    <string name="totalDollarsBetOnCalls">Total $ Called</string>
+	 <string name="totalDollarsBetOnBets">Total $ Bets</string>
+	 <string name="totalDollarsBetOnRaises">Total $ Raised</string>
+	 <string name="totalDollarsBetOnReRaises">Total $ ReRaised</string>
+	 <string name="totalDollarsBet">Total $ Bet</string>
+	 <string name="avgDollarsBetOnCalls">Average $ On Call</string>
+	 <string name="avgDollarsBetOnBets">Average $ On Bet</string>
+	 <string name="avgDollarsBetOnRaises">Average $ On Raise</string>
+	 <string name="avgDollarsBetOnReRaises">Average $ On ReRaise</string>
+	 <string name="totalNumberOfBets">Total # Bets</string>
+	 <string name="totalNumberOfChecks">Total # Checks</string>
+	 <string name="totalNumberOfCalls">Total # Bets</string>
+	 <string name="totalNumberOfFolds">Total # Folds</string>
+	 <string name="totalNumberOfRaise">Total # Raises</string>
+	 <string name="totalNumberOfReRaise">Total # ReRaises</string>
+	 <string name="totalNumberOfPotsWon">Total # Pots Won</string>
+	 <string name="totalNumberOfPotsLoss">Total # Pots Loss</string>
+	 <string name="totalNumberOfPots">Total # Pots</string>
+	 <string name="avgPotOnChecks">Average Pot On Check</string>
+	 <string name="avgPotOnCalls">Average Pot On Calls</string>
+	 <string name="avgPotOnBets">Average Pot On Bets</string>
+	 <string name="avgPotOnRaises">Average Pot On Raises</string>
+	 <string name="avgPotOnReRaises">Average Pot On ReRaises</string>
+	 <string name="avgPotOnFolds">Average Pot On Folds</string>
+	 <string name="avgPotOnWins">Average Pot On Wins</string>
+	 <string name="avgPotOnLoses">Average Pot On Loses</string>
+	 <string name="totalDollarsWon">Total $ Won</string>
+	 <string name="totalDollarsLoss">Total $ Loss</string>
+	 <string name="totalDollarsFolded">Total $ Folded</string>
+	 <string name="winPercentage">Win Percentage</string>
+	 <string name="moneyGenerated">Money Generated</string>
+	 <string name="gamesPlayed">Total Games Played</string>
+	 <string name="netMoney">Net Money</string>
+	 <string name="avgBet">Average Bet</string>
+	 <string name="netMoneyRanking">Net Money Ranking</string>
+     <string name="optimalityRanking">Optimality Ranking</string>
+	 <string name="optimality">Optimality</string>
     
 </resources>

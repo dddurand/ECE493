@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import misc.AmountDialog;
 import misc.BalanceUpdatable;
 import networking.NLogout;
+import networking.NPersonalStats;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -40,6 +41,10 @@ import com.example.bluetoothpoker.Stats;
 
 import dataModels.Account;
 import dataModels.GameJson;
+import dataModels.PersonalStatistics;
+import dataModels.PersonalStatistics.PersonalStatisticRequest;
+import dataModels.SimpleStatistic;
+import dataModels.TimeFrame;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
@@ -94,7 +99,7 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		//test();
+		test();
 		super.onActivityCreated(savedInstanceState);
 	}
 	
@@ -102,32 +107,48 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 	
 	public void test()
 	{
-		String UUID = "123456789";
-		int id = dbInterface.addGame(UUID, account);
 		
-		int id2 = dbInterface.addGame(UUID, account);
+		PersonalStatisticRequest personalStats = new PersonalStatisticRequest(TimeFrame.ALL, this.account);
+		NPersonalStats personalStatsTask = new NPersonalStats(this.getActivity());
+		try {
+			PersonalStatistics stat = personalStatsTask.execute(personalStats).get();
+			ArrayList<SimpleStatistic> stats = stat.getAllStatistics();
+
+			int test = 0;test++;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+				}
 		
-		ArrayList<GameJson> games = dbInterface.getGames(account);
-		
-		Card hand[] = new Card[] {new Card(2,2),new Card(2,2)};
-		Card comm[] = new Card[] {};
-		
-		
-		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
-		
-		GameJson game = dbInterface.getGame(UUID, account);
-		
-		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
-		
-		game = dbInterface.getGame(UUID, account);
-		
-		dbInterface.removeGame(UUID, account);
-		
-		game = dbInterface.getGame(UUID, account);
-		
-		games = dbInterface.getGames(account);
-		
-		games.size();
+//		String UUID = "123456789";
+//		int id = dbInterface.addGame(UUID, account);
+//		
+//		int id2 = dbInterface.addGame(UUID, account);
+//		
+//		ArrayList<GameJson> games = dbInterface.getGames(account);
+//		
+//		Card hand[] = new Card[] {new Card(2,2),new Card(2,2)};
+//		Card comm[] = new Card[] {};
+//		
+//		
+//		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
+//		
+//		GameJson game = dbInterface.getGame(UUID, account);
+//		
+//		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
+//		
+//		game = dbInterface.getGame(UUID, account);
+//		
+//		dbInterface.removeGame(UUID, account);
+//		
+//		game = dbInterface.getGame(UUID, account);
+//		
+//		games = dbInterface.getGames(account);
+//		
+//		games.size();
 		
 	}
 	
