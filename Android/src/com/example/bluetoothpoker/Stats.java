@@ -67,6 +67,15 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    ab.addTab(rankingStatsTab);
 	}
 	
+	/**
+	 * Method for changing the currently selected tab and its content in the list view.
+	 * Done after a swipe.
+	 * @param currentTabPos
+	 */
+	private void changeStatsTabContent(int currentTabPos){
+		ab.setSelectedNavigationItem(currentTabPos);
+	}
+	
 	/**********************************************************************************************/
 	/***************************************TAB LISTENERS******************************************/
 	@Override
@@ -110,7 +119,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 			if (currentTabPos<0) currentTabPos=2;
 
 			//Set it
-			ab.setSelectedNavigationItem(currentTabPos);
+			changeStatsTabContent(currentTabPos);
 		}
 		
 		return false;
@@ -146,6 +155,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	public void onClick(View arg0) {
 		ListView list = (ListView)findViewById(R.id.statsListView);
 		String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+				  "Linux", "OS/2","Android", "iPhone", "WindowsMobile",
 				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
 				  "Linux", "OS/2" };
 		

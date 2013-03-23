@@ -190,17 +190,36 @@ public final class R {
     public static final class string {
         public static final int OK=0x7f04000b;
         public static final int app_name=0x7f040000;
+        public static final int avgBet=0x7f040038;
+        public static final int avgDollarsBetOnBets=0x7f04001d;
+        public static final int avgDollarsBetOnCalls=0x7f04001c;
+        public static final int avgDollarsBetOnRaises=0x7f04001e;
+        public static final int avgDollarsBetOnReRaises=0x7f04001f;
+        public static final int avgPotOnBets=0x7f04002b;
+        public static final int avgPotOnCalls=0x7f04002a;
+        public static final int avgPotOnChecks=0x7f040029;
+        public static final int avgPotOnFolds=0x7f04002e;
+        public static final int avgPotOnLoses=0x7f040030;
+        public static final int avgPotOnRaises=0x7f04002c;
+        public static final int avgPotOnReRaises=0x7f04002d;
+        public static final int avgPotOnWins=0x7f04002f;
         public static final int createTableHint=0x7f04000e;
         public static final int createTableString=0x7f040007;
         public static final int currentFundsString=0x7f04000c;
         public static final int current_balance_prefix=0x7f040016;
         public static final int fundsDialogMessage=0x7f04000a;
+        public static final int gamesPlayed=0x7f040036;
         public static final int hello_world=0x7f040001;
         public static final int initialFundsAmount=0x7f04000d;
         public static final int initializing=0x7f04000f;
         public static final int joinTableString=0x7f040006;
         public static final int menu_settings=0x7f040002;
+        public static final int moneyGenerated=0x7f040035;
+        public static final int netMoney=0x7f040037;
+        public static final int netMoneyRanking=0x7f040039;
         public static final int offlineUserHint=0x7f040005;
+        public static final int optimality=0x7f04003b;
+        public static final int optimalityRanking=0x7f04003a;
         public static final int passwordConfirmFieldString=0x7f040009;
         public static final int passwordFieldString=0x7f040008;
         public static final int remember_me_str=0x7f040004;
@@ -210,7 +229,27 @@ public final class R {
         public static final int server_invalid_username=0x7f040012;
         public static final int server_unknown=0x7f040015;
         public static final int server_unregistered=0x7f040014;
+        public static final int totalDollarsBet=0x7f04001b;
+        public static final int totalDollarsBetOnBets=0x7f040018;
+        /**  Personal Stats  
+         */
+        public static final int totalDollarsBetOnCalls=0x7f040017;
+        public static final int totalDollarsBetOnRaises=0x7f040019;
+        public static final int totalDollarsBetOnReRaises=0x7f04001a;
+        public static final int totalDollarsFolded=0x7f040033;
+        public static final int totalDollarsLoss=0x7f040032;
+        public static final int totalDollarsWon=0x7f040031;
+        public static final int totalNumberOfBets=0x7f040020;
+        public static final int totalNumberOfCalls=0x7f040022;
+        public static final int totalNumberOfChecks=0x7f040021;
+        public static final int totalNumberOfFolds=0x7f040023;
+        public static final int totalNumberOfPots=0x7f040028;
+        public static final int totalNumberOfPotsLoss=0x7f040027;
+        public static final int totalNumberOfPotsWon=0x7f040026;
+        public static final int totalNumberOfRaise=0x7f040024;
+        public static final int totalNumberOfReRaise=0x7f040025;
         public static final int username=0x7f040003;
+        public static final int winPercentage=0x7f040034;
     }
     public static final class style {
         /** 

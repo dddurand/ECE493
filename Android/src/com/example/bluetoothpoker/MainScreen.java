@@ -10,8 +10,10 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 import application.PokerApplication;
 import client.UploadService;
 import database.DatabaseDataSource;
@@ -22,7 +24,7 @@ import fragments.OfflineMode;
 import fragments.OnlineMode;
 import fragments.RegisterUser;
 
-public class MainScreen extends Activity{
+public class MainScreen extends Activity implements View.OnClickListener {
 	
 	public final static int LOGIN_SCREEN = 0;
 	public final static int OFFLINE_SCREEN = 1;
@@ -48,6 +50,9 @@ public class MainScreen extends Activity{
 			if (savedInstanceState != null) {
 				return;
 			}
+			
+			View v = (View) findViewById(R.id.mainscreenLeft);
+			v.setOnClickListener(this);
 			
 			this.serverCodes = new ServerCodes(this);
 			this.switchFragment(MainScreen.LOGIN_SCREEN);
@@ -166,6 +171,14 @@ public class MainScreen extends Activity{
 			}).create().show();
 		}
 		else MainScreen.super.onBackPressed();
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		Intent i = new Intent(this,Stats.class);
+		startActivity(i);
 	}
 
 }
