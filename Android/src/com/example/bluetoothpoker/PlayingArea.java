@@ -25,11 +25,14 @@ import android.widget.ProgressBar;
 import application.PokerApplication;
 import client.Client;
 import dataModels.Account;
+import database.DatabaseDataSource;
 import fragments.OnlineMode;
 import fragments.PlayerFragment;
 import fragments.River;
 import game.Card;
+import game.GameMechanics;
 import game.Player;
+import game.Pot;
 
 public class PlayingArea extends Activity implements OnClickListener {
 	
@@ -41,6 +44,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private FragmentManager fm;
 	private int current = 0;
 	
+	private int myPositionAtTable;
+	
+	private PokerApplication pokerApp;
+	private Account account;
+	private DatabaseDataSource dbInterface;
+	
 	private boolean debugServer = false;
 
 	/** Called when the activity is first created. */
@@ -51,6 +60,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    setContentView(R.layout.playing_area);
 	    //Get intent
 	   // Intent intent = getIntent();
+	    
+	    this.pokerApp = (PokerApplication) this.getApplication();
+	    this.account = pokerApp.getAccount();
+	    dbInterface = pokerApp.getDataSource();
 	    
 	    /***********Set listeners for buttons****************/
 	    Button b1 = (Button)findViewById(R.id.button1);
@@ -123,6 +136,147 @@ public class PlayingArea extends Activity implements OnClickListener {
 		fm.executePendingTransactions();
 	}
 	
+	/**
+	 * Stores the various data to the database based on the state provided
+	 * to the client.
+	 * 
+	 * This function does nothing if the last action made was not for this user,
+	 * or if the current account is not online.
+	 * 
+	 * @param state
+	 */
+	private void storeGameState(GameState state)
+	{
+		if(!this.account.isOnline()) return;//offline account
+		GameAction gameAction = state.getLastPokerGameAction();
+		int playerPosition = gameAction.getPosition();
+		//If other players action (or not server action) ignore.
+		if(playerPosition != myPositionAtTable && playerPosition != GameMechanics.SERVER_POSITION) return;
+		
+		PokerAction action = gameAction.getAction();
+		
+		switch(action)
+		{
+		case STARTGAME:
+			saveGameHistory(state);
+			break;
+			
+		case ENDGAME:
+			
+			saveEndGameHistory(state);
+			
+			break;
+			
+		case BET:
+		case CALL:
+		case CHECK:
+		case FOLD:
+		case RAISE:
+		case RERAISE:
+			
+			saveGameHistory(state);
+			
+			break;
+			
+		default:
+			break;
+			
+		}
+		
+
+		
+	}
+	
+	/**
+	 * This function saves all data at the end of a game.
+	 * This includes saving which pot the player has won, loss, etc
+	 * 
+	 * @param state
+	 */
+	private void saveEndGameHistory(GameState state)
+	{
+		GameAction gameAction = state.getLastPokerGameAction();
+		PokerAction action = gameAction.getAction();
+		ArrayList<Pot> sidePots = state.getSidePots();
+		Pot mainPot = state.getMainPot();
+		
+		Player player = state.getPlayer();
+		
+		int gameID = dbInterface.addGame(state.getUUID().toString(), account);
+		if(gameID == -1) return;
+		Card hand[] = state.getPlayer().getHand();
+		Card comm[] = state.getCommunity();
+		
+		int bet = gameAction.getValue();
+		int updateNum = state.getGameUpdateNumber();
+		
+		int subActionCount = 0;
+		if(player.getActive() != Player.FOLDED)
+		{
+			for(Pot sidePot : sidePots)
+			{
+				if(sidePot.exist(this.myPositionAtTable))
+				{
+					if(sidePot.isWinner(this.myPositionAtTable))
+						dbInterface.addGameAction(gameID, updateNum+subActionCount, sidePot.getTotal(), bet, hand, comm, PokerAction.WIN);
+					else
+						dbInterface.addGameAction(gameID, updateNum+subActionCount, sidePot.getTotal(), bet, hand, comm, PokerAction.LOSS);
+					
+					subActionCount++;
+				}
+			}
+			
+			if(mainPot.isWinner(this.myPositionAtTable))
+				dbInterface.addGameAction(gameID, updateNum+subActionCount, mainPot.getTotal(), bet, hand, comm, PokerAction.WIN);
+			else
+				dbInterface.addGameAction(gameID, updateNum+subActionCount, mainPot.getTotal(), bet, hand, comm, PokerAction.LOSS);
+			
+			subActionCount++;
+		}
+		
+		int potAmount = 0;
+		for(Pot pot : sidePots)
+			potAmount += pot.getTotal();
+		
+		potAmount += mainPot.getTotal();
+		
+		dbInterface.addGameAction(gameID, updateNum, potAmount, bet, hand, comm, action);
+	}
+	
+	/**
+	 * Saves a given state to the database
+	 * 
+	 * This function is for the normal moves in poker:
+	 * check, bet, fold, raise, reraise....
+	 * 
+	 * This should only be called if the player is online
+	 * 
+	 * @param state
+	 */
+	private void saveGameHistory(GameState state)
+	{
+		GameAction gameAction = state.getLastPokerGameAction();
+		PokerAction action = gameAction.getAction();
+		ArrayList<Pot> sidePots = state.getSidePots();
+		Pot mainPot = state.getMainPot();
+		int potAmount = 0;
+		for(Pot pot : sidePots)
+			potAmount += pot.getTotal();
+		
+		potAmount += mainPot.getTotal();
+		
+		int bet = gameAction.getValue();
+		int updateNum = state.getGameUpdateNumber();
+		
+		int gameID = dbInterface.addGame(state.getUUID().toString(), account);
+		if(gameID == -1) return;
+		
+		Card hand[] = state.getPlayer().getHand();
+		Card comm[] = state.getCommunity();
+		
+		dbInterface.addGameAction(gameID, updateNum, potAmount, bet, hand, comm, action);
+	}
+	
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
 	/**
@@ -165,6 +319,11 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		Card comm[] = data.getCommunity();
 		updateRiver(comm);
+		
+		/*
+		 * Disabled until we have bluetooth clients...
+		 */
+		//storeGameState(data);
 	}
 	
 	/**

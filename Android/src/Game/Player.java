@@ -41,6 +41,10 @@ public class Player implements Serializable{
 		return this.hand[pos];
 	}
 	
+	public Card[] getHand() {
+		return this.hand;
+	}
+	
 	protected void addMoney(int money) {
 		this.money+= money;
 	}
@@ -62,7 +66,7 @@ public class Player implements Serializable{
 	 * 1 - all in
 	 * 2 - current
 	 */
-	protected int getActive() {
+	public int getActive() {
 		return active;
 	}
 	public String toString() {

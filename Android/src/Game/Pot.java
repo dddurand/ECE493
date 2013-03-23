@@ -17,12 +17,34 @@ public class Pot implements Serializable{
 	private int totalAmount=0;
 	private ArrayList<Integer> participants = new ArrayList<Integer>();
 	private Hashtable<Integer, Integer> playeramount = new Hashtable<Integer, Integer>();
-
+	private Player[] winners = new Player[0];
+	
+	
 	public Pot(int owner, int amount) {
 		this.participants.add(owner);
 		this.amount = amount;
 	}
 	
+	
+	
+	/**
+	 * @return the winners
+	 */
+	public Player[] getWinners() {
+		return winners;
+	}
+
+
+
+	/**
+	 * @param winners the winners to set
+	 */
+	public void setWinners(Player[] winners) {
+		this.winners = winners;
+	}
+
+
+
 	protected void mainPot(){
 		for(int i=0; i<this.participants.size();i++) {
 			this.playeramount.put(this.participants.get(i), 0);
@@ -52,7 +74,7 @@ public class Pot implements Serializable{
 	protected void setPlayerAmount(int id, int amount) {
 		this.playeramount.put(id, amount);
 	}
-	protected int getPlayerAmount(int id) {
+	public int getPlayerAmount(int id) {
 		return this.playeramount.get(id);
 	}
 	protected void decrementPlayerAmount(int newpot) {
@@ -66,7 +88,7 @@ public class Pot implements Serializable{
 		this.amount = amount;
 	}
 	
-	protected int getAmount() {
+	public int getAmount() {
 		return this.amount;
 	}
 	
@@ -80,7 +102,7 @@ public class Pot implements Serializable{
 		return this.totalAmount;
 	}
 	
-	protected int getTotal() {
+	public int getTotal() {
 		return this.totalAmount;
 	}
 	
@@ -122,6 +144,15 @@ public class Pot implements Serializable{
 		return false;
 	}
 	
+	public boolean isWinner(int playerPosition)
+	{
+		for(int i=0; i<this.winners.length;i++) {
+			int id = this.winners[i].getId();
+			if(playerPosition == id) return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * This method is used in the serialization of the object
 	 * 
@@ -132,6 +163,7 @@ public class Pot implements Serializable{
 		out.writeInt(this.amount);
 		out.writeInt(this.totalAmount);
 		out.writeObject(this.playeramount);
+		out.writeObject(this.winners);
 	}
 
 	
@@ -146,6 +178,7 @@ public class Pot implements Serializable{
 		this.amount = in.readInt();
 		this.totalAmount = in.readInt();
 		this.playeramount = (Hashtable<Integer, Integer>) in.readObject();
+		this.winners = (Player[]) in.readObject();
 	}
 
 	

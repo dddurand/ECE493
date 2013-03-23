@@ -135,7 +135,6 @@ public class GameMechanics {
 			case STARTTABLE:
 				currentTurn = 0;
 				this.startGame();
-				updateState();
 				break;
 
 			case STOPTABLE:
@@ -319,7 +318,7 @@ public class GameMechanics {
 					currentDealer, 
 					blindAmount, 
 					mainPot, 
-					currentSidePots, 
+					sidePots, 
 					this.communityCards.clone(), 
 					this.lastPokerGameAction,
 					30,
@@ -423,6 +422,7 @@ public class GameMechanics {
 		this.nextTurn();
 		this.blinds();
 		lastPokerGameAction = new GameAction(PokerAction.STARTGAME);
+		lastPokerGameAction.setPosition(SERVER_POSITION);
 		updateState();
 	}
 
@@ -487,6 +487,7 @@ public class GameMechanics {
 		}
 		for (int i = 0; i<this.sidePots.size();i++) {
 			Player[] winners = determineWinners();
+			this.sidePots.get(i).setWinners(winners);
 			for(int j=0; j<winners.length; j++) {
 				//int pos=-1;
 				//for(int k=0; k<this.playerList.size();k++) {
@@ -499,12 +500,14 @@ public class GameMechanics {
 			this.playerList.get(i).setActive(0);
 		}
 		Player[] winners = determineWinners();
+		this.mainPot.setWinners(winners);
 		for(int j=0; j<winners.length; j++) {
 			System.out.println("Players" +winners[j].getId() + "Won");
 			winners[j].addMoney(this.mainPot.getTotal()/winners.length);
 		}
 
 		lastPokerGameAction = new GameAction(PokerAction.ENDGAME);
+		lastPokerGameAction.setPosition(SERVER_POSITION);
 		updateState(true);
 
 		try {
