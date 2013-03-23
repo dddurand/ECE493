@@ -15,6 +15,7 @@ import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class Stats extends Activity implements TabListener, OnGestureListener, OnClickListener {
 	
@@ -45,7 +46,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    b.setOnClickListener(this);
 	    
 	    //Gesture on list
-//	    gov = new GestureOverlayView(this);
 	    detector = new GestureDetector(this,this);
 	    ListView list = (ListView)findViewById(R.id.statsListView);
 	    list.setOnTouchListener(new OnTouchListener() {
@@ -55,10 +55,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    		return false;
 	    	}
 	    });
-//	    list.setOnScrollListener(this);
-//	    gov.addView(list);
-//	    gov.addOnGesturePerformedListener(this);
-	    
 	    
 	    //Set the tab listeners to this class
 	    personalStatsTab.setTabListener(this);
@@ -96,23 +92,26 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	 * Method for listening for flings/swipes in this activity.
 	 */
 	@Override
-	public boolean onFling(MotionEvent me0, MotionEvent me1, float arg2,
-			float arg3) {
+	public boolean onFling(MotionEvent me0, MotionEvent me1, float velX,
+			float velY) {
 		
 		float x1 = me0.getX();
 		float x2 = me1.getX();
 		
-		//right swipe
-		if (x1<x2) currentTabPos++;
-		//else left swipe
-		else currentTabPos--;
-		
-		//Reset value of position if necessary
-		if (currentTabPos>2) currentTabPos=0;
-		if (currentTabPos<0) currentTabPos=2;
-		
-		//Set it
-		ab.setSelectedNavigationItem(currentTabPos);
+		//Check velocity of swipe. If velocity of X is greater than Y, then it means a horizontal swipe
+		if (Math.abs(velX) > Math.abs(velY)) {
+			//right swipe
+			if (x1<x2) currentTabPos++;
+			//else left swipe
+			else currentTabPos--;
+
+			//Reset value of position if necessary
+			if (currentTabPos>2) currentTabPos=0;
+			if (currentTabPos<0) currentTabPos=2;
+
+			//Set it
+			ab.setSelectedNavigationItem(currentTabPos);
+		}
 		
 		return false;
 	}
