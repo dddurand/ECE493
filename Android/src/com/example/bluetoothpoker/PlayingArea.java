@@ -320,7 +320,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 		Card comm[] = data.getCommunity();
 		updateRiver(comm);
 		
-		storeGameState(data);
+		/*
+		 * Disabled until we have bluetooth clients...
+		 */
+		//storeGameState(data);
 	}
 	
 	/**
