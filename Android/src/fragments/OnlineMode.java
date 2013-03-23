@@ -1,20 +1,18 @@
 package fragments;
 
-import game.Card;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import misc.AmountDialog;
 import misc.BalanceUpdatable;
+import networking.NCommunityStats;
 import networking.NLogout;
 import networking.NPersonalStats;
+import networking.NRankStats;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import server.GameAction.PokerAction;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -40,10 +38,14 @@ import com.example.bluetoothpoker.R;
 import com.example.bluetoothpoker.Stats;
 
 import dataModels.Account;
-import dataModels.GameJson;
-import dataModels.MoneyGenerated;
+import dataModels.CommunityStatistics;
+import dataModels.CommunityStatistics.CommuntyStatisticRequest;
 import dataModels.PersonalStatistics;
 import dataModels.PersonalStatistics.PersonalStatisticRequest;
+import dataModels.RankingStatistics;
+import dataModels.RankingStatistics.RankingStatisticRequest;
+import dataModels.RankingStatistics.RankingStatisticRequest.RankType;
+import dataModels.SimpleRankStatistic;
 import dataModels.SimpleStatistic;
 import dataModels.TimeFrame;
 import database.DatabaseDataSource;
@@ -109,21 +111,59 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 	public void test()
 	{
 		
-		PersonalStatisticRequest personalStats = new PersonalStatisticRequest(TimeFrame.ALL, this.account);
-		NPersonalStats personalStatsTask = new NPersonalStats(this.getActivity());
-		try {
-			PersonalStatistics stat = personalStatsTask.execute(personalStats).get();
-			ArrayList<SimpleStatistic> stats = stat.getAllStatistics();
-
-			int test = 0;test++;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-				}
+		/**
+		 * Stats Testing
+		 */
+//		PersonalStatisticRequest personalStats = new PersonalStatisticRequest(TimeFrame.ALL, this.account);
+//		NPersonalStats personalStatsTask = new NPersonalStats(this.getActivity());
+//		try {
+//			PersonalStatistics stat = personalStatsTask.execute(personalStats).get();
+//			ArrayList<SimpleStatistic> stats = stat.getAllStatistics();
+//
+//			int test = 0;test++;
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//				}
+//		
+//		CommuntyStatisticRequest commStats = new CommuntyStatisticRequest(TimeFrame.ALL, this.account);
+//		NCommunityStats communityStatsTask = new NCommunityStats(this.getActivity());
+//		try {
+//			CommunityStatistics stat = communityStatsTask.execute(commStats).get();
+//			ArrayList<SimpleStatistic> stats = stat.getAllStatistics();
+//
+//			int test = 0;test++;
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		RankingStatisticRequest rankStats = new RankingStatisticRequest(TimeFrame.ALL, this.account, 0, 1000, RankType.NET_MONEY);
+//		NRankStats rankStatsTask = new NRankStats();
+//		try {
+//			RankingStatistics stat = rankStatsTask.execute(rankStats).get();
+//			ArrayList<SimpleRankStatistic> stats = stat.getAllStatistics();
+//
+//			@SuppressWarnings("unused")
+//			int test = 0;
+//			test++;
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
+		/**
+		 * Statistic collection testing
+		 */
 //		String UUID = "123456789";
 //		int id = dbInterface.addGame(UUID, account);
 //		

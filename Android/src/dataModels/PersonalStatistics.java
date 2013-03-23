@@ -8,15 +8,15 @@ import org.json.JSONObject;
 import android.content.Context;
 
 /**
- * A representation of the set of statistics return from the web service.
- * The object takes in a JSON object and parses out all the stats.
+ * A representation of the set of personal statistics return from the web service.
+ * The object takes in a JSON object and parses out all the stats
+ * present in the json response.
  * 
  * @author dddurand
  *
  */
-public class PersonalStatistics {
+public class PersonalStatistics extends Statistic<SimpleStatistic> {
 
-private Context context;
 private ArrayList<SimpleStatistic> statistics;
 private static final String[] personalStatisticIdentifiers = 
 	new String[] {
@@ -67,6 +67,8 @@ private static final String[] personalStatisticIdentifiers =
 	 */
 	public PersonalStatistics(JSONObject obj, Context context)
 	{
+		super(context);
+		
 		statistics = new ArrayList<SimpleStatistic>();
 		this.context = context;
 		JSONObject personalObj;
@@ -91,6 +93,7 @@ private static final String[] personalStatisticIdentifiers =
 	 * Retrieves all statistics loaded
 	 * @return
 	 */
+	@Override
 	public ArrayList<SimpleStatistic> getAllStatistics()
 	{
 		return this.statistics;
@@ -116,18 +119,6 @@ private static final String[] personalStatisticIdentifiers =
 
 		return new SimpleStatistic(identifier, displayName, number);
 	}
-	
-	/**
-	 * Retrieve the display name based on the provided string identifier
-	 * 
-	 * @param resourceIdentifier The statistic identifier
-	 * @return
-	 */
-	private String getStringResourceByName(String identifier) {
-	      String packageName = this.context.getPackageName();
-	      int resId = this.context.getResources().getIdentifier(identifier, "string", packageName);
-	      return this.context.getString(resId);
-	    }
 	
 	/**
 	 * A data model that is used to construct the JSON request to the server
