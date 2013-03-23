@@ -67,6 +67,7 @@ private static final String[] personalStatisticIdentifiers =
 	 */
 	public PersonalStatistics(JSONObject obj, Context context)
 	{
+		statistics = new ArrayList<SimpleStatistic>();
 		this.context = context;
 		JSONObject personalObj;
 		try {

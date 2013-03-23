@@ -41,6 +41,7 @@ import com.example.bluetoothpoker.Stats;
 
 import dataModels.Account;
 import dataModels.GameJson;
+import dataModels.MoneyGenerated;
 import dataModels.PersonalStatistics;
 import dataModels.PersonalStatistics.PersonalStatisticRequest;
 import dataModels.SimpleStatistic;
@@ -261,6 +262,10 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 				} else 
 					{
 						showToast("User information conflict. Please log in again.");
+						application.setLoggedIn(false);
+						Editor editor = preferences.edit();
+						editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
+						editor.commit();
 						((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
 					}
 			} 
