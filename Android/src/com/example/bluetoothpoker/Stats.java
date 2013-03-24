@@ -1,5 +1,9 @@
 package com.example.bluetoothpoker;
 
+import java.util.ArrayList;
+
+import misc.CustomAdapter;
+import misc.StatsRowObject;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -10,12 +14,8 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class Stats extends Activity implements TabListener, OnGestureListener {
 	
@@ -89,31 +89,36 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	
 	/**
 	 * Method for changing the currently selected tab and its content in the list view.
-	 * Done after a swipe.
+	 * Done after a left/right swipe.
 	 * @param currentTabPos
 	 */
 	private void setTabContent(int currentTabPos){
 		ab.setSelectedNavigationItem(currentTabPos);
 		ListView list = (ListView)findViewById(R.id.statsListView);
-		String[] v;
+		StatsRowObject row;
 		
 		switch (currentTabPos){
 		
-		case Stats.PERSONAL_STATS:v=values;
+		case Stats.PERSONAL_STATS:row = new StatsRowObject("Hello1","There1");
 			break;
 			
-		case Stats.COMMUNITY_STATS:v=values2;
+		case Stats.COMMUNITY_STATS:row = new StatsRowObject("Hello2","There2");
 			break;
 			
-		case Stats.RANKING_STATS:v=values3;
+		case Stats.RANKING_STATS:row = new StatsRowObject("Hello3","There3");
 			break;
 			
-			default:v=values;
+			default:row = new StatsRowObject("Hello","There");
 		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.stats_list_element, R.id.statsEntryText,v);
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.stats_list_element, R.id.statsEntryText,v);
+		ArrayList<StatsRowObject> objects = new ArrayList<StatsRowObject>();
+		 
+		for (int i=0; i<60;i++)
+			objects.add(row);
 		
-		list.setAdapter(adapter);
+		CustomAdapter customAdapter = new CustomAdapter(this,objects);
+		list.setAdapter(customAdapter);
 	}
 	
 	/**********************************************************************************************/

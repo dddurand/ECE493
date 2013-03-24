@@ -130,7 +130,7 @@ public final class R {
         public static final int logoutProgressBar=0x7f07002a;
         public static final int mainscreenHelper=0x7f070000;
         public static final int mainscreenLeft=0x7f070001;
-        public static final int menu_settings=0x7f070050;
+        public static final int menu_settings=0x7f070054;
         public static final int moneyAmountText=0x7f070034;
         public static final int newOfflineUserName=0x7f070023;
         public static final int newUsernameField=0x7f070040;
@@ -168,9 +168,13 @@ public final class R {
         public static final int riverLayout=0x7f070037;
         public static final int screen_middle=0x7f070015;
         public static final int statsButtonOnlineMode=0x7f07002f;
-        public static final int statsEntryText=0x7f07004d;
-        public static final int statsListView=0x7f07004e;
-        public static final int statsProgressBar=0x7f07004f;
+        public static final int statsDataText=0x7f070050;
+        public static final int statsEntryText=0x7f07004e;
+        public static final int statsHelper1=0x7f07004d;
+        public static final int statsHelper2=0x7f07004f;
+        public static final int statsHelper3=0x7f070051;
+        public static final int statsListView=0x7f070052;
+        public static final int statsProgressBar=0x7f070053;
         public static final int tableNameText=0x7f070011;
         public static final int tablesList=0x7f07000e;
         public static final int usernameField=0x7f070017;

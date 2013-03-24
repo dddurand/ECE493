@@ -48,11 +48,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     
-<!--         android:textColor="#ffffff"
-        android:background="#333333"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" -->
-    
     <Button
         android:id="@+id/button1"
         android:drawableLeft="@drawable/ic_join_table"
