@@ -12,10 +12,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.Preference;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +30,7 @@ import application.PokerApplication;
 import client.Client;
 import dataModels.Account;
 import database.DatabaseDataSource;
+import database.PreferenceConstants;
 import fragments.OnlineMode;
 import fragments.PlayerFragment;
 import fragments.River;
@@ -49,8 +54,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private PokerApplication pokerApp;
 	private Account account;
 	private DatabaseDataSource dbInterface;
+	private SharedPreferences preferences;
 	
-	private boolean debugServer = false;
+	private boolean debugServer = true;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -64,6 +70,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    this.pokerApp = (PokerApplication) this.getApplication();
 	    this.account = pokerApp.getAccount();
 	    dbInterface = pokerApp.getDataSource();
+	    this.preferences = this.getPreferences(Context.MODE_PRIVATE);
 	    
 	    /***********Set listeners for buttons****************/
 	    Button b1 = (Button)findViewById(R.id.button1);
@@ -134,6 +141,35 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		transaction.commit();
 		fm.executePendingTransactions();
+	}
+	
+	/**
+	 * Updates the account balance based on the state of the game
+	 * 
+	 * @param state
+	 */
+	private void updateAccount(GameState state)
+	{
+		ArrayList<Player> players = state.getPlayers();
+		
+		for(Player player: players)
+		{
+			if(player.getId() == this.myPositionAtTable && player.getUsername().equals(this.account.getUsername()))
+			{
+				this.account.setBalance(player.getAmountMoney());
+				if(this.account.isOnline())
+					dbInterface.updateAccount(account);
+				else
+				{
+					Editor editor = this.preferences.edit();
+					editor.putInt(PreferenceConstants.OFFLINE_BALANCE, account.getBalance());
+					editor.commit();
+				}
+				
+				break;
+			}
+		}
+		
 	}
 	
 	/**
@@ -321,6 +357,11 @@ public class PlayingArea extends Activity implements OnClickListener {
 		updateRiver(comm);
 		
 		/*
+		 * Update Account
+		 */
+		//updateAccount(data);
+		
+		/*
 		 * Disabled until we have bluetooth clients...
 		 */
 		//storeGameState(data);
@@ -332,14 +373,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 */
 	private void setVisiblePlayers(ArrayList<Player> players){
 		
-		/**
-		 * This won't work.
-		 * Itterate over the given list of players in the gamestate and check which arn't null
-		 * Dustin
-		 * 
-		 */
 		for(Player player : players)
 		{
+			if(player == null) continue;
 			playerLayouts[player.getId()].setVisibility(View.VISIBLE);
 		}
 	}
@@ -512,7 +548,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 				account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
 				account.setUsername("BOB2");
 				account.setBalance(500);
-				Client client2 = new Client(PlayingArea.this, server, actionQueue2, 1);
+				Client client2 = new Client(PlayingArea.this, server, actionQueue2, 3);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -528,31 +564,31 @@ public class PlayingArea extends Activity implements OnClickListener {
 			action = new GameAction(0, PokerAction.BET, 15);
 			actions.add(action);
 			
-			action = new GameAction(1, PokerAction.BET, 5);
+			action = new GameAction(3, PokerAction.BET, 5);
 			actions.add(action);
 			
 			action = new GameAction(0, PokerAction.CALL, 5);
 			actions.add(action);
 			
-			action = new GameAction(1, PokerAction.CHECK, 0);
+			action = new GameAction(3, PokerAction.CHECK, 0);
 			actions.add(action);
 			
 			action = new GameAction(0, PokerAction.CHECK, 0);
 			actions.add(action);
 			
-			action = new GameAction(1, PokerAction.CHECK, 0);
+			action = new GameAction(3, PokerAction.CHECK, 0);
 			actions.add(action);
 			
 			action = new GameAction(0, PokerAction.CHECK, 0);
 			actions.add(action);
 			
-			action = new GameAction(1, PokerAction.CHECK, 0);
+			action = new GameAction(3, PokerAction.CHECK, 0);
 			actions.add(action);
 			
 			action = new GameAction(0, PokerAction.CHECK, 0);
 			actions.add(action);
 			
-			action = new GameAction(1, PokerAction.CHECK, 0);
+			action = new GameAction(3, PokerAction.CHECK, 0);
 			actions.add(action);
 
 			for(int i = 0; i < actions.size(); i++)

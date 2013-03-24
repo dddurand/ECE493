@@ -53,11 +53,16 @@ public class Server implements PlayerTaskListener {
 	 */
 	private void initialize()
 	{
+		
+		
 		gameBroadCastQueue = new LinkedBlockingDeque<GameState>();
-		GameMechanics gameEngine = new GameMechanics(new Player[0], 0, 30, gameBroadCastQueue);
+		
 		gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		playerListenerTasks = new Hashtable<Integer, ServerClientListener>();
 		
+		WatchDogTimer playTimer = new WatchDogTimer(gameActionQueue, 10);
+		
+		GameMechanics gameEngine = new GameMechanics( 0, 30, gameBroadCastQueue, playTimer);
 		
 		gameEngineTask = new PokerEngineTask(gameActionQueue, gameEngine);
 		gameBroadCaster = new ServerBroadCaster(gameBroadCastQueue, activity);

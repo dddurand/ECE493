@@ -11,6 +11,7 @@ import java.util.concurrent.BlockingQueue;
 
 import server.GameAction;
 import server.GameState;
+import server.WatchDogTimer;
 import server.GameAction.PokerAction;
 
 /**
@@ -44,14 +45,15 @@ public class GameMechanics {
 	private Pot mainPot;
 	private GameAction lastPokerGameAction;
 	private UUID gameUUID;
-
+	private WatchDogTimer playTimer;
+	
 	private int gameUpdateCount;
 
 	private boolean isAllFolded = false;
 
 	private ArrayList<Integer> playerBetsInARound;
-	private ArrayList<Player> outGoingList = new ArrayList<Player>();
-	private ArrayList<Player> playerList = new ArrayList<Player>();
+	private ArrayList<Player> outGoingList = new ArrayList<Player>(6);
+	private ArrayList<Player> playerList = new ArrayList<Player>(6);
 	private ArrayList<Pot> sidePots;
 	private ArrayList<Pot> currentSidePots;
 	private BlockingQueue<GameState> queue;
@@ -65,37 +67,6 @@ public class GameMechanics {
 		currentSidePots = new ArrayList<Pot>();
 		tempBets = new int[6];
 		communityCards = new Card[5];
-	}
-
-	public static void main(String[] args) {
-
-		GameMechanics mech = new GameMechanics(new Player[6], 0, 30, null);
-
-		Player player = new Player(0, "BOB", 1000);
-		Player player1 = new Player(1, "Fred", 1000);
-		Player player2 = new Player(2, "John", 1000);
-
-
-
-		GameAction addPlayer0 = new GameAction(player, true);
-		GameAction addPlayer1 = new GameAction(player1, true);
-
-		mech.processGameAction(addPlayer0);
-		mech.processGameAction(addPlayer1);
-
-		GameAction actionStart = new GameAction(PokerAction.STARTTABLE);
-		mech.processGameAction(actionStart);
-
-		while(true)
-		{
-			int position = mech.positionOfCurrentPlayer;
-			int bet = mech.gui(position);
-			GameAction x = new GameAction(position, PokerAction.CALL, bet);
-			mech.processGameAction(x);
-		}
-
-		//GameAction action = new GameAction(player, true);
-
 	}
 
 	/**
@@ -145,6 +116,7 @@ public class GameMechanics {
 			case TIMEOUT:
 				this.processBet(ACTION_FOLD);
 				this.lastPokerGameAction = new GameAction(positionOfCurrentPlayer, PokerAction.FOLD);
+				lastPokerGameAction.setPlayer(this.playerList.get(positionOfCurrentPlayer));
 				updateState();
 				break;
 
@@ -190,6 +162,9 @@ public class GameMechanics {
 			break;
 
 		}
+		
+		if(this.playTimer!=null)
+			this.playTimer.cancel();
 
 	}
 
@@ -343,11 +318,15 @@ public class GameMechanics {
 	 * @param Dealer
 	 * @param blindAmount
 	 */
-	public GameMechanics(Player[] playerList, int Dealer, int blindAmount, BlockingQueue<GameState> queue) {
-		this.playerList = new ArrayList<Player>(Arrays.asList(playerList));;
+	public GameMechanics(int Dealer, int blindAmount, BlockingQueue<GameState> queue, WatchDogTimer playTimer) {
+		this.playerList = new ArrayList<Player>(6);
+		
+		for(int i = 0; i < 6; i++) this.playerList.add(null);
+
 		this.currentDealer = Dealer;
 		this.blindAmount = blindAmount;
 		this.queue = queue;
+		this.playTimer = playTimer;
 	}
 
 	/**
@@ -424,6 +403,8 @@ public class GameMechanics {
 		lastPokerGameAction = new GameAction(PokerAction.STARTGAME);
 		lastPokerGameAction.setPosition(SERVER_POSITION);
 		updateState();
+		
+		this.playTimer.startTimer();
 	}
 
 	/**
@@ -474,6 +455,8 @@ public class GameMechanics {
 	 */
 	private void endGame() {
 
+		this.playTimer.cancel();
+		
 		isAllFolded = false;
 
 		ArrayList<Player>currentPlayer = new ArrayList<Player>();
@@ -775,7 +758,7 @@ public class GameMechanics {
 			this.processBet(0);
 			return;
 		}
-
+		
 		/*If we have already seen a this person bet, and the above 
 		 * !this.mainPot.checkPlayersBet()&&!noBets evaluated false
 		 * 
@@ -803,6 +786,9 @@ public class GameMechanics {
 		}
 
 		this.positionOfCurrentPlayer = next;
+		
+		this.playTimer.startTimer();
+		
 	}
 	/**
 	 * Checks to see if all other players have folded
