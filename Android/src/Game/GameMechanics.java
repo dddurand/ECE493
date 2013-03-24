@@ -23,39 +23,39 @@ public class GameMechanics {
 
 	public static final int ACTION_FOLD = -1;
 	public static final int SERVER_POSITION = -3;
-	
+
 	private Deck myDeck = new Deck();
-	
+
 	private int id;
 	private int positionOfCurrentPlayer;
 	private int currentTurn = -1;
 	private int currentDealer;
 	private int blindAmount;
-	
-	
+
+
 	private int[] tempBets = new int[6];
 	private Card[] communityCards = new Card[5];
-	
+
 	private int currentBet;
-	
+
 	private boolean lastGame = false;
 	private boolean noBets =false;
 
 	private Pot mainPot;
 	private GameAction lastPokerGameAction;
 	private UUID gameUUID;
-	
+
 	private int gameUpdateCount;
 
 	private boolean isAllFolded = false;
-	
+
 	private ArrayList<Integer> playerBetsInARound;
 	private ArrayList<Player> outGoingList = new ArrayList<Player>();
 	private ArrayList<Player> playerList = new ArrayList<Player>();
 	private ArrayList<Pot> sidePots;
 	private ArrayList<Pot> currentSidePots;
 	private BlockingQueue<GameState> queue;
-	
+
 	//private ArrayList<Integer> playerBetsInARound;
 
 	private void newGameReset()
@@ -66,7 +66,7 @@ public class GameMechanics {
 		tempBets = new int[6];
 		communityCards = new Card[5];
 	}
-	
+
 	public static void main(String[] args) {
 
 		GameMechanics mech = new GameMechanics(new Player[6], 0, 30, null);
@@ -155,7 +155,7 @@ public class GameMechanics {
 			}
 			return;
 		}
-		
+
 		//If incorrect player ignore!
 		if(this.positionOfCurrentPlayer != action.getPosition())
 			return;
@@ -287,9 +287,9 @@ public class GameMechanics {
 			{
 				Player temp = playerList.get(i);
 				if(temp == null) continue;
-				
+
 				Player limitedPlayerData = new Player(temp.getId(), temp.getUsername(), temp.getAmountMoney());
-				
+
 				/*
 				 * If all in or current player - include cards
 				 * 
@@ -298,7 +298,7 @@ public class GameMechanics {
 				 */
 				if((temp.getActive() == Player.ALL_IN || limitedPlayerData.getId() == player.getId())
 						||
-					((temp.getActive() == Player.ALL_IN || temp.getActive() == Player.CURRENT) && unfilteredCurrentPlayers)
+						((temp.getActive() == Player.ALL_IN || temp.getActive() == Player.CURRENT) && unfilteredCurrentPlayers)
 						)
 				{
 					limitedPlayerData.setCard(temp.getCard(0), 0);
@@ -327,7 +327,7 @@ public class GameMechanics {
 			this.queue.add(gameState);
 		}
 	}
-	
+
 	/**
 	 * Generates the GameState for each client and adds them to queue
 	 * 
@@ -381,7 +381,7 @@ public class GameMechanics {
 
 		this.gameUUID = UUID.randomUUID();
 		gameUpdateCount = 0;
-		
+
 		for(Player player : this.outGoingList)
 		{
 			this.playerList.remove(player.getId());
@@ -513,7 +513,7 @@ public class GameMechanics {
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {}
-		
+
 		if(!lastGame)
 			this.startGame();
 
@@ -758,7 +758,7 @@ public class GameMechanics {
 		System.out.println("Main Pot " + this.mainPot.getAmount());
 		System.out.println("Please enter bet for (-1 to fold): Player " + positionOfCurrentPlayer);
 		System.out.println("BET: "+bet);
-		
+
 		if(isAllFolded)
 		{
 			this.nextTurn();

@@ -14,13 +14,13 @@ public class Account {
 	private String username;
 	private String password;
 	private String authenticationToken;
-	
+
 	private transient int accountID;
 	private transient String ecryptedPassword;
 	private transient boolean hasEncryptedPassword;
 	private transient PasswordUtil passUtil;
-	
-	
+
+
 	/**
 	 * Generic Empty Constructor
 	 * Required by GSON
@@ -29,7 +29,7 @@ public class Account {
 	{
 		passUtil = new PasswordUtil();
 	}
-	
+
 	/**
 	 * Generic Constructor
 	 * @param username Username of the account
@@ -38,7 +38,7 @@ public class Account {
 	public Account(String username, String password, boolean isEncryptedPassword)
 	{
 		this.username = username;
-		
+
 		if(isEncryptedPassword)
 		{
 			this.ecryptedPassword = password;
@@ -49,7 +49,7 @@ public class Account {
 			this.password = password;
 			this.hasEncryptedPassword = false;
 		}
-					
+
 		this.password = password;
 		passUtil = new PasswordUtil();
 	}
@@ -65,7 +65,7 @@ public class Account {
 		this.username = username;
 		this.authenticationToken = authToken;
 		passUtil = new PasswordUtil();
-		
+
 		if(isEncryptedPassword)
 		{
 			this.ecryptedPassword = password;
@@ -76,10 +76,10 @@ public class Account {
 			this.password = password;
 			this.hasEncryptedPassword = false;
 		}
-		
-		
+
+
 	}
-	
+
 	/**
 	 * Generic Constructor
 	 * @param username Username of the account
@@ -92,7 +92,7 @@ public class Account {
 		this.username = username;
 		this.authenticationToken = authToken;
 		passUtil = new PasswordUtil();
-		
+
 		if(isEncryptedPassword)
 		{
 			this.ecryptedPassword = password;
@@ -103,10 +103,10 @@ public class Account {
 			this.password = password;
 			this.hasEncryptedPassword = false;
 		}
-		
-		
+
+
 	}
-	
+
 	/**
 	 * Retrieves the user's account ID
 	 * 
@@ -133,8 +133,8 @@ public class Account {
 	{
 		this.username = username;
 	}
-	
-	
+
+
 	/**
 	 * Retrieves username of the account
 	 * @return Username
@@ -142,7 +142,7 @@ public class Account {
 	public String getUsername() {
 		return username;
 	}
-	
+
 	/**
 	 * Set the username for the account
 	 * @param username Username of the account
@@ -158,7 +158,7 @@ public class Account {
 	public String getPassword() {
 		return password;
 	}
-	
+
 	/**
 	 * Get encrypted version of current password.
 	 * 
@@ -172,9 +172,9 @@ public class Account {
 			this.hasEncryptedPassword = true;
 			this.ecryptedPassword = passUtil.encrypt(this.password);
 		}
-		
+
 		return this.ecryptedPassword;
-			
+
 	}
 
 	/**
@@ -219,31 +219,33 @@ public class Account {
 	 */
 	public boolean exactCompare(Object object)
 	{
+		if(object == null) return false;
+
 		if (object instanceof Account) {
-	       Account accountOther = (Account) object;
-	       
-	       String otherUsername = accountOther.getUsername();
-	       
-	       String otherPassword = accountOther.getEncyptedPassword();
-	       
-	       String otherAuthToken = accountOther.getAuthenticationToken();
-	       
-	       if(!isEqualUsername(username,otherUsername))
-	    	   return false;
-	    	   
-	       if(!isEqualString(this.getEncyptedPassword(),otherPassword))
-	    	   return false;
-	       
-	       if(!isEqualString(authenticationToken,otherAuthToken))
-	    	   return false;
-	       
-	       return true;
-	    }
-		
+			Account accountOther = (Account) object;
+
+			String otherUsername = accountOther.getUsername();
+
+			String otherPassword = accountOther.getEncyptedPassword();
+
+			String otherAuthToken = accountOther.getAuthenticationToken();
+
+			if(!isEqualUsername(username,otherUsername))
+				return false;
+
+			if(!isEqualString(this.getEncyptedPassword(),otherPassword))
+				return false;
+
+			if(!isEqualString(authenticationToken,otherAuthToken))
+				return false;
+
+			return true;
+		}
+
 		return false;
 	}
 
-	
+
 	/**
 	 * Determines if the provided account object has the same username
 	 * and password.
@@ -253,18 +255,20 @@ public class Account {
 	 */
 	public boolean compareLogin(Account otherAccount)
 	{
-	       String otherUsername = otherAccount.getUsername();
-	       String otherPassword = otherAccount.getEncyptedPassword();
-	       
-		 if(!isEqualUsername(username,otherUsername))
-	    	   return false;
-		 
-	       if(!isEqualString(this.getEncyptedPassword(),otherPassword))
-	    	   return false;
+		if(otherAccount == null) return false;
+
+		String otherUsername = otherAccount.getUsername();
+		String otherPassword = otherAccount.getEncyptedPassword();
+
+		if(!isEqualUsername(username,otherUsername))
+			return false;
+
+		if(!isEqualString(this.getEncyptedPassword(),otherPassword))
+			return false;
 
 		return true;
 	}
-	
+
 	/**
 	 * Determines if the provided account has the same username, and
 	 * authentication token.
@@ -274,43 +278,52 @@ public class Account {
 	 */
 	public boolean compareAuthenticated(Account otherAccount)
 	{		
-		String otherUsername = otherAccount.getUsername();
-	    String otherAuthToken = otherAccount.getAuthenticationToken();
-	       
-	       if(!isEqualUsername(username,otherUsername))
-	    	   return false;
-
-	       if(!isEqualString(authenticationToken,otherAuthToken))
-	    	   return false;
+		if(otherAccount == null) return false;
 		
+		String otherUsername = otherAccount.getUsername();
+		String otherAuthToken = otherAccount.getAuthenticationToken();
+
+		if(!isEqualUsername(username,otherUsername))
+			return false;
+
+		if(!isEqualString(authenticationToken,otherAuthToken))
+			return false;
+
 		return true;
 	}
-	
+
 	/**
-	 * 
+	 * Determines if two string are equal
 	 * 
 	 * @param value1
 	 * @param value2
 	 * @return
 	 */
-	private boolean isEqualString(String value1, String value2)
+	public boolean isEqualString(String value1, String value2)
 	{
 		if(value1 == null && value2 != null)
-	    	   return false;
-	       else if(!value1.equals(value2))
-	    	   return false;
-		
+			return false;
+		else if(!value1.equals(value2))
+			return false;
+
 		return true;
 	}
-	
-	private boolean isEqualUsername(String value1, String value2)
+
+	/**
+	 * Determines if two usernames are the same
+	 * 
+	 * @param value1
+	 * @param value2
+	 * @return
+	 */
+	public boolean isEqualUsername(String value1, String value2)
 	{
 		if(value1 == null || value2 == null)
-	    	   return false;
-	       else if(!value1.equals(value2))
-	    	   return false;
-		
+			return false;
+		else if(!value1.equals(value2))
+			return false;
+
 		return true;
 	}
-	
+
 }

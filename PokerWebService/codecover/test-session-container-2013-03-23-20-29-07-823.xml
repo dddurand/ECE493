@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><TestSessionContainer xmlns="http://www.codecover.org/xml/testsession-container" Date="1364092147820" TestSessionContainerId="d512e69e-209d-4752-8263-bda1b6e3fe4e" version="1.0">
+<SrcFileList>
+<SrcFile Content="package suite;&#13;&#10;&#13;&#10;import org.junit.runner.RunWith;&#13;&#10;import org.junit.runners.Suite;&#13;&#10;import org.junit.runners.Suite.SuiteClasses;&#13;&#10;&#13;&#10;import dataModels.AccountTest;&#13;&#10;&#13;&#10;@RunWith(Suite.class)&#13;&#10;@SuiteClasses({AccountTest.class})&#13;&#10;public class AllTests {&#13;&#10;&#13;&#10;}&#13;&#10;" Filename="AllTests.java" Intrnl_Id="1"/>
+</SrcFileList>
+<CritList>
+<CritListEntry Name="org.codecover.model.utils.criteria.BranchCoverage" PluginName="org.codecover"/>
+<CritListEntry Name="org.codecover.model.utils.criteria.StatementCoverage" PluginName="org.codecover"/>
+</CritList>
+<BoolOpList/>
+<HierarchyLvlTypeList>
+<HierarchyLvlType EnglishName="package" IntrnlName="package" Intrnl_Id="2"/>
+<HierarchyLvlType EnglishName="class" IntrnlName="class" Intrnl_Id="3"/>
+<HierarchyLvlType EnglishName="default package" IntrnlName="default package" Intrnl_Id="4"/>
+</HierarchyLvlTypeList>
+<MASTRoot>
+<HierarchyLvl HierarchyLvlId="132" HierarchyLvlTypeId="4" Intrnl_Id="5" Name="default package">
+<Header/>
+<LocList/>
+<HierarchyLvl HierarchyLvlId="131" HierarchyLvlTypeId="2" Intrnl_Id="6" Name="suite">
+<Header/>
+<LocList/>
+<HierarchyLvl HierarchyLvlId="130" HierarchyLvlTypeId="3" Intrnl_Id="7" Name="AllTests">
+<Header>
+<Loc EndOffset="247" SrcFileId="1" StartOffset="167"/>
+</Header>
+<LocList>
+<Loc EndOffset="254" SrcFileId="1" StartOffset="167"/>
+</LocList>
+</HierarchyLvl>
+</HierarchyLvl>
+</HierarchyLvl>
+</MASTRoot>
+</TestSessionContainer>

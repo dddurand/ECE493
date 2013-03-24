@@ -43,6 +43,9 @@ public class Filter {
 	public Filter(String timeFrame)
 	{
 		this.time_frame = TimeFrame.getTimeFrame(timeFrame);
+		this.skip = 0;
+		this.max = Integer.MAX_VALUE;
+		this.rankType = RankType.NET_MONEY;
 	}
 	
 	/**
@@ -57,6 +60,7 @@ public class Filter {
 		this.time_frame = TimeFrame.getTimeFrame(timeFrame);
 		this.skip = skip;
 		this.max = max;
+		this.rankType = RankType.NET_MONEY;
 	}
 	
 	/**

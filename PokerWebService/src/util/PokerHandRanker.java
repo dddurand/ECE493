@@ -1,6 +1,8 @@
 package util;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +55,13 @@ public class PokerHandRanker {
         try {
         	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         	input = classLoader.getResourceAsStream("../tables/HandRanks.dat");
+        	
+        	//For testing
+        	if(input == null)
+        	{	
+        		input = new FileInputStream(new File("./tables/HandRanks.dat"));
+        	}
+        	
         	input.read(b, 0, tableSize);
         } catch (FileNotFoundException e) {
            e.printStackTrace();

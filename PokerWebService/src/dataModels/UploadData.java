@@ -96,12 +96,20 @@ public class UploadData {
 		 */
 		private Game createGame(JsonObject gameObject)
 		{
-			String game_id = gameObject.get("gameID").getAsString();
-
-			if(game_id == null || game_id.isEmpty())
+			JsonElement element = gameObject.get("gameID");
+			String game_id = "";
+			
+			if(element == null || element.getAsString().isEmpty())
+			{
 				throw new JsonParseException("Invalid Game ID");
+			}
 
-			JsonArray actions = gameObject.get("gameActions").getAsJsonArray();
+			game_id = element.getAsString();
+			
+			JsonElement actionEl = gameObject.get("gameActions");
+			if(actionEl == null) throw new JsonParseException("Invalid GameActions");
+			JsonArray actions = actionEl.getAsJsonArray();
+			
 			ArrayList<GameAction> actionList = createGameActionList(actions);
 
 			Game game = new Game(actionList, game_id);
@@ -147,11 +155,24 @@ public class UploadData {
 			if(pokerAction == PokerAction.UNKNOWN)
 				throw new JsonParseException("Invalid game action");
 
-			int pot = actionObject.get("pot").getAsInt();
-			int bet = actionObject.get("bet").getAsInt();
-			String hand = actionObject.get("hand").getAsString();
-			String comm = actionObject.get("communityCards").getAsString();
+			JsonElement potEl = actionObject.get("pot");
+			if(potEl == null) throw new JsonParseException("Invalid Pot");
+			int pot = potEl.getAsInt();
+			
+			JsonElement botEl = actionObject.get("bet");
+			if(botEl == null) throw new JsonParseException("Invalid Bet");
+			int bet = botEl.getAsInt();
+			
+			JsonElement handEl = actionObject.get("hand");
+			if(handEl == null) throw new JsonParseException("Invalid Hand");
+			String hand = handEl.getAsString();
+			
+			JsonElement commEl = actionObject.get("communityCards");
+			if(commEl == null) throw new JsonParseException("Invalid Comm");
+			String comm = commEl.getAsString();
 
+			
+			
 			if(hand != null && hand.length() != 5 && !Card.validCardString(hand))
 				throw new JsonParseException("Invalid Hand");
 			if(comm != null && !comm.isEmpty() && !Card.validCardString(comm))
@@ -184,9 +205,7 @@ public class UploadData {
 					gameList.add(game);
 				}
 				catch (JsonParseException e)
-				{
-					gameList.add(null);
-				}
+				{}
 			}
 
 			return gameList;
@@ -208,17 +227,20 @@ public class UploadData {
 				try{
 					JsonObject miscObj = miscDatas.get(i).getAsJsonObject();
 
-					String name = miscObj.get("name").getAsString();
-					String value = miscObj.get("value").getAsString();
+					JsonElement nameEl = miscObj.get("name");
+					if(nameEl == null) throw new JsonParseException("");
+					String name = nameEl.getAsString();
+					
+					JsonElement miscEl = miscObj.get("value");
+					if(miscEl == null) throw new JsonParseException("");
+					String value = miscEl.getAsString();
 
 
 					MiscGameData miscData = new MiscGameData(name, value);
 					miscList.add(miscData);
 				}
 				catch (JsonParseException e)
-				{
-					miscList.add(null);
-				}
+				{}
 			}
 
 			return miscList;

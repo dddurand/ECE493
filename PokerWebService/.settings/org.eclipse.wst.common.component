@@ -3,6 +3,7 @@
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/tables" source-path="/tables"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/tests"/>
         <dependent-module archiveName="mysql-connector-java-5.1.23-bin.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/PokerWebService/lib/mysql-connector-java-5.1.23-bin.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>

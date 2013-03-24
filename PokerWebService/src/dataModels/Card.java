@@ -39,10 +39,11 @@ public class Card {
 	 */
 	public Card(String card)
 	{
-		if(card == null || isValidCard(card))
+		if(card == null || !isValidCard(card))
 		{
 			this.suit = Suit.UNKNOWN;
 			this.number = Number.UNKNOWN;
+			return;
 		}
 		
 		suit = Suit.getSuit(card.charAt(0));

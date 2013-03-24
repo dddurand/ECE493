@@ -9,8 +9,8 @@ import dataModels.GameAction.PokerAction;
 public class Optimality {
 
 	
-	private final double POSTIVE_ACTION_VALUE = 1;
-	private final double NEGATIVE_ACTION_VALUE = 0;
+	public static final double POSTIVE_ACTION_VALUE = 1;
+	public static final double NEGATIVE_ACTION_VALUE = 0;
 	
 	/**
 	 * In the case of two cards (pre-flop), we will use precalculated EV's.
