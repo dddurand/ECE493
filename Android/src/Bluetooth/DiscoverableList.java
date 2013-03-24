@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.Vector;
 
+import com.example.bluetoothpoker.R;
+
+
 import android.app.Activity;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
@@ -18,12 +21,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,10 +46,18 @@ public class DiscoverableList {
 	public final static int REQUEST_ENABLE_BT_CLIENT =51;
 	public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 	private Vector<BluetoothSocket> mSockets = new Vector<BluetoothSocket>();
+	private Vector<ServerThread> serverThreads = new Vector<ServerThread>();
+	private Vector<ClientThread> clientThreads = new Vector<ClientThread>();
+	private Vector<ConnectedThread> connectedThreads = new Vector<ConnectedThread>();
 	//private ConnectedThread mConnection;
 	private int mState;
+	private Activity mActivity;
+	private int mType =0;
 
-    // Constants that indicate the current connection state
+	public static final int TYPE_NONE=0;
+    public static final int TYPE_SERVER =1;
+    public static final int TYPE_CLIENT=2;
+	// Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
@@ -57,14 +70,15 @@ public class DiscoverableList {
         //mHandler.obtainMessage(BluetoothChat.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
     
-    private synchronized void addSocket(BluetoothSocket socket) {
+    private void addSocket(BluetoothSocket socket) {
     	mSockets.add(socket);
     }
     
 	private BluetoothAdapter BlueAdapt=null;
 	// Create a BroadcastReceiver for ACTION_FOUND
 	
-	public DiscoverableList(ArrayAdapter<String> arrayAdapter) {
+	public DiscoverableList(ArrayAdapter<String> arrayAdapter, Activity mActivity) {
+		this.mActivity= mActivity ;
 		mArrayAdapter=arrayAdapter;
 	}
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -78,7 +92,7 @@ public class DiscoverableList {
 	            // Add the name and address to an array adapter to show in a ListView
 	            mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
 	        }
-	        if(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED.equals(action)) {
+	        if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 	        	//TODO if discoverable set to off
 	        }
 	    }
@@ -110,11 +124,13 @@ public class DiscoverableList {
 	
 	
 	public void startServer() {
+		mType =TYPE_SERVER;
 		ServerThread mServer = new ServerThread(BlueAdapt);
-		mServer.run();
+		mServer.execute("");
 	}
 	
 	public void startClient(Intent data) {
+		mType =TYPE_CLIENT;
 		 // Get the device MAC address
         String address = data.getExtras().getString(EXTRA_DEVICE_ADDRESS);
         // Get the BluetoothDevice object
@@ -140,19 +156,90 @@ public class DiscoverableList {
 	public void destroyList (Context c) {
 		BlueAdapt.cancelDiscovery();
 		c.unregisterReceiver(mReceiver);
+		killThreads();
 	}
 	
+	private void killThreads() {
+		// TODO Auto-generated method stub
+		for (int i=0; i<this.clientThreads.size();i++) {
+			clientThreads.get(i).cancel();
+		}
+		for (int i=0; i<this.serverThreads.size();i++) {
+			serverThreads.get(i).cancel();
+		}
+		for (int i=0; i<this.connectedThreads.size();i++) {
+			connectedThreads.get(i).cancel();
+		}
+	}
+	public void sendStart() {
+		
+	}
 	public class BluetoothInitializeException extends Exception {
 		public BluetoothInitializeException() {
 			super("The bluetooth adapter was not set. Must call checkBluetooth before calling enableBluetooth.");
 		}
 	}
 
-	private class ServerThread extends Thread{
+
+	private class ServerThread extends AsyncTask<String, BluetoothSocket, BluetoothDevice>{
 		private final BluetoothServerSocket mmServerSocket;
-		private ArrayList<UUID> mUuid;
+		private ArrayList<UUID> mUuid = new ArrayList<UUID>();
 		private String NAME = "BluetoothPoker";
 		private DiscoverableList mdiscoverableList;
+		
+		@Override
+		protected BluetoothDevice doInBackground(String... params) {
+			BluetoothSocket socket = null;
+			BluetoothDevice bdev = null;
+	        // Keep listening until exception occurs or a socket is returned
+	        while (true) {
+	            try {
+	                socket = mmServerSocket.accept();
+	            } catch (IOException e) {
+	                break;
+	            }
+	            // If a connection was accepted
+	            if (socket != null) {
+	            	//return socket;
+	                // Do work to manage the connection (in a separate thread)
+	                //manageConnectedSocket(socket);
+	                try {
+	                	publishProgress(socket);
+	                	
+	                	//synchronized(DiscoverableList.this) {
+	                		//connected(socket, socket.getRemoteDevice());
+	                		//bdev = socket.getRemoteDevice();
+	                		/*switch (mState) {
+	                         case STATE_LISTEN:
+	                         case STATE_CONNECTING:
+	                             // Situation normal. Start the connected thread.
+	                             
+	                        	 connected(socket, socket.getRemoteDevice());
+	                        	 
+	                             break;
+	                         case STATE_NONE:
+	                         case STATE_CONNECTED:
+	                             // Either not ready or already connected. Terminate new socket.
+	                             try {
+	                                 socket.close();
+	                             } catch (IOException e) {
+	                                 //Log.e(TAG, "Could not close unwanted socket", e);
+	                             }
+	                             break;*/
+	                         //}
+	                         
+	                	//}
+						mmServerSocket.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	                break;
+	            }
+	        }
+			
+			return bdev;
+		}
 		
 		private ServerThread(BluetoothAdapter mBluetoothAdapter) {
 			mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
@@ -170,52 +257,25 @@ public class DiscoverableList {
 	        mmServerSocket = tmp;
 	    }
 		
-		public void run() {
-	        BluetoothSocket socket = null;
-	        // Keep listening until exception occurs or a socket is returned
-	        while (true) {
-	            try {
-	                socket = mmServerSocket.accept();
-	            } catch (IOException e) {
-	                break;
-	            }
-	            // If a connection was accepted
-	            if (socket != null) {
-	                // Do work to manage the connection (in a separate thread)
-	                //manageConnectedSocket(socket);
-	                try {
-	                	synchronized(DiscoverableList.this) {
-	                		connected(socket, socket.getRemoteDevice());
-	                		/* 
-	                		switch (mState) {
-	                         case STATE_LISTEN:
-	                         case STATE_CONNECTING:
-	                             // Situation normal. Start the connected thread.
-	                             
-	                        	 connected(socket, socket.getRemoteDevice());
-	                             break;
-	                         case STATE_NONE:
-	                         case STATE_CONNECTED:
-	                             // Either not ready or already connected. Terminate new socket.
-	                             try {
-	                                 socket.close();
-	                             } catch (IOException e) {
-	                                 //Log.e(TAG, "Could not close unwanted socket", e);
-	                             }
-	                             break;
-	                         }
-	                         */
-	                	}
-						mmServerSocket.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	                break;
-	            }
-	        }
-	    }
-	 
+
+		@Override
+		protected void onProgressUpdate(BluetoothSocket... params) {  
+			//TODO
+			mArrayAdapter.add(params[0].getRemoteDevice().getName() + "\n" + params[0].getRemoteDevice().getAddress());
+			mArrayAdapter.notifyDataSetChanged();
+			//Button start = (Button) mActivity.findViewById(R.id.start_button);
+			//start.setEnabled(true);
+			connected(params[0]);
+		}
+		
+		@Override
+		protected void onPostExecute(BluetoothDevice params) {  
+			//TODO
+			//connected(socket, socket.getRemoteDevice());
+			//mArrayAdapter.add(params.getName() + "\n" + params.getAddress());
+			//mArrayAdapter.notifyDataSetChanged();
+			
+		}
 	    /** Will cancel the listening socket, and cause the thread to finish */
 	    public void cancel() {
 	        try {
@@ -224,11 +284,10 @@ public class DiscoverableList {
 	    }
 	}
 	
-	
-	private class ClientThread extends Thread{
+	private class ClientThread extends AsyncTask<String, Void, Void>{
 	    private final BluetoothSocket mmSocket;
 	    private final BluetoothDevice mmDevice;
-	    private ArrayList<UUID> mUuid;
+	    private ArrayList<UUID> mUuid = new ArrayList<UUID>();
 		private String NAME = "BluetoothPoker";
 		private BluetoothAdapter mBluetoothAdapter;
 		private DiscoverableList mDiscoverableList;
@@ -252,28 +311,6 @@ public class DiscoverableList {
 	        } catch (IOException e) { }
 	        mmSocket = tmp;
 	    }
-
-
-		public void run() {
-	        // Cancel discovery because it will slow down the connection
-	        mBluetoothAdapter.cancelDiscovery();
-	 
-	        try {
-	            // Connect the device through the socket. This will block
-	            // until it succeeds or throws an exception
-	            mmSocket.connect();
-	        } catch (IOException connectException) {
-	            // Unable to connect; close the socket and get out
-	            try {
-	                mmSocket.close();
-	            } catch (IOException closeException) { }
-	            return;
-	        }
-	 
-	        // Do work to manage the connection (in a separate thread)
-	        //manageConnectedSocket(mmSocket);
-	        
-	    }
 	 
 	    /** Will cancel an in-progress connection, and close the socket */
 	    public void cancel() {
@@ -281,10 +318,45 @@ public class DiscoverableList {
 	            mmSocket.close();
 	        } catch (IOException e) { }
 	    }
+
+
+		@Override
+		protected Void doInBackground(String... params) {
+			 // Cancel discovery because it will slow down the connection
+	        mBluetoothAdapter.cancelDiscovery();
+	 
+	        try {
+	            // Connect the device through the socket. This will block
+	            // until it succeeds or throws an exception
+	            mmSocket.connect();
+	            //mActivity.setContentView(R.layout.sendstuff);
+	        } catch (IOException connectException) {
+	            // Unable to connect; close the socket and get out
+	            try {
+	                mmSocket.close();
+	            } catch (IOException closeException) { }
+	            return null;
+	        }
+	 
+	        // Do work to manage the connection (in a separate thread)
+	        //manageConnectedSocket(mmSocket);
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... params) {
+			//mActivity.setContentView(R.layout.sendstuff);
+			//return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void params) {  
+			//mActivity.setContentView(R.layout.sendstuff);
+		}
 	}
 	
 		
-		private class ConnectedThread extends Thread {
+	private class ConnectedThread extends AsyncTask<String, Void, Void> {
 		    private final BluetoothSocket mmSocket;
 		    private final InputStream mmInStream;
 		    private final OutputStream mmOutStream;
@@ -305,7 +377,22 @@ public class DiscoverableList {
 		        mmOutStream = tmpOut;
 		    }
 		 
-		    public void run() {
+		    /* Call this from the main activity to send data to the remote device */
+		    public void write(byte[] bytes) {
+		        try {
+		            mmOutStream.write(bytes);
+		        } catch (IOException e) { }
+		    }
+		 
+		    /* Call this from the main activity to shutdown the connection */
+		    public void cancel() {
+		        try {
+		            mmSocket.close();
+		        } catch (IOException e) { }
+		    }
+
+			@Override
+			protected Void doInBackground(String... params) {
 		        byte[] buffer = new byte[1024];  // buffer store for the stream
 		        int bytes; // bytes returned from read()
 		 
@@ -321,32 +408,41 @@ public class DiscoverableList {
 		                break;
 		            }
 		        }
-		    }
-		 
-		    /* Call this from the main activity to send data to the remote device */
-		    public void write(byte[] bytes) {
-		        try {
-		            mmOutStream.write(bytes);
-		        } catch (IOException e) { }
-		    }
-		 
-		    /* Call this from the main activity to shutdown the connection */
-		    public void cancel() {
-		        try {
-		            mmSocket.close();
-		        } catch (IOException e) { }
-		    }
+				return null;
+			}
 		}
 
 
-	public synchronized void connected(BluetoothSocket socket, BluetoothDevice remoteDevice) {
+	public void connected(BluetoothSocket socket) {
 		// TODO Auto-generated method stub
-		mArrayAdapter.add(remoteDevice.getName() + "\n" + remoteDevice.getAddress());
-		mArrayAdapter.notifyDataSetChanged();
+		//mArrayAdapter.add(remoteDevice.getName() + "\n" + remoteDevice.getAddress());
+		//mArrayAdapter.notifyDataSetChanged();
 		ConnectedThread connection = new ConnectedThread(socket);
-		connection.run();
+		connection.execute();
 		addSocket(socket);
 		
 		
 	}
+	 // The on-click listener for all devices in the ListViews
+    public OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
+        public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
+            // Cancel discovery because it's costly and we're about to connect
+            BlueAdapt.cancelDiscovery();
+
+            // Get the device MAC address, which is the last 17 chars in the View
+            String info = ((TextView) v).getText().toString();
+            String address = info.substring(info.length() - 17);
+            BluetoothDevice device = BlueAdapt.getRemoteDevice(address);
+            ClientThread mClient = new ClientThread(BlueAdapt, device);
+            mClient.execute("");
+            
+            // Create the result Intent and include the MAC address
+            //Intent intent = new Intent();
+            //intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+
+            // Set result and finish this Activity
+            //setResult(Activity.RESULT_OK, intent);
+            //finish();
+        }
+    };
 }
