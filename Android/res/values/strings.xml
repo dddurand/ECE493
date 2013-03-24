@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	
+    <!-- GUI Labels -->
     <string name="app_name">Bluetooth Poker</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -17,6 +18,8 @@
     <string name="initialFundsAmount">500</string>
     <string name="createTableHint">Table name</string>
     <string name="initializing">Initializing . . .</string>
+    <string name="joinTableButton">Join</string>
+    <string name="statsLabel">Statistics</string>
 	
 	<string name="server_invalid_login">Invalid Login Credentials</string>
     <string name="server_duplicate_user">Username already in use</string>

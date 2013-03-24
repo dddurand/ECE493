@@ -17,11 +17,34 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class Stats extends Activity implements TabListener, OnGestureListener, OnClickListener {
+public class Stats extends Activity implements TabListener, OnGestureListener {
+	
+	public static final int PERSONAL_STATS = 0;
+	public static final int COMMUNITY_STATS = 1;
+	public static final int RANKING_STATS = 2;
 	
 	private ActionBar ab;
 	private int currentTabPos=0;
 	private GestureDetector detector;
+	
+	//Data Test
+	String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+			  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+			  "Linux", "OS/2","Android", "iPhone", "WindowsMobile",
+			  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+			  "Linux", "OS/2" };
+	
+	String[] values2 = new String[] { "Android2", "iPhone2", "Windows2Mobile",
+			  "Blackb2erry", "WebOS", "Ubuntu", "Windows72", "Max OS X",
+			  "Linu2x", "OS/2","Android", "iPhone", "WindowsMobile",
+			  "Blackbe2rry", "WebOS", "Ubuntu", "Windows72", "Max OS X2",
+			  "Linu2x", "OS/22" };
+	
+	String[] values3 = new String[] { "Andr3oid", "iP3hone", "WindowsMobi3le",
+			  "Black3berry", "Web3OS", "Ubunt3u", "Windows7", "Max OS X",
+			  "Linu3x", "OS/2","An3droid", "iPhone", "WindowsMobile",
+			  "Blac3kberry", "WebO3S", "Ub3untu", "Win3dows7", "Max OS3 X",
+			  "Lin3ux", "OS3/2" };
 
 	/** Called when the activity is first created. */
 	@Override
@@ -41,9 +64,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    globalStatsTab.setIcon(R.drawable.ic_global_stats);
 	    ActionBar.Tab rankingStatsTab = ab.newTab().setText("Ranking");
 	    rankingStatsTab.setIcon(R.drawable.ic_ranking_stats);
-	    
-	    Button b = (Button)findViewById(R.id.button1);
-	    b.setOnClickListener(this);
 	    
 	    //Gesture on list
 	    detector = new GestureDetector(this,this);
@@ -72,8 +92,28 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	 * Done after a swipe.
 	 * @param currentTabPos
 	 */
-	private void changeStatsTabContent(int currentTabPos){
+	private void setTabContent(int currentTabPos){
 		ab.setSelectedNavigationItem(currentTabPos);
+		ListView list = (ListView)findViewById(R.id.statsListView);
+		String[] v;
+		
+		switch (currentTabPos){
+		
+		case Stats.PERSONAL_STATS:v=values;
+			break;
+			
+		case Stats.COMMUNITY_STATS:v=values2;
+			break;
+			
+		case Stats.RANKING_STATS:v=values3;
+			break;
+			
+			default:v=values;
+		}
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.stats_list_element, R.id.statsEntryText,v);
+		
+		list.setAdapter(adapter);
 	}
 	
 	/**********************************************************************************************/
@@ -86,6 +126,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	@Override
 	public void onTabSelected(Tab t, FragmentTransaction arg1) {
 		currentTabPos=t.getPosition();
+		setTabContent(currentTabPos);
 	}
 
 	@Override
@@ -119,7 +160,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 			if (currentTabPos<0) currentTabPos=2;
 
 			//Set it
-			changeStatsTabContent(currentTabPos);
+			setTabContent(currentTabPos);
 		}
 		
 		return false;
@@ -149,20 +190,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	@Override
 	public boolean onSingleTapUp(MotionEvent arg0) {
 		return false;
-	}
-
-	@Override
-	public void onClick(View arg0) {
-		ListView list = (ListView)findViewById(R.id.statsListView);
-		String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-				  "Linux", "OS/2","Android", "iPhone", "WindowsMobile",
-				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-				  "Linux", "OS/2" };
-		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.stats_list_element, R.id.statsEntryText,values);
-		
-		list.setAdapter(adapter);
 	}
 
 }

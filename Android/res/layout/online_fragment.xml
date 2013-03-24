@@ -60,9 +60,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Join Table"/>
+        android:layout_margin="10dp"
+        android:background="@drawable/button_border"
+        android:textColor="#ffffff"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/joinTableString"
+        android:textSize="15sp"/>
 
     <Button
         android:id="@+id/button2"
@@ -70,14 +74,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Create Table" />
+        android:layout_margin="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/button_border"
+        android:textColor="#ffffff"
+        android:text="@string/createTableString" 
+        android:textSize="15sp"/>
     
     <View
         android:id="@+id/onlineWhiteSpace"
         android:layout_width="fill_parent"
-        android:layout_height="20dp"
+        android:layout_height="23dp"
         android:layout_weight="1"
         />
 
@@ -86,9 +94,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Stats" />
+        android:layout_margin="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:drawableLeft="@drawable/ic_stats_online"
+        android:background="@drawable/stats_button_border"
+        android:textColor="#ffffff"
+        android:text="@string/statsLabel" 
+        android:textSize="15sp"/>
     
     <View
         android:id="@+id/onlineWhiteSpace2"

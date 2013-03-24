@@ -152,6 +152,10 @@ public class MainScreen extends Activity implements View.OnClickListener {
 		transaction.commit();
 	}
 
+	/**
+	 * Method executed when the user presses the back button. Prompts the user to log out
+	 * if the current screen is the online mode (ie. user is logged in).
+	 */
 	@Override
 	public void onBackPressed() {
 		if (currentScreen==MainScreen.ONLINE_MODE)
