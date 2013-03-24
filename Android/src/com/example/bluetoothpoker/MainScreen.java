@@ -176,9 +176,9 @@ public class MainScreen extends Activity implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		Intent i = new Intent(this,Stats.class);
-		startActivity(i);
+//		Intent i = new Intent(this,Stats.class);
+//		startActivity(i);
+		this.switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 	}
 
 }
