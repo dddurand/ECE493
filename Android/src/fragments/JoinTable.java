@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import bluetooth.DiscoverableList;
+import bluetooth.DiscoverableList.BluetoothInitializeException;
 
 import com.example.bluetoothpoker.R;
 
@@ -23,6 +25,7 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 	private ListView list;
 	private int selectedPos = -1;
 	private String tableName;
+	private DiscoverableList mDiscoverableList;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,9 +55,18 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
 				  "Linux", "OS/2" };
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.jointable_list_element, R.id.tableNameText,values);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.jointable_list_element);
 		
 		list.setAdapter(adapter);
+		
+		mDiscoverableList = new DiscoverableList(adapter, this);
+		try {
+			mDiscoverableList.enableBluetooth(getActivity(),DiscoverableList.REQUEST_ENABLE_BT_CLIENT);
+			mDiscoverableList.setList(getActivity());
+		} catch (BluetoothInitializeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -18,6 +18,7 @@ public class Pot implements Serializable{
 	private ArrayList<Integer> participants = new ArrayList<Integer>();
 	private Hashtable<Integer, Integer> playeramount = new Hashtable<Integer, Integer>();
 	private Player[] winners = new Player[0];
+	private int[] losers = null;
 	
 	
 	public Pot(int owner, int amount) {
@@ -33,15 +34,34 @@ public class Pot implements Serializable{
 	public Player[] getWinners() {
 		return winners;
 	}
-
+	
+	/**
+	 * @return the losers null if not set
+	 */
+	public int[] getLosers() {
+		return losers;
+	}
 
 
 	/**
+	 * Sets both an array of winners and an array of losers in the pot
 	 * @param winners the winners to set
 	 */
 	public void setWinners(Player[] winners) {
 		this.winners = winners;
+		losers = new int[participants.size()-winners.length];
+		int j =0,k=0;
+		for(int i=0; i<participants.size(); i++) {
+			if(participants.get(i)==winners[j].getId()) {
+				j++;
+			} else {
+				losers[k]=participants.get(i);
+				k++;
+			}
+		}
+		
 	}
+	
 
 
 
