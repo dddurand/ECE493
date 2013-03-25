@@ -24,12 +24,12 @@ public class WatchDogTimer {
 		
 	public void cancel()
 	{
-		this.timer.cancel();
+//		this.timer.cancel();
 	}
 	
 	public void startTimer()
 	{
-		timer.schedule(new TimeOutTask(queue), this.timeout);
+//		timer.schedule(new TimeOutTask(queue), this.timeout);
 	}
 	
 	private class TimeOutTask extends TimerTask
