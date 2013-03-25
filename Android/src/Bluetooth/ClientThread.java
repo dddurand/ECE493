@@ -2,14 +2,20 @@ package bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import dataModels.Account;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.widget.TextView;
+import application.PokerApplication;
 
 
 import fragments.JoinTable;
@@ -26,6 +32,10 @@ import fragments.JoinTable;
 		private BluetoothAdapter mBluetoothAdapter;
 		private DiscoverableList mDiscoverableList;
 		JoinTable mActivity;
+		PokerApplication application;
+		Account account;
+		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
+		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
 		
 	    public ClientThread(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device, JoinTable mActivity, DiscoverableList mDiscoverabelList) {
 	    	mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
@@ -40,6 +50,8 @@ import fragments.JoinTable;
 	        // because mmSocket is final
 	        BluetoothSocket tmp = null;
 	        mmDevice = device;
+	        application = (PokerApplication) mActivity.getActivity().getApplication();
+			account = application.getAccount();
 	 
 	        // Get a BluetoothSocket to connect with the given BluetoothDevice
 	        try {
@@ -66,36 +78,37 @@ import fragments.JoinTable;
 	            // Connect the device through the socket. This will block
 	            // until it succeeds or throws an exception
 	            mmSocket.connect();
-	            publishProgress("wait");
+	            //publishProgress("wait");
+	            OutputStream tmpOut = mmSocket.getOutputStream();
+		        ObjectOutputStream streamOut = new ObjectOutputStream(tmpOut);
+		        streamOut.flush();
 		        InputStream tmpIn = mmSocket.getInputStream();
-		        byte[] buffer = new byte[1024];
-		        int bytes;
-		        String msg;
-		        //while (true) { 
-		        bytes = tmpIn.read(buffer);
-		        if (bytes!=-1) {
-		        	//msg = new String(buffer, "UTF-8");
-		        	msg = new String(buffer, 0, bytes, "UTF-8");
-		        	if(msg.equals("GO!")) {
-		        		//TODO Handshake send playername?
-		        		return "GO";
-		        		//publishProgress("GO");
-		        	} //else {
-		        		//publishProgress("GO");
-		        	//}
-		        	return msg;
-		        }
-		        	
-		        //}
-		            
-	            //mActivity.setContentView(R.layout.sendstuff);
+		        ObjectInputStream streamIn = new ObjectInputStream(tmpIn);
+		        
+            	
+		        UUID tmp = (UUID)streamIn.readObject();
+            	if(tmp.equals(ServerhandshakeUUID)) {
+            		holder mHolder = new holder(account.getBalance(), account.getUsername());
+	        		streamOut.writeObject(ClienthandshakeUUID);
+	        		streamOut.flush();
+            		streamOut.writeObject(mHolder);
+	        		streamOut.flush();
+	        		return "GO";
+            	}
 	        } catch (IOException connectException) {
 	            // Unable to connect; close the socket and get out
 	            try {
 	                mmSocket.close();
 	            } catch (IOException closeException) { }
 	            return "BAD";
-	        }
+	        } catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+	        	 try {
+		                mmSocket.close();
+		            } catch (IOException closeException) { }
+	        	e.printStackTrace();
+				return "BAD";
+			}
 	 
 	        // Do work to manage the connection (in a separate thread)
 	        //manageConnectedSocket(mmSocket);
@@ -122,7 +135,8 @@ import fragments.JoinTable;
 			if(params.equals("GO")) {
 				//mActivity.setContentView(R.layout.sendstuff);
 				//mActivity.update("GO");
-				cancel();
+				mDiscoverableList.connected(mmSocket);
+				//cancel();
 			} else {
 				//mActivity.setContentView(R.layout.activity_main);
 			}

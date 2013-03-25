@@ -26,6 +26,8 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 	private int selectedPos = -1;
 	private String tableName;
 	private DiscoverableList mDiscoverableList;
+	private String address=null;
+	private String info=null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,11 +57,14 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
 				  "Linux", "OS/2" };
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.jointable_list_element);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
 		
 		list.setAdapter(adapter);
-		
 		mDiscoverableList = new DiscoverableList(adapter, this);
+		if(!mDiscoverableList.checkBluetooth()) {
+			Toast.makeText(getActivity(), "Error Bluetooth not supported", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		try {
 			mDiscoverableList.enableBluetooth(getActivity(),DiscoverableList.REQUEST_ENABLE_BT_CLIENT);
 			mDiscoverableList.setList(getActivity());
@@ -75,7 +80,11 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 		switch (v.getId()){
 		
 		case R.id.joinButton:
-			Toast.makeText(getActivity(), tableName, Toast.LENGTH_SHORT).show();
+			if(address==null){
+				Toast.makeText(getActivity(), "Please select a device", Toast.LENGTH_SHORT).show();
+			} else {
+				mDiscoverableList.startClient(info, address);
+			}
 			break;
 			
 		case R.id.refreshButton:
@@ -88,11 +97,21 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View v, int pos, long id) {
 		//Save current position
+ 		this.selectedPos = pos;
+ 		Toast.makeText(getActivity(), "Pos: " + pos, Toast.LENGTH_SHORT).show();
+ 		info = (String)arg0.getAdapter().getItem(pos);
+ 		
+
+        address = info.substring(info.length() - 17);
+        //mDiscoverableList.startClient(info, address);
+         /*
+		//Save current position
 		this.selectedPos = pos;
 		//Save table name in string
 		RelativeLayout rl = (RelativeLayout)v;
 		TextView text = (TextView)rl.getChildAt(0);
 		this.tableName=text.getText().toString();
+		*/
 	}
 
 }

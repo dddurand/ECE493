@@ -1,6 +1,10 @@
 package bluetooth;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -19,14 +23,16 @@ import android.widget.Button;
  * @author Lawton
  *
  */
-public class ServerThread extends AsyncTask<String, BluetoothSocket, BluetoothDevice>{
+public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private final BluetoothServerSocket mmServerSocket;
 		private ArrayList<UUID> mUuid = new ArrayList<UUID>();
 		private String NAME = "BluetoothPoker";
 		private DiscoverableList mdiscoverableList;
 		private JoinTable mActivity;
 		private BluetoothAdapter mBluetoothAdapter;
-		private ArrayAdapter mArrayAdapter;
+		private ArrayAdapter<String> mArrayAdapter;
+		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
+		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
 		
 	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, JoinTable mActivity, DiscoverableList mDiscoverableList) {
 			mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
@@ -48,7 +54,7 @@ public class ServerThread extends AsyncTask<String, BluetoothSocket, BluetoothDe
 	        mmServerSocket = tmp;
 	    }
 		@Override
-		protected BluetoothDevice doInBackground(String... params) {
+		protected BluetoothSocket doInBackground(String... params) {
 			BluetoothSocket socket = null;
 			BluetoothDevice bdev = null;
 	        // Keep listening until exception occurs or a socket is returned
@@ -64,31 +70,46 @@ public class ServerThread extends AsyncTask<String, BluetoothSocket, BluetoothDe
 	                // Do work to manage the connection (in a separate thread)
 	                //manageConnectedSocket(socket);
 	                try {
-	                	publishProgress(socket);
-						mmServerSocket.close();
+	                	OutputStream tmpOut = socket.getOutputStream();
+	                	ObjectOutputStream streamOut = new ObjectOutputStream(tmpOut);
+	                	streamOut.flush();
+	                	InputStream tmpIn = socket.getInputStream();
+	                	ObjectInputStream streamIn = new ObjectInputStream(tmpIn);
+	                	
+	                	streamOut.writeObject(ServerhandshakeUUID);
+	                	UUID tmp = (UUID)streamIn.readObject();
+	                	if(tmp.equals(ClienthandshakeUUID)) {
+	                		holder mholder = (holder)streamIn.readObject();
+	                		publishProgress(mholder);
+							mmServerSocket.close();
+							return socket;
+	                	}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+					} catch(ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
 	                break;
+                	}
 	            }
+	        return null;
 	        }
-			
-			return bdev;
-		}
 
 		@Override
-		protected void onProgressUpdate(BluetoothSocket... params) {  
+		protected void onProgressUpdate(holder... params) {  
 			//TODO
-			mArrayAdapter.add(params[0].getRemoteDevice().getName() + "\n" + params[0].getRemoteDevice().getAddress());
+			mArrayAdapter.add(params[0].getName() + "\n" + params[0].getBalance());
 			mArrayAdapter.notifyDataSetChanged();
 			//Button start = (Button) mActivity.findViewById(R.id.start_button);
 			//start.setEnabled(true);
-			this.mdiscoverableList.connected(params[0]);
+			
 		}
 		
 		@Override
-		protected void onPostExecute(BluetoothDevice params) {  
+		protected void onPostExecute(BluetoothSocket params) {  
+			this.mdiscoverableList.connected(params);
 			//TODO
 			//connected(socket, socket.getRemoteDevice());
 			//mArrayAdapter.add(params.getName() + "\n" + params.getAddress());

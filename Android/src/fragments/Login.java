@@ -272,16 +272,16 @@ public class Login extends Fragment implements OnClickListener {
 		case R.id.offlineButton:
 			//TODO Back door to playing area, remove!!
 			
-//			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "OfflinePlayer");
-//			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
-//			account = new Account(offlineUsername, balance);
-//			this.application.setAccount(account);
+			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "OfflinePlayer");
+			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
+			account = new Account(offlineUsername, balance);
+			this.application.setAccount(account);
 			
-//			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
+			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
 			
-			Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
+			//Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
 			//Add stuff here?
-			startActivity(i);
+			//startActivity(i);
 			//((MainScreen) this.getActivity()).test();
 			break;
 		

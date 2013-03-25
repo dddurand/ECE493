@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 public class CreateTable extends Fragment implements OnClickListener {
@@ -35,6 +36,8 @@ public class CreateTable extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		//bluetooth stuff here
+		MainScreen ms = (MainScreen)getActivity();
+		ms.switchFragment(ms.WAIT_CLIENT);
 		
 	}
 

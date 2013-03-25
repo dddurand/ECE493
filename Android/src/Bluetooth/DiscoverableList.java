@@ -135,13 +135,14 @@ public class DiscoverableList {
 		mServer.execute("");
 	}
 	
-	public void startClient(Intent data) {
+	public void startClient(String info, String address) {
 		mType =TYPE_CLIENT;
-		 // Get the device MAC address
-        String address = data.getExtras().getString(EXTRA_DEVICE_ADDRESS);
-        // Get the BluetoothDevice object
+		// Cancel discovery because it's costly and we're about to connect
+        BlueAdapt.cancelDiscovery();
+
         BluetoothDevice device = BlueAdapt.getRemoteDevice(address);
-		//ClientThread mClient = new ClientThread(BlueAdapt, device);
+        ClientThread mClient = new ClientThread(BlueAdapt, device, mActivity,DiscoverableList.this);
+        mClient.execute("");
 	}
 	
 	public void startConnection(BluetoothSocket bluetoothSocket) {
@@ -162,7 +163,7 @@ public class DiscoverableList {
 	public void destroyList (Context c) {
 		BlueAdapt.cancelDiscovery();
 		c.unregisterReceiver(mReceiver);
-		killThreads();
+		//killThreads();
 	}
 	
 	private void killThreads() {

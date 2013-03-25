@@ -23,6 +23,7 @@ import fragments.Login;
 import fragments.OfflineMode;
 import fragments.OnlineMode;
 import fragments.RegisterUser;
+import fragments.WaitClient;
 
 public class MainScreen extends Activity implements View.OnClickListener {
 	
@@ -32,6 +33,7 @@ public class MainScreen extends Activity implements View.OnClickListener {
 	public final static int JOIN_TABLE_SCREEN = 4;
 	public final static int CREATE_TABLE_SCREEN = 5;
 	public final static int ONLINE_MODE = 6;
+	public static final int WAIT_CLIENT = 7;
 	
 	private ServerCodes serverCodes;
 	private int currentScreen;
@@ -136,6 +138,10 @@ public class MainScreen extends Activity implements View.OnClickListener {
 			
 		case MainScreen.ONLINE_MODE:
 			newFragment = new OnlineMode();
+			break;
+			
+		case MainScreen.WAIT_CLIENT:
+			newFragment = new WaitClient();
 			break;
 			
 		default: newFragment = new Login(serverCodes); 
