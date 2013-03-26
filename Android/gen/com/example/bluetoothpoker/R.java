@@ -131,7 +131,7 @@ public final class R {
         public static final int logoutProgressBar=0x7f07002d;
         public static final int mainscreenHelper=0x7f070000;
         public static final int mainscreenLeft=0x7f070001;
-        public static final int menu_settings=0x7f07005d;
+        public static final int menu_settings=0x7f07005f;
         public static final int moneyAmountText=0x7f070037;
         public static final int newOfflineUserName=0x7f070026;
         public static final int newUsernameField=0x7f070043;
@@ -152,6 +152,7 @@ public final class R {
         public static final int player5=0x7f07003f;
         public static final int player6=0x7f070040;
         public static final int playerNameText=0x7f070036;
+        public static final int progressBar1=0x7f07005d;
         public static final int progressBarTimeLeft=0x7f070017;
         public static final int refreshButton=0x7f07000d;
         public static final int registerButton=0x7f070020;
@@ -190,6 +191,7 @@ public final class R {
         public static final int validPasswordsIcon=0x7f070048;
         public static final int validUsernameIcon=0x7f070044;
         public static final int waiting_client=0x7f070013;
+        public static final int waiting_message=0x7f07005e;
     }
     public static final class layout {
         public static final int activity_main_screen=0x7f030000;
@@ -209,6 +211,7 @@ public final class R {
         public static final int river_fragment=0x7f03000e;
         public static final int stats_list_element=0x7f03000f;
         public static final int stats_screen=0x7f030010;
+        public static final int waitinggame=0x7f030011;
     }
     public static final class menu {
         public static final int activity_main_screen=0x7f060000;
