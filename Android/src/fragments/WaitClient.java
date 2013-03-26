@@ -1,4 +1,8 @@
 package fragments;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 import game.Player;
 import bluetooth.DiscoverableList;
 import bluetooth.DiscoverableList.BluetoothInitializeException;
@@ -20,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
+import application.PokerApplication;
 
 /**
  * Fragment that is shown while the table waits to be populated
@@ -72,12 +77,18 @@ public class WaitClient extends Fragment implements OnClickListener {
 		String msg = (String)mArrayAdapter.getItem(0);
 		String info[] = msg.split("\\r?\\n");
 		intent.putExtra(DiscoverableList.IS_CLIENT, false);
-		Player otherPlayer[] = {new Player(1, info[0], Integer.parseInt(info[1]))};
+		ArrayList<Player> otherPlayer = new ArrayList<Player>();
+		otherPlayer.add(new Player(1, info[0], Integer.parseInt(info[1])));
 		intent.putExtra(DiscoverableList.PLAYER_HOLDER, otherPlayer);
 		
 		BluetoothSocket blueSocket[] = {mserver.getSocket()};
-		intent.putExtra(DiscoverableList.SOCKET_HOLDER, blueSocket);
-		
+		ObjectOutputStream outStream[] = {mserver.getOutStream()};
+		ObjectInputStream inStream[] = {mserver.getInStream()};
+		//intent.putExtra(DiscoverableList.SOCKET_HOLDER, blueSocket);
+		PokerApplication pokerApplication = (PokerApplication)getActivity().getApplication();
+		pokerApplication.setSocket(blueSocket);
+		pokerApplication.setOutStream(outStream);
+		pokerApplication.setInStream(inStream);
 		//intent.putExtra(name, value)
 		getActivity().startActivity(intent);
 	}

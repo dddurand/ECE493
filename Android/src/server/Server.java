@@ -5,6 +5,8 @@ import game.Player;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.util.Hashtable;
@@ -83,7 +85,7 @@ public class Server implements PlayerTaskListener {
 	 * @param inStream The associated inputStream
 	 * @param outStream The associated outputStream
 	 */
-	public void addPlayer(Player player, InputStream inStream, OutputStream outStream)
+	public void addPlayer(Player player, ObjectInputStream inStream, ObjectOutputStream outStream)
 	{
 		
 		try {

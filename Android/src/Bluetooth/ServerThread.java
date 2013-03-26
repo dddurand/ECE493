@@ -40,6 +40,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private final UUID startMsg = UUID.fromString("c860afe0-2877-4042-b618-721ab1609cb9");
 		private Button startButton;
 		private ObjectOutputStream streamOut =null;
+		private ObjectInputStream streamIn = null;
 		private BluetoothSocket blueSocket;
 		
 		
@@ -93,6 +94,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	                		publishProgress(mholder);
 	                		this.blueSocket = socket;
 	                		this.streamOut = streamOut;
+	                		this.streamIn = streamIn;
 							mmServerSocket.close();
 							return socket;
 	                	}
@@ -120,6 +122,12 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		}
 		public BluetoothSocket getSocket() {
 			return this.blueSocket;
+		}
+		public ObjectOutputStream getOutStream() {
+			return this.streamOut;
+		}
+		public ObjectInputStream getInStream() {
+			return this.streamIn;
 		}
 		public void sendStart() {
 			try {

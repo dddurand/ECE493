@@ -1,6 +1,8 @@
 package com.example.bluetoothpoker;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -116,8 +118,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    	Thread thread = new Thread(new DebugRunnable());
 	    	thread.start();
 	    	}
-	    Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
-	    BluetoothSocket mySockets[] = (BluetoothSocket[])this.getIntent().getSerializableExtra(DiscoverableList.SOCKET_HOLDER);
+	    ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+	    PokerApplication pA = (PokerApplication) this.getApplication();
+	    BluetoothSocket mySockets[] = pA.getSocket();
+	    ObjectInputStream inStream[] = pA.getInStream();
+	    ObjectOutputStream outStream[] =pA.getOutStream();
 	    if(getIntent().getBooleanExtra(DiscoverableList.IS_CLIENT, true)) {
 	    	//Client
 	    	
@@ -127,11 +133,11 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    	LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
 	    	try {
 				Client client = new Client(this, server, actionQueue, 0);
-				for (int i=0; i<myPlayer.length; i++) {
+				for (int i=0; i<myPlayer.size(); i++) {
 					//LinkedBlockingQueue<GameAction> FARTS = new LinkedBlockingQueue<GameAction>();
 					//Client tmp = new Client(this, mySockets[i].getInputStream(), mySockets[i].getOutputStream(),FARTS);
-					Player tmp = myPlayer[i];
-					server.addPlayer(tmp, mySockets[i].getInputStream(), mySockets[i].getOutputStream());
+					Player tmp = myPlayer.get(i);
+					server.addPlayer(tmp, inStream[i], outStream[i]);
 				}
 				server.gameStart();
 			} catch (IOException e) {

@@ -1,8 +1,11 @@
 package application;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.Semaphore;
 
 import android.app.Application;
+import android.bluetooth.BluetoothSocket;
 import dataModels.Account;
 import database.DatabaseDataSource;
 
@@ -22,8 +25,41 @@ public class PokerApplication extends Application {
 	private DatabaseDataSource dataSource;
 	private boolean isLoggedIn = false;
 	private Semaphore uploadServiceSemaphore;
+	private BluetoothSocket blueSocket[]=null;
+	private ObjectOutputStream outStream[]=null;
+	private ObjectInputStream inStream[]=null;
 	
+	public ObjectOutputStream[] getOutStream() {
+		return outStream;
+	}
+
+	public void setOutStream(ObjectOutputStream outStream[]) {
+		this.outStream = outStream;
+	}	
 	
+	public ObjectInputStream[] getInStream() {
+		return inStream;
+	}
+
+	public void setInStream(ObjectInputStream[] inStream) {
+		this.inStream = inStream;
+	}
+
+	/**
+	 * set the sockets that clients are connected with
+	 * @param blueSocket
+	 */
+	public void setSocket(BluetoothSocket blueSocket[]) {
+		this.blueSocket = blueSocket;
+	}
+	
+	/**
+	 * returns sockets clients are connected to
+	 * @return
+	 */
+	public BluetoothSocket[] getSocket() {
+		return this.blueSocket;
+	}
 	/**
 	 * Retrieves the lock that used to trigger the upload thread to start.
 	 * 
@@ -95,5 +131,5 @@ public class PokerApplication extends Application {
 	 */
 	public void setDataSource(DatabaseDataSource dataSource) {
 		this.dataSource = dataSource;
-	}	
+	}
 }

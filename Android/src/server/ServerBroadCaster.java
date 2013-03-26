@@ -45,13 +45,13 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 	 * @param stream The players associated output stream
 	 * @throws IOException
 	 */
-	public void addPlayer(Player player, OutputStream stream) throws IOException
+	public void addPlayer(Player player, ObjectOutputStream stream) throws IOException
 	{
-		ObjectOutputStream objStream = new ObjectOutputStream(stream);
-		objStream.flush();
+		//ObjectOutputStream objStream = new ObjectOutputStream(stream);
+		//objStream.flush();
 		
 		synchronized (this) {
-			players.put(player.getId(), objStream);
+			players.put(player.getId(), stream);
 		}
 	}
 	

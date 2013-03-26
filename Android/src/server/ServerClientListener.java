@@ -31,11 +31,11 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 	 * @throws StreamCorruptedException
 	 * @throws IOException
 	 */
-	public ServerClientListener(InputStream inStream, BlockingQueue<GameAction> queue, Player player, Activity activity) 
+	public ServerClientListener(ObjectInputStream inStream, BlockingQueue<GameAction> queue, Player player, Activity activity) 
 			throws StreamCorruptedException, IOException
 	{
 		super(activity);
-		objectInputStream = new ObjectInputStream(inStream);
+		objectInputStream = inStream;
 		this.queue = queue;
 		this.player = player;
 	}

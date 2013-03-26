@@ -60,11 +60,10 @@ public class Client implements ClientTaskListener {
 	 * @throws IOException 
 	 * @throws StreamCorruptedException 
 	 */
-	public Client(PlayingArea activity, InputStream inStream, OutputStream outStream, LinkedBlockingQueue<GameAction> queue) throws StreamCorruptedException, IOException {
+	public Client(PlayingArea activity, ObjectInputStream inStream, ObjectOutputStream outStream, LinkedBlockingQueue<GameAction> queue) throws StreamCorruptedException, IOException {
 		this.activity = activity;
-		this.inStream = new ObjectInputStream(inStream);
-		this.outStream = new ObjectOutputStream(outStream);
-		outStream.flush();
+		this.inStream = inStream;
+		this.outStream = outStream;
 		
 		this.queue = queue;
 		initialize();
@@ -105,10 +104,16 @@ public class Client implements ClientTaskListener {
 		PipedInputStream sendInStream = new PipedInputStream(LOCAL_PIPE_BUFFER);
 		
 		PipedOutputStream keepOutStream = new PipedOutputStream(sendInStream);
-		keepOutStream.flush();
-		
+		//keepOutStream.flush();
 		PipedOutputStream sendOutStream = new PipedOutputStream(keepInStream);
+		//sendOutStream.flush();
+		
+		ObjectOutputStream sendOutObjectStream = new ObjectOutputStream(sendOutStream);
+		sendOutObjectStream.flush();
 		sendOutStream.flush();
+		ObjectInputStream sendInObjectStream=  new ObjectInputStream(sendInStream);
+		
+		
 		
 		this.outStream = new ObjectOutputStream(keepOutStream);
 		this.outStream.flush();
@@ -117,7 +122,7 @@ public class Client implements ClientTaskListener {
 		Account account = app.getAccount();
 		Player player = new Player(position, account.getUsername(), account.getBalance());
 		
-		server.addPlayer(player, sendInStream, sendOutStream);
+		server.addPlayer(player, sendInObjectStream, sendOutObjectStream);
 		this.inStream = new ObjectInputStream(keepInStream);
 	}
 
