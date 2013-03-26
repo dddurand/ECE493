@@ -112,6 +112,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	 * Method that sets all the buttons' backgrounds to 0.
 	 */
 	private void clearTimeframeButtons(){
+		
 		dayButton.setBackgroundResource(0);
 		weekButton.setBackgroundResource(0);
 		monthButton.setBackgroundResource(0);
@@ -231,17 +232,17 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 //		}
 		
 		//TODO Ask Dustin about where the account is stored!
-		PersonalStatistics.PersonalStatisticRequest requestObject = new PersonalStatistics.PersonalStatisticRequest(TimeFrame.DAY,null);
-		NPersonalStats serverRequest = new NPersonalStats(getApplicationContext());
-		try {
-			PersonalStatistics response = serverRequest.execute(requestObject).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		PersonalStatistics.PersonalStatisticRequest requestObject = new PersonalStatistics.PersonalStatisticRequest(TimeFrame.DAY,null);
+//		NPersonalStats serverRequest = new NPersonalStats(getApplicationContext());
+//		try {
+//			PersonalStatistics response = serverRequest.execute(requestObject).get();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		
 		

@@ -194,20 +194,21 @@ public final class R {
     public static final class layout {
         public static final int activity_main_screen=0x7f030000;
         public static final int create_table_fragment=0x7f030001;
-        public static final int funds_dialog=0x7f030002;
-        public static final int join_table_fragment=0x7f030003;
-        public static final int jointable_list_element=0x7f030004;
-        public static final int list_client_fragment=0x7f030005;
-        public static final int local_player_fragment=0x7f030006;
-        public static final int login_fragment=0x7f030007;
-        public static final int offline_fragment=0x7f030008;
-        public static final int online_fragment=0x7f030009;
-        public static final int player_fragment=0x7f03000a;
-        public static final int playing_area=0x7f03000b;
-        public static final int register_fragment=0x7f03000c;
-        public static final int river_fragment=0x7f03000d;
-        public static final int stats_list_element=0x7f03000e;
-        public static final int stats_screen=0x7f03000f;
+        public static final int device_name=0x7f030002;
+        public static final int funds_dialog=0x7f030003;
+        public static final int join_table_fragment=0x7f030004;
+        public static final int jointable_list_element=0x7f030005;
+        public static final int list_client_fragment=0x7f030006;
+        public static final int local_player_fragment=0x7f030007;
+        public static final int login_fragment=0x7f030008;
+        public static final int offline_fragment=0x7f030009;
+        public static final int online_fragment=0x7f03000a;
+        public static final int player_fragment=0x7f03000b;
+        public static final int playing_area=0x7f03000c;
+        public static final int register_fragment=0x7f03000d;
+        public static final int river_fragment=0x7f03000e;
+        public static final int stats_list_element=0x7f03000f;
+        public static final int stats_screen=0x7f030010;
     }
     public static final class menu {
         public static final int activity_main_screen=0x7f060000;
