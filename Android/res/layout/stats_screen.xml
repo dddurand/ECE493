@@ -3,14 +3,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/stats_bg" >
+    
+    <LinearLayout 
+        android:id="@+id/timeframeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+        
+        <Button 
+            android:id="@+id/statsDayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dayLabel"/>
+        
+        <Button 
+            android:id="@+id/statsWeekButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/weekLabel"/>
+        
+        <Button 
+            android:id="@+id/statsMonthButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/monthLabel"/>
+        
+        <Button 
+            android:id="@+id/statsYearButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/yearLabel"/>
+        
+        <Button 
+            android:id="@+id/statsAllButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/allTimeLabel"/>
+        
+    </LinearLayout>
 
     <ListView
         android:id="@+id/statsListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/timeframeLayout"
         android:layout_above="@+id/statsProgressBar"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:background="#bb000000" />
 
     <ProgressBar

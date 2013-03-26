@@ -1,9 +1,11 @@
 package com.example.bluetoothpoker;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import misc.CustomAdapter;
 import misc.StatsRowObject;
+import networking.NPersonalStats;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -14,37 +16,26 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.ListView;
+import dataModels.PersonalStatistics;
+import dataModels.TimeFrame;
 
-public class Stats extends Activity implements TabListener, OnGestureListener {
+public class Stats extends Activity implements TabListener, OnGestureListener, OnTouchListener, OnClickListener {
 	
 	public static final int PERSONAL_STATS = 0;
 	public static final int COMMUNITY_STATS = 1;
 	public static final int RANKING_STATS = 2;
 	
+	//Buttons. For saving state
+	Button dayButton, weekButton, monthButton, yearButton, allButton;
+	
 	private ActionBar ab;
 	private int currentTabPos=0;
 	private GestureDetector detector;
-	
-	//Data Test
-	String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-			  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-			  "Linux", "OS/2","Android", "iPhone", "WindowsMobile",
-			  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-			  "Linux", "OS/2" };
-	
-	String[] values2 = new String[] { "Android2", "iPhone2", "Windows2Mobile",
-			  "Blackb2erry", "WebOS", "Ubuntu", "Windows72", "Max OS X",
-			  "Linu2x", "OS/2","Android", "iPhone", "WindowsMobile",
-			  "Blackbe2rry", "WebOS", "Ubuntu", "Windows72", "Max OS X2",
-			  "Linu2x", "OS/22" };
-	
-	String[] values3 = new String[] { "Andr3oid", "iP3hone", "WindowsMobi3le",
-			  "Black3berry", "Web3OS", "Ubunt3u", "Windows7", "Max OS X",
-			  "Linu3x", "OS/2","An3droid", "iPhone", "WindowsMobile",
-			  "Blac3kberry", "WebO3S", "Ub3untu", "Win3dows7", "Max OS3 X",
-			  "Lin3ux", "OS3/2" };
+	private int selectedTimeframe;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -52,6 +43,29 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	    super.onCreate(savedInstanceState);
 	    
 	    setContentView(R.layout.stats_screen);
+	    
+	    /*********Get views*********/
+	    dayButton = (Button)findViewById(R.id.statsDayButton);
+	    weekButton = (Button)findViewById(R.id.statsWeekButton);
+	    monthButton = (Button)findViewById(R.id.statsMonthButton);
+	    yearButton = (Button)findViewById(R.id.statsYearButton);
+	    allButton = (Button)findViewById(R.id.statsAllButton);
+	    
+	    /********Set button listeners*********/
+	    dayButton.setOnClickListener(this);
+	    dayButton.setOnTouchListener(this);
+	    
+	    weekButton.setOnClickListener(this);
+	    weekButton.setOnTouchListener(this);
+	    
+	    monthButton.setOnClickListener(this);
+	    monthButton.setOnTouchListener(this);
+	    
+	    yearButton.setOnClickListener(this);
+	    yearButton.setOnTouchListener(this);
+	    
+	    allButton.setOnClickListener(this);
+	    allButton.setOnTouchListener(this);
 	    
 	    //Get action bar
 	    ab = getActionBar();
@@ -65,7 +79,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	    ActionBar.Tab rankingStatsTab = ab.newTab().setText("Ranking");
 	    rankingStatsTab.setIcon(R.drawable.ic_ranking_stats);
 	    
-	    //Gesture on list
+	    /***********Gesture on list**************/
 	    detector = new GestureDetector(this,this);
 	    ListView list = (ListView)findViewById(R.id.statsListView);
 	    list.setOnTouchListener(new OnTouchListener() {
@@ -76,15 +90,33 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	    	}
 	    });
 	    
-	    //Set the tab listeners to this class
+	    /*********Set the tab listeners to this class*********/
 	    personalStatsTab.setTabListener(this);
 	    globalStatsTab.setTabListener(this);
 	    rankingStatsTab.setTabListener(this);
+	    
 	    
 	    //Finally add them to the action bar
 	    ab.addTab(personalStatsTab);
 	    ab.addTab(globalStatsTab);
 	    ab.addTab(rankingStatsTab);
+	    
+	    //Clean buttons up
+	    clearTimeframeButtons();
+	    //Initializes screen
+	    this.onTouch(dayButton, null);
+	    this.selectedTimeframe=dayButton.getId();
+	}
+	
+	/**
+	 * Method that sets all the buttons' backgrounds to 0.
+	 */
+	private void clearTimeframeButtons(){
+		dayButton.setBackgroundResource(0);
+		weekButton.setBackgroundResource(0);
+		monthButton.setBackgroundResource(0);
+		yearButton.setBackgroundResource(0);
+		allButton.setBackgroundResource(0);
 	}
 	
 	/**
@@ -125,6 +157,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	/***************************************TAB LISTENERS******************************************/
 	@Override
 	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		//do nothing
 	}
 
 	//Update current position when tab is selected
@@ -145,6 +178,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 
 	/**
 	 * Method for listening for flings/swipes in this activity.
+	 * Selects the corresponding action bar item if the velocity of X in the swipe is
+	 * greater than the velocity of Y.
 	 */
 	@Override
 	public boolean onFling(MotionEvent me0, MotionEvent me1, float velX,
@@ -171,6 +206,61 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 		return false;
 	}
 	
+	/*********************Click Listener********************/
+	@Override
+	public void onClick(View v) {
+		
+		this.selectedTimeframe=v.getId();
+		
+//		switch(v.getId()){
+//		
+//		case R.id.statsDayButton:
+//			break;
+//			
+//		case R.id.statsWeekButton:
+//			break;
+//			
+//		case R.id.statsMonthButton:
+//			break;
+//			
+//		case R.id.statsYearButton:
+//			break;
+//			
+//		case R.id.statsAllButton:
+//			break;
+//		}
+		
+		//TODO Ask Dustin about where the account is stored!
+		PersonalStatistics.PersonalStatisticRequest requestObject = new PersonalStatistics.PersonalStatisticRequest(TimeFrame.DAY,null);
+		NPersonalStats serverRequest = new NPersonalStats(getApplicationContext());
+		try {
+			PersonalStatistics response = serverRequest.execute(requestObject).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	
+	/**
+	 * On touch listener: changes the background of the touched button and clears
+	 * the other buttons
+	 */
+	@Override
+	public boolean onTouch(View v, MotionEvent arg1) {
+		Button b = (Button)v;
+		clearTimeframeButtons();
+		b.setBackgroundResource(R.drawable.timeframe_button_border_selected);
+		
+		return false;
+	}
+	
+	/**----------------------Other Listeners not being used but required by interface------------------*/
 	@Override
 	public boolean onDown(MotionEvent arg0) {
 		return false;
@@ -196,5 +286,5 @@ public class Stats extends Activity implements TabListener, OnGestureListener {
 	public boolean onSingleTapUp(MotionEvent arg0) {
 		return false;
 	}
-
+	
 }
