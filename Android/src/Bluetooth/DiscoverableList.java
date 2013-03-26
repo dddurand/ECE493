@@ -52,7 +52,7 @@ public class DiscoverableList {
 	private Vector<ConnectedThread> connectedThreads = new Vector<ConnectedThread>();
 	//private ConnectedThread mConnection;
 	private int mState;
-	private JoinTable mActivity;
+	private Activity mActivity;
 	private int mType =0;
 
 	public static final int TYPE_NONE=0;
@@ -83,7 +83,7 @@ public class DiscoverableList {
 	private BluetoothAdapter BlueAdapt=null;
 	// Create a BroadcastReceiver for ACTION_FOUND
 	
-	public DiscoverableList(ArrayAdapter<String> arrayAdapter, JoinTable mActivity) {
+	public DiscoverableList(ArrayAdapter<String> arrayAdapter, Activity mActivity) {
 		this.mActivity= mActivity ;
 		mArrayAdapter=arrayAdapter;
 	}

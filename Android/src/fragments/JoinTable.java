@@ -60,7 +60,7 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
 		
 		list.setAdapter(adapter);
-		mDiscoverableList = new DiscoverableList(adapter, this);
+		mDiscoverableList = new DiscoverableList(adapter, getActivity());
 		if(!mDiscoverableList.checkBluetooth()) {
 			Toast.makeText(getActivity(), "Error Bluetooth not supported", Toast.LENGTH_SHORT).show();
 			return;

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import fragments.JoinTable;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -28,13 +29,13 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private ArrayList<UUID> mUuid = new ArrayList<UUID>();
 		private String NAME = "BluetoothPoker";
 		private DiscoverableList mdiscoverableList;
-		private JoinTable mActivity;
+		private Activity mActivity;
 		private BluetoothAdapter mBluetoothAdapter;
 		private ArrayAdapter<String> mArrayAdapter;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
 		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
 		
-	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, JoinTable mActivity, DiscoverableList mDiscoverableList) {
+	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, Activity mActivity, DiscoverableList mDiscoverableList) {
 			mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
 	        mUuid.add(UUID.fromString("296fa800-fe63-49f5-aa21-f7c405d70cff"));
 	        mUuid.add(UUID.fromString("5d9c5a66-6daa-4e83-97b9-11f89af27fca"));

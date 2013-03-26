@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 import fragments.JoinTable;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.widget.TextView;
@@ -19,9 +20,9 @@ public class ConnectedThread extends AsyncTask<String, String, Void> {
 		    private final BluetoothSocket mmSocket;
 		    private final InputStream mmInStream;
 		    private final OutputStream mmOutStream;
-			private JoinTable mActivity;
+			private Activity mActivity;
 		 
-		   public ConnectedThread(BluetoothSocket socket, JoinTable mActivity) {
+		   public ConnectedThread(BluetoothSocket socket, Activity mActivity) {
 		        mmSocket = socket;
 		        InputStream tmpIn = null;
 		        OutputStream tmpOut = null;

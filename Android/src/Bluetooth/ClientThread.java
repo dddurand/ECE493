@@ -8,13 +8,18 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.R;
+
 import dataModels.Account;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.widget.TextView;
+import android.widget.Toast;
 import application.PokerApplication;
 
 
@@ -31,18 +36,28 @@ import fragments.JoinTable;
 		private String NAME = "BluetoothPoker";
 		private BluetoothAdapter mBluetoothAdapter;
 		private DiscoverableList mDiscoverableList;
-		JoinTable mActivity;
+		Activity mActivity;
 		PokerApplication application;
 		Account account;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
 		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
-		
-	    public ClientThread(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device, JoinTable mActivity, DiscoverableList mDiscoverabelList) {
+		private TextView mText;
+		/**
+		 * Basic constructor that creates socket from bluetooth device
+		 * @param mBluetoothAdapter
+		 * @param device
+		 * @param mActivity
+		 * @param mDiscoverabelList
+		 */
+	    public ClientThread(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device, Activity mActivity, DiscoverableList mDiscoverabelList) {
 	    	mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
 	        mUuid.add(UUID.fromString("296fa800-fe63-49f5-aa21-f7c405d70cff"));
 	        mUuid.add(UUID.fromString("5d9c5a66-6daa-4e83-97b9-11f89af27fca"));
 	        mUuid.add(UUID.fromString("624c879f-62f5-4c9e-93d3-de8366837c2e"));
 	        mUuid.add(UUID.fromString("4d07c239-4760-4f09-8751-762d8a1b4cf3"));
+	        //Change to a waiting on server
+	        ((MainScreen)mActivity).switchFragment(MainScreen.WAIT_SERVER);
+	        mText = (TextView)mActivity.findViewById(R.id.waiting_message);
 	        this.mBluetoothAdapter = mBluetoothAdapter;
 	        this.mActivity = mActivity;
 	        this.mDiscoverableList = mDiscoverableList;
@@ -50,7 +65,7 @@ import fragments.JoinTable;
 	        // because mmSocket is final
 	        BluetoothSocket tmp = null;
 	        mmDevice = device;
-	        application = (PokerApplication) mActivity.getActivity().getApplication();
+	        application = (PokerApplication) mActivity.getApplication();
 			account = application.getAccount();
 	 
 	        // Get a BluetoothSocket to connect with the given BluetoothDevice
@@ -78,7 +93,7 @@ import fragments.JoinTable;
 	            // Connect the device through the socket. This will block
 	            // until it succeeds or throws an exception
 	            mmSocket.connect();
-	            //publishProgress("wait");
+	            publishProgress("wait");
 	            OutputStream tmpOut = mmSocket.getOutputStream();
 		        ObjectOutputStream streamOut = new ObjectOutputStream(tmpOut);
 		        streamOut.flush();
@@ -88,11 +103,13 @@ import fragments.JoinTable;
             	
 		        UUID tmp = (UUID)streamIn.readObject();
             	if(tmp.equals(ServerhandshakeUUID)) {
+            		publishProgress("connected");
             		holder mHolder = new holder(account.getBalance(), account.getUsername());
 	        		streamOut.writeObject(ClienthandshakeUUID);
 	        		streamOut.flush();
             		streamOut.writeObject(mHolder);
 	        		streamOut.flush();
+	        		publishProgress("wait2");
 	        		return "GO";
             	}
 	        } catch (IOException connectException) {
@@ -118,11 +135,11 @@ import fragments.JoinTable;
 		@Override
 		protected void onProgressUpdate(String... params) {
 			if(params[0].equals("wait")){
-				//mActivity.setContentView(R.layout.waitinggame);
-			}else if(params[0].equals("GO")){
-				//mActivity.setContentView(R.layout.sendstuff);
-				//mActivity.update("GO");
-				mDiscoverableList.connected(mmSocket);
+				//mText.setText("Connected. Verifying server.");
+			}else if(params[0].equals("connected")) {
+				//mText.setText("Server verified. Sending credentials");
+			}else if(params[0].equals("wait2")){
+				//mText.setText("Waiting for server to start game.");
 			} else {
 				//TextView  tv = (TextView) mActivity.findViewById(R.id.textView2);
 				//tv.setText(params[0]);
@@ -130,14 +147,17 @@ import fragments.JoinTable;
 			//mActivity.setContentView(R.layout.sendstuff);
 			//return null;
 		}
+		
 		@Override
 		protected void onPostExecute(String params) {
 			if(params.equals("GO")) {
-				//mActivity.setContentView(R.layout.sendstuff);
-				//mActivity.update("GO");
+				//Server has started so start game on this end
 				mDiscoverableList.connected(mmSocket);
-				//cancel();
 			} else {
+				cancel();
+				//Bad connection
+				Toast.makeText(mActivity, "Connection failed", Toast.LENGTH_SHORT).show();
+				mActivity.onBackPressed();
 				//mActivity.setContentView(R.layout.activity_main);
 			}
 		}
