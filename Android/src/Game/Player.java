@@ -2,7 +2,11 @@ package game;
 
 import java.io.IOException;
 import java.io.Serializable;
-
+/**
+ * object to hold player information
+ * @author Lawton
+ *
+ */
 public class Player implements Serializable{
 	/**
 	 * 
@@ -17,7 +21,12 @@ public class Player implements Serializable{
 	public static final int FOLDED = 0;
 	public static final int ALL_IN = 1;
 	public static final int CURRENT = 2;
-	
+	/**
+	 * Constructor set username amount of money and id to distinguish
+	 * @param id
+	 * @param username
+	 * @param money
+	 */
 	public Player(int id, String username, int money) {
 		this.id=id;
 		this.money = money;

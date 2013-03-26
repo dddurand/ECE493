@@ -1,12 +1,23 @@
 package game;
 
-
+/**
+ * Class to hold 52 cards to symbolize the deck
+ * @author Lawton
+ *
+ */
 public class Deck {
 	private Card[] currentDeck = new Card[52];
 	private int top = -1;
+	/**
+	 * make Deck and shuffle it
+	 */
 	public Deck() {
 		this.shuffle();
 	}
+	/**
+	 * get card on top of deck
+	 * @return card
+	 */
 	protected Card getCard() {
 		if (this.top ==-1) {
 			return null;
@@ -15,6 +26,9 @@ public class Deck {
 		}
 	}
 	
+	/**
+	 * shuffles deck twenty times
+	 */
 	protected void shuffle() {
 		this.resetDeck();
 		for(int j=0; j<20;j++) {
@@ -27,6 +41,9 @@ public class Deck {
 		
 	}
 	
+	/**
+	 * resets to a full deck
+	 */
 	public void resetDeck() {
 		this.top =51;
 		for (int i =0; i<4; i++) {

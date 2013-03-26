@@ -49,7 +49,7 @@ import fragments.JoinTable;
 		 * @param mActivity
 		 * @param mDiscoverabelList
 		 */
-	    public ClientThread(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device, Activity mActivity, DiscoverableList mDiscoverabelList) {
+	    public ClientThread(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device, Activity mActivity, DiscoverableList mDiscoverableList) {
 	    	mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
 	        mUuid.add(UUID.fromString("296fa800-fe63-49f5-aa21-f7c405d70cff"));
 	        mUuid.add(UUID.fromString("5d9c5a66-6daa-4e83-97b9-11f89af27fca"));

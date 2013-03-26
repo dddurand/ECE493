@@ -15,10 +15,8 @@ import server.WatchDogTimer;
 import server.GameAction.PokerAction;
 
 /**
- * 
+ * Game mechanics used for all of the game logic
  * @author lawton
- *
- *
  */
 public class GameMechanics {
 
@@ -72,7 +70,7 @@ public class GameMechanics {
 	/**
 	 * The main interface for processing actions from the clients.
 	 * 
-	 * These GameActions provided to this object drivse the whole GameMechanics engine, 
+	 * These GameActions provided to this object drives the whole GameMechanics engine, 
 	 * and must be processed through this interface.
 	 * 
 	 * 
@@ -186,7 +184,7 @@ public class GameMechanics {
 	}
 
 	/**
-	 * Retreves the next user that is not all in or folded
+	 * Retrieves the next user that is not all in or folded
 	 * 
 	 * @return
 	 */
@@ -213,7 +211,7 @@ public class GameMechanics {
 	}
 
 	/**
-	 * Retrieves the next valid user afer the given position
+	 * Retrieves the next valid user after the given position
 	 * 
 	 * @param position
 	 * @return
@@ -377,6 +375,10 @@ public class GameMechanics {
 
 		this.currentDealer = getValidUser(this.currentDealer);
 
+		/*
+		 * get deck shuffle
+		 * setup pots and start betting
+		 */
 		newGameReset();
 		myDeck.resetDeck();
 		this.myDeck.shuffle();

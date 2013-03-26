@@ -2,7 +2,11 @@ package game;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Comparator;
-
+/**
+ * Simple card class that is used to hold rank and suit
+ * @author Lawton
+ *
+ */
 public class Card implements Serializable {
 	/**
 	 * 

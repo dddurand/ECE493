@@ -5,7 +5,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-
+/**
+ * Class to hold pot objects in poker game
+ * @author Lawton
+ *
+ */
 public class Pot implements Serializable{
 	/**
 	 * 
