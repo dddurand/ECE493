@@ -1,7 +1,6 @@
 package com.example.bluetoothpoker;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import misc.CustomAdapter;
 import misc.StatsRowObject;
@@ -20,7 +19,12 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+import application.PokerApplication;
+import dataModels.Account;
 import dataModels.PersonalStatistics;
+import dataModels.SimpleStatistic;
 import dataModels.TimeFrame;
 
 public class Stats extends Activity implements TabListener, OnGestureListener, OnTouchListener, OnClickListener {
@@ -35,7 +39,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	private ActionBar ab;
 	private int currentTabPos=0;
 	private GestureDetector detector;
-	private int selectedTimeframe;
+	private TimeFrame selectedTimeframe;
+	private ProgressBar pb;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -50,6 +55,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    monthButton = (Button)findViewById(R.id.statsMonthButton);
 	    yearButton = (Button)findViewById(R.id.statsYearButton);
 	    allButton = (Button)findViewById(R.id.statsAllButton);
+	    pb = (ProgressBar)findViewById(R.id.statsProgressBar);
 	    
 	    /********Set button listeners*********/
 	    dayButton.setOnClickListener(this);
@@ -103,9 +109,10 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    
 	    //Clean buttons up
 	    clearTimeframeButtons();
-	    //Initializes screen
+	    
+	    //Initializes screen by simulating a touch and click to the first button
 	    this.onTouch(dayButton, null);
-	    this.selectedTimeframe=dayButton.getId();
+	    this.onClick(dayButton);
 	}
 	
 	/**
@@ -124,32 +131,22 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	 * Done after a left/right swipe.
 	 * @param currentTabPos
 	 */
-	private void setTabContent(int currentTabPos){
-		ab.setSelectedNavigationItem(currentTabPos);
+	private void setListContent(ArrayList<SimpleStatistic> content){
+		
+		//Get List
 		ListView list = (ListView)findViewById(R.id.statsListView);
 		StatsRowObject row;
+		int rowCount = content.size();
 		
-		switch (currentTabPos){
-		
-		case Stats.PERSONAL_STATS:row = new StatsRowObject("Hello1","There1");
-			break;
-			
-		case Stats.COMMUNITY_STATS:row = new StatsRowObject("Hello2","There2");
-			break;
-			
-		case Stats.RANKING_STATS:row = new StatsRowObject("Hello3","There3");
-			break;
-			
-			default:row = new StatsRowObject("Hello","There");
-		}
-		
-//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.stats_list_element, R.id.statsEntryText,v);
-		ArrayList<StatsRowObject> objects = new ArrayList<StatsRowObject>();
+		ArrayList<StatsRowObject> rowObjects = new ArrayList<StatsRowObject>();
 		 
-		for (int i=0; i<60;i++)
-			objects.add(row);
+		for (int i=0; i<rowCount;i++){
+			row = new StatsRowObject(content.get(i).getDisplayName(),content.get(i).getValue().toString());
+			rowObjects.add(row);
+		}
+			
 		
-		CustomAdapter customAdapter = new CustomAdapter(this,objects);
+		CustomAdapter customAdapter = new CustomAdapter(this,rowObjects);
 		list.setAdapter(customAdapter);
 	}
 	
@@ -164,7 +161,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	@Override
 	public void onTabSelected(Tab t, FragmentTransaction arg1) {
 		currentTabPos=t.getPosition();
-		setTabContent(currentTabPos);
+//TODO		setTabContent(currentTabPos);
 	}
 
 	@Override
@@ -172,6 +169,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	}
 	/***************************************TAB LISTENERS END**************************************/
 	/**********************************************************************************************/
+	
+	
 	
 	/**************************************************************************************************************/
 	/***************************************GESTURE LISTENERS******************************************************/
@@ -200,56 +199,83 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 			if (currentTabPos<0) currentTabPos=2;
 
 			//Set it
-			setTabContent(currentTabPos);
+//TODO			setTabContent(currentTabPos);
+			ab.setSelectedNavigationItem(currentTabPos);
 		}
 		
 		return false;
 	}
 	
 	/*********************Click Listener********************/
+	/**
+	 * Changes the time frame for the current stats request object and 
+	 * gets new stats from the server
+	 * @param v
+	 */
 	@Override
 	public void onClick(View v) {
 		
-		this.selectedTimeframe=v.getId();
+		//Choose appropriate timeframe according to the pressed button
+		switch(v.getId()){
 		
-//		switch(v.getId()){
-//		
-//		case R.id.statsDayButton:
-//			break;
-//			
-//		case R.id.statsWeekButton:
-//			break;
-//			
-//		case R.id.statsMonthButton:
-//			break;
-//			
-//		case R.id.statsYearButton:
-//			break;
-//			
-//		case R.id.statsAllButton:
-//			break;
-//		}
-		
-		//TODO Ask Dustin about where the account is stored!
-		PersonalStatistics.PersonalStatisticRequest requestObject = new PersonalStatistics.PersonalStatisticRequest(TimeFrame.DAY,null);
-		NPersonalStats serverRequest = new NPersonalStats(getApplicationContext());
-		try {
-			PersonalStatistics response = serverRequest.execute(requestObject).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		case R.id.statsDayButton:
+			this.selectedTimeframe=TimeFrame.DAY;
+			break;
+			
+		case R.id.statsWeekButton:
+			this.selectedTimeframe=TimeFrame.WEEK;
+			break;
+			
+		case R.id.statsMonthButton:
+			this.selectedTimeframe=TimeFrame.MONTH;
+			break;
+			
+		case R.id.statsYearButton:
+			this.selectedTimeframe=TimeFrame.YEAR;
+			break;
+			
+		case R.id.statsAllButton:
+			this.selectedTimeframe=TimeFrame.ALL;
+			break;
+			
+			default:this.selectedTimeframe=TimeFrame.DAY;
 		}
 		
+		//Get current account
+		PokerApplication application = (PokerApplication)this.getApplication();
+		Account account = application.getAccount();
 		
+		//Create request object and asynctask
+		PersonalStatistics.PersonalStatisticRequest requestObject = new PersonalStatistics.PersonalStatisticRequest(this.selectedTimeframe,account);
+		NPersonalStats serverRequest = new NPersonalStats(getApplicationContext(),this);
 		
+		//View work: Clear list and set progress bar to visible
+		ListView list = (ListView)findViewById(R.id.statsListView);
+		list.setAdapter(null);
+		pb.setVisibility(View.VISIBLE);
+		
+		//Execute
+		serverRequest.execute(requestObject);
+	}
+	
+	/**
+	 * Method executed after the Asynctask is done retrieving the stats. This will take care of
+	 * populating the list.
+	 */
+	public void onPostStatsRequest(PersonalStatistics result){
+		//Hide ProgressBar
+		pb.setVisibility(View.INVISIBLE);
+		
+		//Extract the statistics
+		ArrayList<SimpleStatistic> stats = result.getAllStatistics();
+		
+		//Call method to change content
+		setListContent(stats);
 	}
 	
 	/**
 	 * On touch listener: changes the background of the touched button and clears
-	 * the other buttons
+	 * the other buttons. Does not consume the onClick listener.
 	 */
 	@Override
 	public boolean onTouch(View v, MotionEvent arg1) {

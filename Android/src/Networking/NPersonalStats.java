@@ -16,11 +16,13 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import dataModels.PersonalStatistics;
-import dataModels.PersonalStatistics.PersonalStatisticRequest;
+import com.example.bluetoothpoker.Stats;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
+import dataModels.PersonalStatistics;
+import dataModels.PersonalStatistics.PersonalStatisticRequest;
 
 public class NPersonalStats extends AsyncTask<PersonalStatisticRequest,Integer, PersonalStatistics> {
 	
@@ -30,10 +32,12 @@ public class NPersonalStats extends AsyncTask<PersonalStatisticRequest,Integer, 
 	protected HttpParams httpParams;
 	protected HttpClient client;
 	private Context context;
+	private Stats parent;
 	
-	public NPersonalStats(Context context)
+	public NPersonalStats(Context context, Stats parent)
 	{
 		this.context = context;
+		this.parent=parent;
 	}
 	
 	/**
@@ -70,6 +74,15 @@ public class NPersonalStats extends AsyncTask<PersonalStatisticRequest,Integer, 
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * Passes the result back to the Stats Activity once the
+	 * main task is done.
+	 */
+	@Override
+	protected void onPostExecute(PersonalStatistics result){
+		this.parent.onPostStatsRequest(result);
 	}
 	
 }
