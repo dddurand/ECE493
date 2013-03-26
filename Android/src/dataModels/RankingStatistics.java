@@ -172,6 +172,14 @@ public class RankingStatistics {
 			}
 			
 			/**
+			 * Setter for the time frame of the class
+			 * @param timeFrame
+			 */
+			public void setTimeFrame(TimeFrame timeFrame){
+				this.timeframe=timeFrame;
+			}
+			
+			/**
 			 * TimeFrame enum of all possible timeframes the object supports.
 			 * 
 			 * @author dddurand

@@ -18,6 +18,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.example.bluetoothpoker.Stats;
+
 import dataModels.CommunityStatistics;
 import dataModels.CommunityStatistics.CommuntyStatisticRequest;
 
@@ -29,10 +32,12 @@ public class NCommunityStats extends AsyncTask<CommuntyStatisticRequest,Integer,
 	protected HttpParams httpParams;
 	protected HttpClient client;
 	private Context context;
+	private Stats parent;
 	
-	public NCommunityStats(Context context)
+	public NCommunityStats(Context context, Stats parent)
 	{
 		this.context = context;
+		this.parent=parent;
 	}
 	
 	/**
@@ -69,6 +74,11 @@ public class NCommunityStats extends AsyncTask<CommuntyStatisticRequest,Integer,
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	@Override
+	protected void onPostExecute(CommunityStatistics result){
+		this.parent.onPostCommunityStatsRequest(result);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import misc.CustomAdapter;
 import misc.StatsRowObject;
+import networking.NCommunityStats;
 import networking.NPersonalStats;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -20,10 +21,11 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import application.PokerApplication;
 import dataModels.Account;
+import dataModels.CommunityStatistics;
 import dataModels.PersonalStatistics;
+import dataModels.RankingStatistics;
 import dataModels.SimpleStatistic;
 import dataModels.TimeFrame;
 
@@ -39,8 +41,15 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	private ActionBar ab;
 	private int currentTabPos=0;
 	private GestureDetector detector;
-	private TimeFrame selectedTimeframe;
+	private TimeFrame selectedTimeframe = TimeFrame.DAY;
 	private ProgressBar pb;
+	
+	//Account
+	private Account account;
+	//Request objects
+	private PersonalStatistics.PersonalStatisticRequest personalStatsRequest;
+	private RankingStatistics.RankingStatisticRequest rankingStatsRequest;
+	private CommunityStatistics.CommuntyStatisticRequest commStatsRequest;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -110,6 +119,15 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    //Clean buttons up
 	    clearTimeframeButtons();
 	    
+	    //Get account for request objects
+	  	PokerApplication application = (PokerApplication)this.getApplication();
+	  	account = application.getAccount();
+	  	
+	    //Creates request objects for all tabs
+	    personalStatsRequest = new PersonalStatistics.PersonalStatisticRequest(this.selectedTimeframe,account);
+	    rankingStatsRequest = new RankingStatistics.RankingStatisticRequest(this.selectedTimeframe,account);
+	    commStatsRequest = new CommunityStatistics.CommuntyStatisticRequest(this.selectedTimeframe,account);
+	    
 	    //Initializes screen by simulating a touch and click to the first button
 	    this.onTouch(dayButton, null);
 	    this.onClick(dayButton);
@@ -150,6 +168,12 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 		list.setAdapter(customAdapter);
 	}
 	
+	private void clearList(){
+		ListView list = (ListView)findViewById(R.id.statsListView);
+		list.setAdapter(null);
+	}
+	
+	
 	/**********************************************************************************************/
 	/***************************************TAB LISTENERS******************************************/
 	@Override
@@ -161,7 +185,32 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	@Override
 	public void onTabSelected(Tab t, FragmentTransaction arg1) {
 		currentTabPos=t.getPosition();
-//TODO		setTabContent(currentTabPos);
+		
+		
+		//Get the currently pressed button and send that as parameter to the
+		//on click method
+		switch(this.selectedTimeframe){
+		
+		case DAY:
+			break;
+			
+		case WEEK:
+			break;
+			
+		case MONTH:
+			break;
+			
+		case YEAR:
+			break;
+			
+		case ALL:
+			break;
+			
+			default:
+		
+		}
+		
+		
 	}
 
 	@Override
@@ -199,7 +248,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 			if (currentTabPos<0) currentTabPos=2;
 
 			//Set it
-//TODO			setTabContent(currentTabPos);
 			ab.setSelectedNavigationItem(currentTabPos);
 		}
 		
@@ -241,37 +289,64 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 			default:this.selectedTimeframe=TimeFrame.DAY;
 		}
 		
-		//Get current account
-		PokerApplication application = (PokerApplication)this.getApplication();
-		Account account = application.getAccount();
-		
-		//Create request object and asynctask
-		PersonalStatistics.PersonalStatisticRequest requestObject = new PersonalStatistics.PersonalStatisticRequest(this.selectedTimeframe,account);
-		NPersonalStats serverRequest = new NPersonalStats(getApplicationContext(),this);
-		
-		//View work: Clear list and set progress bar to visible
-		ListView list = (ListView)findViewById(R.id.statsListView);
-		list.setAdapter(null);
+		//Clear List before getting new data
+		clearList();
 		pb.setVisibility(View.VISIBLE);
 		
-		//Execute
-		serverRequest.execute(requestObject);
+		//Modify the appropiate request object and execute
+		switch(ab.getSelectedNavigationIndex()){
+		
+		case Stats.PERSONAL_STATS:
+			personalStatsRequest.setTimeFrame(selectedTimeframe);
+			NPersonalStats personalServer = new NPersonalStats(getApplicationContext(),this);
+			personalServer.execute(personalStatsRequest);
+			break;
+			
+		case Stats.COMMUNITY_STATS:
+			commStatsRequest.setTimeFrame(selectedTimeframe);
+			NCommunityStats commServer = new NCommunityStats(getApplicationContext(),this);
+			commServer.execute(commStatsRequest);
+			break;
+			
+		case Stats.RANKING_STATS:
+			rankingStatsRequest.setTimeFrame(selectedTimeframe);
+			break;
+		
+		}
+		
 	}
 	
 	/**
 	 * Method executed after the Asynctask is done retrieving the stats. This will take care of
 	 * populating the list.
 	 */
-	public void onPostStatsRequest(PersonalStatistics result){
+	public void onPostPersonalStatsRequest(PersonalStatistics result){
 		//Hide ProgressBar
 		pb.setVisibility(View.INVISIBLE);
-		
 		//Extract the statistics
 		ArrayList<SimpleStatistic> stats = result.getAllStatistics();
-		
 		//Call method to change content
 		setListContent(stats);
 	}
+	
+	public void onPostCommunityStatsRequest(CommunityStatistics result){
+		//Hide ProgressBar
+		pb.setVisibility(View.INVISIBLE);
+		//Extract the statistics
+		ArrayList<SimpleStatistic> stats = result.getAllStatistics();
+		//Call method to change content
+		setListContent(stats);
+	}
+	
+//	public void onPostRankingStatsRequest(RankingStatistics result){
+//		//Hide ProgressBar
+//		pb.setVisibility(View.INVISIBLE);
+//		//Extract the statistics
+//		ArrayList<SimpleRankStatistic> stats = result.getAllStatistics();
+//		//Call method to change content
+//		setListContent(stats);
+//	}
+
 	
 	/**
 	 * On touch listener: changes the background of the touched button and clears
