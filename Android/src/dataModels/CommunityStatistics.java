@@ -141,6 +141,10 @@ public class CommunityStatistics extends Statistic<SimpleStatistic> {
 				this.account = account;
 			}
 			
+			public void setTimeFrame(TimeFrame timeFrame){
+				this.timeframe=timeFrame;
+			}
+			
 			/**
 			 * Retrieves the JSON for the community statistics request.
 			 * 

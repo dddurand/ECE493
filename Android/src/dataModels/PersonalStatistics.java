@@ -145,6 +145,14 @@ private static final String[] personalStatisticIdentifiers =
 		}
 		
 		/**
+		 * Sets the time frame for the request
+		 * @param timeFrame
+		 */
+		public void setTimeFrame(TimeFrame timeFrame){
+			this.timeframe=timeFrame;
+		}
+		
+		/**
 		 * Retrieves the JSON for the personal statistics request.
 		 * 
 		 * @return

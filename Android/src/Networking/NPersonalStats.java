@@ -82,7 +82,7 @@ public class NPersonalStats extends AsyncTask<PersonalStatisticRequest,Integer, 
 	 */
 	@Override
 	protected void onPostExecute(PersonalStatistics result){
-		this.parent.onPostStatsRequest(result);
+		this.parent.onPostPersonalStatsRequest(result);
 	}
 	
 }

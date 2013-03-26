@@ -15,7 +15,11 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.os.AsyncTask;
+
+import com.example.bluetoothpoker.Stats;
+
 import dataModels.RankingStatistics;
 import dataModels.RankingStatistics.RankingStatisticRequest;
 
@@ -26,6 +30,11 @@ public class NRankStats extends AsyncTask<RankingStatisticRequest,Integer, Ranki
 	
 	protected HttpParams httpParams;
 	protected HttpClient client;
+	private Stats parent;
+	
+	public NRankStats(Stats parent){
+		this.parent=parent;
+	}
 	
 	/**
 	 * Parameter to get: JSONObject with username and password.
@@ -61,6 +70,11 @@ public class NRankStats extends AsyncTask<RankingStatisticRequest,Integer, Ranki
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	@Override
+	protected void onPostExecute(RankingStatistics result){
+//		this.parent.onPostRankingStatsRequest(result);
 	}
 
 }
