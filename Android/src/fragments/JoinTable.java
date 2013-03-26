@@ -98,7 +98,6 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 	public void onItemClick(AdapterView<?> arg0, View v, int pos, long id) {
 		//Save current position
  		this.selectedPos = pos;
- 		Toast.makeText(getActivity(), "Pos: " + pos, Toast.LENGTH_SHORT).show();
  		info = (String)arg0.getAdapter().getItem(pos);
  		
 

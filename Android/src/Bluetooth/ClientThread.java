@@ -41,6 +41,7 @@ import fragments.JoinTable;
 		Account account;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
 		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
+		private final UUID startMsg = UUID.fromString("c860afe0-2877-4042-b618-721ab1609cb9");
 		private TextView mText;
 		/**
 		 * Basic constructor that creates socket from bluetooth device
@@ -110,7 +111,11 @@ import fragments.JoinTable;
             		streamOut.writeObject(mHolder);
 	        		streamOut.flush();
 	        		publishProgress("wait2");
-	        		return "GO";
+	        		tmp = (UUID) streamIn.readObject();
+	        		if(tmp.equals(this.startMsg)) {
+	        			return "GO";
+	        		}
+	        		return "BAD";
             	}
 	        } catch (IOException connectException) {
 	            // Unable to connect; close the socket and get out
@@ -135,10 +140,13 @@ import fragments.JoinTable;
 		@Override
 		protected void onProgressUpdate(String... params) {
 			if(params[0].equals("wait")){
+				Toast.makeText(mActivity, "Connected. Verifying server.", Toast.LENGTH_SHORT).show();
 				//mText.setText("Connected. Verifying server.");
 			}else if(params[0].equals("connected")) {
+				Toast.makeText(mActivity, "Server verified. Sending credentials.", Toast.LENGTH_SHORT).show();
 				//mText.setText("Server verified. Sending credentials");
 			}else if(params[0].equals("wait2")){
+				Toast.makeText(mActivity, "Waiting for server to start game.", Toast.LENGTH_SHORT).show();
 				//mText.setText("Waiting for server to start game.");
 			} else {
 				//TextView  tv = (TextView) mActivity.findViewById(R.id.textView2);

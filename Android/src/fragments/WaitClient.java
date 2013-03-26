@@ -1,10 +1,15 @@
 package fragments;
+import game.Player;
 import bluetooth.DiscoverableList;
 import bluetooth.DiscoverableList.BluetoothInitializeException;
+import bluetooth.ServerThread;
 
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import android.app.Fragment;
+import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +29,8 @@ import android.widget.Toast;
 public class WaitClient extends Fragment implements OnClickListener {
 
 	private View view;
+	private ServerThread mserver;
+	ArrayAdapter<String> mArrayAdapter;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -34,7 +41,7 @@ public class WaitClient extends Fragment implements OnClickListener {
 		Button startTableButton = (Button) view.findViewById(R.id.start_button);
 		startTableButton.setEnabled(false);
 		startTableButton.setOnClickListener(this);
-		ArrayAdapter<String> mArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
+		this.mArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
 
 		ListView mListView = (ListView) view.findViewById(R.id.waiting_client);
 		mListView.setAdapter(mArrayAdapter);
@@ -46,7 +53,7 @@ public class WaitClient extends Fragment implements OnClickListener {
 		try {
 			mDiscoverableList.enableBluetooth(getActivity(),DiscoverableList.REQUEST_ENABLE_BT_SERVER);
 			mDiscoverableList.makeDiscoverable(getActivity());
-			mDiscoverableList.startServer();
+			this.mserver = mDiscoverableList.startServer(startTableButton);
 		} catch (BluetoothInitializeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,7 +67,19 @@ public class WaitClient extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// TODO Start game
+		Intent intent = new Intent(getActivity(), PlayingArea.class);
+		mserver.sendStart();
+		String msg = (String)mArrayAdapter.getItem(0);
+		String info[] = msg.split("\\r?\\n");
+		intent.putExtra(DiscoverableList.IS_CLIENT, false);
+		Player otherPlayer[] = {new Player(1, info[0], Integer.parseInt(info[1]))};
+		intent.putExtra(DiscoverableList.PLAYER_HOLDER, otherPlayer);
 		
+		BluetoothSocket blueSocket[] = {mserver.getSocket()};
+		intent.putExtra(DiscoverableList.SOCKET_HOLDER, blueSocket);
+		
+		//intent.putExtra(name, value)
+		getActivity().startActivity(intent);
 	}
 
 }

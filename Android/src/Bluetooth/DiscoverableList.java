@@ -50,6 +50,9 @@ public class DiscoverableList {
 	private Vector<ServerThread> serverThreads = new Vector<ServerThread>();
 	private Vector<ClientThread> clientThreads = new Vector<ClientThread>();
 	private Vector<ConnectedThread> connectedThreads = new Vector<ConnectedThread>();
+	public static final String PLAYER_HOLDER ="1f3d5846-83e5-4502-a998-c2c936e756f6";
+	public static final String SOCKET_HOLDER ="dcff30c6-0de7-4345-a3a1-a7fcf77d6b7f";
+	public static final String IS_CLIENT = "4d3b1623-8bfd-40f4-be5a-1c084b8c8e0a";
 	//private ConnectedThread mConnection;
 	private int mState;
 	private Activity mActivity;
@@ -129,10 +132,11 @@ public class DiscoverableList {
 	}
 	
 	
-	public void startServer() {
+	public ServerThread startServer(Button startButton) {
 		mType =TYPE_SERVER;
-		ServerThread mServer = new ServerThread(BlueAdapt, mArrayAdapter, mActivity, this);
+		ServerThread mServer = new ServerThread(BlueAdapt, mArrayAdapter, mActivity, this, startButton);
 		mServer.execute("");
+		return mServer;
 	}
 	
 	public void startClient(String info, String address) {

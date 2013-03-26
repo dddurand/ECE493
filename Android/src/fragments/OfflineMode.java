@@ -31,6 +31,7 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 	private SharedPreferences preferences;
 	private EditText offlineUsername;
 	private TextView offlineBalance;
+	private Account account;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +55,7 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		
 		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 		this.application = (PokerApplication) this.getActivity().getApplication();
-		Account account = application.getAccount();
+		account = application.getAccount();
 		
 		updateBalance();
 		

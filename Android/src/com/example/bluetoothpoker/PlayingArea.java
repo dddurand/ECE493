@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import bluetooth.DiscoverableList;
+
 import server.GameAction;
 import server.GameAction.PokerAction;
 import server.GameState;
@@ -12,6 +14,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -56,7 +59,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private DatabaseDataSource dbInterface;
 	private SharedPreferences preferences;
 	
-	private boolean debugServer = true;
+	private boolean debugServer = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -113,6 +116,29 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    	Thread thread = new Thread(new DebugRunnable());
 	    	thread.start();
 	    	}
+	    Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+	    BluetoothSocket mySockets[] = (BluetoothSocket[])this.getIntent().getSerializableExtra(DiscoverableList.SOCKET_HOLDER);
+	    if(getIntent().getBooleanExtra(DiscoverableList.IS_CLIENT, true)) {
+	    	//Client
+	    	
+	    } else {
+	    	//Server
+	    	Server server = new Server(this);
+	    	LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
+	    	try {
+				Client client = new Client(this, server, actionQueue, 0);
+				for (int i=0; i<myPlayer.length; i++) {
+					//LinkedBlockingQueue<GameAction> FARTS = new LinkedBlockingQueue<GameAction>();
+					//Client tmp = new Client(this, mySockets[i].getInputStream(), mySockets[i].getOutputStream(),FARTS);
+					Player tmp = myPlayer[i];
+					server.addPlayer(tmp, mySockets[i].getInputStream(), mySockets[i].getOutputStream());
+				}
+				server.gameStart();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
 	}
 	
 	/**
@@ -544,7 +570,6 @@ public class PlayingArea extends Activity implements OnClickListener {
 				account.setUsername("BOB1");
 				account.setBalance(500);
 				Client client = new Client(PlayingArea.this, server, actionQueue, 0);
-				
 				account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
 				account.setUsername("BOB2");
 				account.setBalance(500);

@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.example.bluetoothpoker.R;
+
 import fragments.JoinTable;
 
 import android.app.Activity;
@@ -18,6 +20,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * Listens on socket for clients then populates listview with them and enables start button
@@ -34,8 +37,13 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private ArrayAdapter<String> mArrayAdapter;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
 		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
+		private final UUID startMsg = UUID.fromString("c860afe0-2877-4042-b618-721ab1609cb9");
+		private Button startButton;
+		private ObjectOutputStream streamOut =null;
+		private BluetoothSocket blueSocket;
 		
-	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, Activity mActivity, DiscoverableList mDiscoverableList) {
+		
+	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, Activity mActivity, DiscoverableList mDiscoverableList, Button startButton) {
 			mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
 	        mUuid.add(UUID.fromString("296fa800-fe63-49f5-aa21-f7c405d70cff"));
 	        mUuid.add(UUID.fromString("5d9c5a66-6daa-4e83-97b9-11f89af27fca"));
@@ -45,6 +53,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	        this.mdiscoverableList = mDiscoverableList;
 	        this.mBluetoothAdapter = mBluetoothAdapter;
 	        this.mArrayAdapter = mArrayAdapter;
+	        this.startButton = startButton;
 	        // Use a temporary object that is later assigned to mmServerSocket,
 	        // because mmServerSocket is final
 	        BluetoothServerSocket tmp = null;
@@ -82,6 +91,8 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	                	if(tmp.equals(ClienthandshakeUUID)) {
 	                		holder mholder = (holder)streamIn.readObject();
 	                		publishProgress(mholder);
+	                		this.blueSocket = socket;
+	                		this.streamOut = streamOut;
 							mmServerSocket.close();
 							return socket;
 	                	}
@@ -104,10 +115,22 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 			mArrayAdapter.add(params[0].getName() + "\n" + params[0].getBalance());
 			mArrayAdapter.notifyDataSetChanged();
 			//Button start = (Button) mActivity.findViewById(R.id.start_button);
-			//start.setEnabled(true);
+			startButton.setEnabled(true);
 			
 		}
-		
+		public BluetoothSocket getSocket() {
+			return this.blueSocket;
+		}
+		public void sendStart() {
+			try {
+				this.streamOut.writeObject(this.startMsg);
+				this.streamOut.flush();
+			} catch (IOException e) {
+				Toast.makeText(mActivity, "Error sending start", Toast.LENGTH_SHORT);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		@Override
 		protected void onPostExecute(BluetoothSocket params) {  
 			this.mdiscoverableList.connected(params);
