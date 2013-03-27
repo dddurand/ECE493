@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
@@ -17,6 +18,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +45,8 @@ import fragments.JoinTable;
 		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
 		private final UUID startMsg = UUID.fromString("c860afe0-2877-4042-b618-721ab1609cb9");
 		private TextView mText;
+		private ObjectOutputStream[] outStream = new ObjectOutputStream[1];
+		private ObjectInputStream[] inStream = new ObjectInputStream[1];
 		/**
 		 * Basic constructor that creates socket from bluetooth device
 		 * @param mBluetoothAdapter
@@ -113,6 +117,8 @@ import fragments.JoinTable;
 	        		publishProgress("wait2");
 	        		tmp = (UUID) streamIn.readObject();
 	        		if(tmp.equals(this.startMsg)) {
+	        			this.outStream[0] = streamOut;
+	        			this.inStream[0] = streamIn;
 	        			return "GO";
 	        		}
 	        		return "BAD";
@@ -160,7 +166,13 @@ import fragments.JoinTable;
 		protected void onPostExecute(String params) {
 			if(params.equals("GO")) {
 				//Server has started so start game on this end
-				mDiscoverableList.connected(mmSocket);
+				Intent intent = new Intent(mActivity, PlayingArea.class);
+				intent.putExtra(DiscoverableList.IS_CLIENT, true);
+				PokerApplication pokerApplication = (PokerApplication)mActivity.getApplication();
+				pokerApplication.setInStream(inStream);
+				pokerApplication.setOutStream(outStream);
+				mActivity.startActivity(intent);
+				//mDiscoverableList.connected(mmSocket);
 			} else {
 				cancel();
 				//Bad connection

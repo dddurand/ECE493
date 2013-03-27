@@ -3,6 +3,7 @@ package com.example.bluetoothpoker;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -119,13 +120,22 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    BluetoothSocket mySockets[] = pA.getSocket();
 	    ObjectInputStream inStream[] = pA.getInStream();
 	    ObjectOutputStream outStream[] =pA.getOutStream();
+	    LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
 	    if(getIntent().getBooleanExtra(DiscoverableList.IS_CLIENT, true)) {
 	    	//Client
-	    	
+	    	try {
+				Client client = new Client(this, inStream[0], outStream[0], actionQueue);
+			} catch (StreamCorruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    } else {
 	    	//Server
 	    	Server server = new Server(this);
-	    	LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
+	    	
 	    	try {
 				Client client = new Client(this, server, actionQueue, 0);
 				for (int i=0; i<myPlayer.size(); i++) {

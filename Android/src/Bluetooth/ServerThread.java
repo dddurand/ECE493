@@ -141,7 +141,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		}
 		@Override
 		protected void onPostExecute(BluetoothSocket params) {  
-			this.mdiscoverableList.connected(params);
+			//this.mdiscoverableList.connected(params);
 			//TODO
 			//connected(socket, socket.getRemoteDevice());
 			//mArrayAdapter.add(params.getName() + "\n" + params.getAddress());
