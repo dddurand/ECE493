@@ -56,6 +56,10 @@ public class Pot implements Serializable{
 		losers = new int[participants.size()-winners.length];
 		int j =0,k=0;
 		for(int i=0; i<participants.size(); i++) {
+			if(participants.get(i)==null) 
+			{
+				continue;
+			}
 			if(participants.get(i)==winners[j].getId()) {
 				j++;
 			} else {
@@ -71,6 +75,10 @@ public class Pot implements Serializable{
 
 	protected void mainPot(){
 		for(int i=0; i<this.participants.size();i++) {
+			if(participants.get(i)==null) 
+			{
+				continue;
+			}
 			this.playeramount.put(this.participants.get(i), 0);
 		}
 	}

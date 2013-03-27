@@ -108,16 +108,11 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    for (int i=1;i<maxPlayers;i++)
 	    {
 	    	playerObjects[i] = new PlayerFragment(false,"Player "+Integer.toString(i));
+	    	
 	    }
 	    
 	    initializeFragments(maxPlayers);
-	    //clearRiver();
 	    
-	    if(debugServer)
-	    	{
-	    	Thread thread = new Thread(new DebugRunnable());
-	    	thread.start();
-	    	}
 	    ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
 	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
 	    PokerApplication pA = (PokerApplication) this.getApplication();
