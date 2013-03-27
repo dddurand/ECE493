@@ -78,7 +78,7 @@ public class WaitClient extends Fragment implements OnClickListener {
 		String info[] = msg.split("\\r?\\n");
 		intent.putExtra(DiscoverableList.IS_CLIENT, false);
 		ArrayList<Player> otherPlayer = new ArrayList<Player>();
-		otherPlayer.add(new Player(1, info[0], Integer.parseInt(info[1])));
+		otherPlayer.add(new Player(2, info[0], Integer.parseInt(info[1])));
 		intent.putExtra(DiscoverableList.PLAYER_HOLDER, otherPlayer);
 		
 		BluetoothSocket blueSocket[] = {mserver.getSocket()};
