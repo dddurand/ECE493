@@ -17,7 +17,7 @@
         android:minWidth="50dp"
         android:ems="10"
         android:hint="@string/createTableHint"
-        android:lines="1" >
+        android:singleLine="true">
 
         <requestFocus />
     </EditText>
