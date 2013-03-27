@@ -143,7 +143,9 @@ public class MainScreen extends Activity implements View.OnClickListener {
 			break;
 			
 		case MainScreen.WAIT_CLIENT:
+			this.getIntent();
 			newFragment = new WaitClient();
+			((WaitClient)newFragment).setTitle(this.getIntent().getStringExtra(CreateTable.TITLE_HOLDER));
 			break;
 			
 		case MainScreen.WAIT_SERVER:

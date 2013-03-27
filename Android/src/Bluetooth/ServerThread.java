@@ -42,9 +42,11 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private ObjectOutputStream streamOut =null;
 		private ObjectInputStream streamIn = null;
 		private BluetoothSocket blueSocket;
+		private String entry;
+		private int pos;
 		
 		
-	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, Activity mActivity, DiscoverableList mDiscoverableList, Button startButton) {
+	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, Activity mActivity, DiscoverableList mDiscoverableList, Button startButton, int pos) {
 			mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
 	        mUuid.add(UUID.fromString("296fa800-fe63-49f5-aa21-f7c405d70cff"));
 	        mUuid.add(UUID.fromString("5d9c5a66-6daa-4e83-97b9-11f89af27fca"));
@@ -55,12 +57,13 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	        this.mBluetoothAdapter = mBluetoothAdapter;
 	        this.mArrayAdapter = mArrayAdapter;
 	        this.startButton = startButton;
+	        this.pos = pos;
 	        // Use a temporary object that is later assigned to mmServerSocket,
 	        // because mmServerSocket is final
 	        BluetoothServerSocket tmp = null;
 	        try {
 	            // MY_UUID is the app's UUID string, also used by the client code
-	            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, mUuid.get(0));
+	            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, mUuid.get(pos));
 	        } catch (IOException e) { }
 	        mmServerSocket = tmp;
 	    }
@@ -86,7 +89,6 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	                	streamOut.flush();
 	                	InputStream tmpIn = socket.getInputStream();
 	                	ObjectInputStream streamIn = new ObjectInputStream(tmpIn);
-	                	
 	                	streamOut.writeObject(ServerhandshakeUUID);
 	                	UUID tmp = (UUID)streamIn.readObject();
 	                	if(tmp.equals(ClienthandshakeUUID)) {
@@ -96,6 +98,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	                		this.streamOut = streamOut;
 	                		this.streamIn = streamIn;
 							mmServerSocket.close();
+							
 							return socket;
 	                	}
 					} catch (IOException e) {
@@ -113,8 +116,9 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 
 		@Override
 		protected void onProgressUpdate(holder... params) {  
-			//TODO
-			mArrayAdapter.add(params[0].getName() + "\n" + params[0].getBalance());
+			int rpos = pos+1;
+			entry = params[0].getName() + "\n" + params[0].getBalance() + "\n" + rpos;
+			mArrayAdapter.add(entry);
 			mArrayAdapter.notifyDataSetChanged();
 			//Button start = (Button) mActivity.findViewById(R.id.start_button);
 			startButton.setEnabled(true);

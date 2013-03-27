@@ -53,6 +53,7 @@ public class DiscoverableList {
 	public static final String PLAYER_HOLDER ="1f3d5846-83e5-4502-a998-c2c936e756f6";
 	public static final String SOCKET_HOLDER ="dcff30c6-0de7-4345-a3a1-a7fcf77d6b7f";
 	public static final String IS_CLIENT = "4d3b1623-8bfd-40f4-be5a-1c084b8c8e0a";
+	public static int MAX_CONNECTION=5;
 	//private ConnectedThread mConnection;
 	private int mState;
 	private Activity mActivity;
@@ -125,16 +126,17 @@ public class DiscoverableList {
 		    a.startActivityForResult(enableBtIntent, identifier);
 		}
 	}
-	public void makeDiscoverable(Context c) {
+	public void makeDiscoverable(Context c, String title) {
+		BlueAdapt.setName(title);
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, WAIT_TIME);
 		c.startActivity(discoverableIntent);
 	}
 	
 	
-	public ServerThread startServer(Button startButton) {
+	public ServerThread startServer(Button startButton, int pos) {
 		mType =TYPE_SERVER;
-		ServerThread mServer = new ServerThread(BlueAdapt, mArrayAdapter, mActivity, this, startButton);
+		ServerThread mServer = new ServerThread(BlueAdapt, mArrayAdapter, mActivity, this, startButton, pos);
 		mServer.execute("");
 		return mServer;
 	}

@@ -142,7 +142,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 					//LinkedBlockingQueue<GameAction> FARTS = new LinkedBlockingQueue<GameAction>();
 					//Client tmp = new Client(this, mySockets[i].getInputStream(), mySockets[i].getOutputStream(),FARTS);
 					Player tmp = myPlayer.get(i);
-					server.addPlayer(tmp, inStream[i], outStream[i]);
+					int pos = tmp.getId()-1;
+					server.addPlayer(tmp, inStream[pos], outStream[pos]);
 				}
 				server.gameStart();
 			} catch (IOException e) {
