@@ -24,6 +24,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import application.PokerApplication;
 import dataModels.Account;
 import dataModels.CommunityStatistics;
@@ -336,30 +337,47 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	 * populating the list.
 	 */
 	public void onPostPersonalStatsRequest(PersonalStatistics result){
-		//Hide ProgressBar
-		pb.setVisibility(View.INVISIBLE);
-		//Extract the statistics
-		ArrayList<SimpleStatistic> stats = result.getAllStatistics();
-		//Call method to change content
-		setListContent(stats);
+		
+		try {
+			//Hide ProgressBar
+			pb.setVisibility(View.INVISIBLE);
+			//Extract the statistics
+			ArrayList<SimpleStatistic> stats = result.getAllStatistics();
+			//Call method to change content
+			setListContent(stats);
+		}
+		catch (NullPointerException e){
+			Toast.makeText(getApplicationContext(), "Unable to retrieve Data. Please ensure you're online.", Toast.LENGTH_SHORT).show();
+		}
+		
 	}
 	
 	public void onPostCommunityStatsRequest(CommunityStatistics result){
-		//Hide ProgressBar
-		pb.setVisibility(View.INVISIBLE);
-		//Extract the statistics
-		ArrayList<SimpleStatistic> stats = result.getAllStatistics();
-		//Call method to change content
-		setListContent(stats);
+		
+		try {
+			//Hide ProgressBar
+			pb.setVisibility(View.INVISIBLE);
+			//Extract the statistics
+			ArrayList<SimpleStatistic> stats = result.getAllStatistics();
+			//Call method to change content
+			setListContent(stats);
+		} catch (NullPointerException e){
+			Toast.makeText(getApplicationContext(), "Unable to retrieve Data. Please ensure you're online.", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	public void onPostRankingStatsRequest(RankingStatistics result){
-		//Hide ProgressBar
-		pb.setVisibility(View.INVISIBLE);
-		//Extract the statistics
-		ArrayList<SimpleRankStatistic> stats = result.getAllStatistics();
-		//Call method to change content
-		setListContentFromRank(stats);
+		
+		try{
+			//Hide ProgressBar
+			pb.setVisibility(View.INVISIBLE);
+			//Extract the statistics
+			ArrayList<SimpleRankStatistic> stats = result.getAllStatistics();
+			//Call method to change content
+			setListContentFromRank(stats);
+		} catch (NullPointerException e) {
+			Toast.makeText(getApplicationContext(), "Unable to retrieve Data. Please ensure you're online.", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	
