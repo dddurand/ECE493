@@ -52,15 +52,23 @@
         android:inputType="textPassword"
         android:singleLine="true"
         android:hint="@string/passwordFieldString" />
-
+    
     <CheckBox
         android:id="@+id/remember_me_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/passwordField"
         android:layout_below="@id/passwordField"
-        android:text="@string/remember_me_str" />
+        android:text="@string/remember_me_str"/>
     
+    <CheckBox 
+        android:id="@+id/remember_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/remember_me_checkbox"
+        android:layout_below="@id/remember_me_checkbox"        
+        android:text="@string/remember_username"/>
+
     <ImageButton
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"

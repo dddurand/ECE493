@@ -6,7 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="username">Username</string>
-    <string name="remember_me_str">Remember Me</string>
+    <string name="remember_username">Remember Username Only</string>
+    <string name="remember_me_str">Auto Log-In</string>
     <string name="offlineUserHint">Temp. Name</string>
     <string name="joinTableString">Join Table</string>
     <string name="createTableString">Create Table</string>
