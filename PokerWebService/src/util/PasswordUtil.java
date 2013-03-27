@@ -41,9 +41,7 @@ public class PasswordUtil {
 			byte[] message = digest.digest();
 
 			encryptedPassword = getStringFromBytes(message);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} 
+		} catch (NoSuchAlgorithmException e) {} 
 
 		return encryptedPassword; 
 	}
@@ -76,9 +74,7 @@ public class PasswordUtil {
 	{
 		try {
 			return new String(passwordBytes, ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		} catch (UnsupportedEncodingException e) {}
 		
 		return new String(passwordBytes);
 	}
@@ -93,9 +89,7 @@ public class PasswordUtil {
 	{
 		try {
 			return password.getBytes(ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		} catch (UnsupportedEncodingException e) {}
 		
 		return password.getBytes();
 	}

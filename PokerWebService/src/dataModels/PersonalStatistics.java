@@ -592,9 +592,7 @@ public class PersonalStatistics {
 		double denom = (double) getTotalNumberOfPots();
 		double num = (double) this.getTotalNumberOfPotsWon();
 		
-		if(denom == 0 && num > 0)
-			return 100;
-		else if(denom == 0)
+		 if(denom == 0)
 			return 0;
 		else
 			return (num/denom) * 100;

@@ -13,6 +13,7 @@ import services.ServiceFactory;
 
 import com.google.gson.Gson;
 
+import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
 import database.ResponseObject;
 
@@ -40,8 +41,9 @@ public class CommunityStatisticsServlet extends ConfigHttpServlet {
 		ServiceFactory factory = new ServiceFactory();
 		
 		try {
+			DatabaseInterface dbInterface = new DatabaseInterface();
 			String data = this.getPostData(request);
-			SecureService service = factory.getService(this);
+			SecureService service = factory.getService(this, dbInterface);
 			message = service.authSecuredProcess(data);
 		} catch (DatabaseInterfaceException e) {
 			Gson gson = new Gson();

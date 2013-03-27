@@ -45,6 +45,10 @@ public class DatabaseInterface {
 	private Connection dbConnection;
 	private PasswordUtil passUtil;
 	
+	
+	
+	public DatabaseInterface(boolean ignore){}
+	
 	/**
 	 * General constructor
 	 * 

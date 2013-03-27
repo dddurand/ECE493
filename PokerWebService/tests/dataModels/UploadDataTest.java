@@ -1,8 +1,7 @@
 package dataModels;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -10,11 +9,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-
-import dataModels.UploadData.UploadDataDeserializer;
 
 public class UploadDataTest {
 

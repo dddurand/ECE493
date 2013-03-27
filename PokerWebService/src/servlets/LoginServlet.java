@@ -16,6 +16,7 @@ import services.ServiceFactory;
 import com.google.gson.Gson;
 
 import database.DatabaseInterface.DatabaseInterfaceException;
+import database.DatabaseInterface;
 import database.ResponseObject;
 
 /**
@@ -69,8 +70,9 @@ public class LoginServlet extends ConfigHttpServlet {
 		ServiceFactory factory = new ServiceFactory();
 		
 		try {
+			DatabaseInterface dbInterface = new DatabaseInterface();
 			String data = this.getPostData(request);
-			SecureService service = factory.getService(this);
+			SecureService service = factory.getService(this, dbInterface);
 			message = service.loginSecuredProcess(data);
 			service.close();
 		} catch (DatabaseInterfaceException e) {

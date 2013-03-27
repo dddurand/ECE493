@@ -52,11 +52,10 @@ public class ServiceFactory {
 	 * @return The specifically built SecureService.
 	 * @throws DatabaseInterfaceException
 	 */
-	public SecureService getService(ConfigHttpServlet servlet) throws DatabaseInterfaceException
+	public SecureService getService(ConfigHttpServlet servlet, DatabaseInterface dbInterface) throws DatabaseInterfaceException
 	{
 		ServletType servletType = getServletType(servlet);
 		Gson gson = generateGSON(servletType);
-		DatabaseInterface dbInterface = new DatabaseInterface();
 		
 		ServiceDelegate delegate = generateServiceDelegate(servletType,gson, dbInterface);
 		
