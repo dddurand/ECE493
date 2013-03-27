@@ -111,16 +111,17 @@ public class Client implements ClientTaskListener {
 		ObjectOutputStream sendOutObjectStream = new ObjectOutputStream(sendOutStream);
 		sendOutObjectStream.flush();
 		sendOutStream.flush();
-		ObjectInputStream sendInObjectStream=  new ObjectInputStream(sendInStream);
-		
-		
 		
 		this.outStream = new ObjectOutputStream(keepOutStream);
 		this.outStream.flush();
 		
+		
 		PokerApplication app = (PokerApplication) activity.getApplication();
 		Account account = app.getAccount();
 		Player player = new Player(position, account.getUsername(), account.getBalance());
+		
+		ObjectInputStream sendInObjectStream=  new ObjectInputStream(sendInStream);
+
 		
 		server.addPlayer(player, sendInObjectStream, sendOutObjectStream);
 		this.inStream = new ObjectInputStream(keepInStream);

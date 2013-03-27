@@ -335,7 +335,7 @@ public class GameMechanics {
 	public void addPlayer(Player p) {
 		this.playerList.add(p.getId(), p);
 
-		if(this.getValidPlayerCount() == 1 && this.currentTurn == 0)
+		if(this.getValidPlayerCount() != 1 && this.currentTurn == 0)
 		{
 			this.startGame();
 		}
