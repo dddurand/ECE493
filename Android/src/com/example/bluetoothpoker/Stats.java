@@ -82,18 +82,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    allButton.setOnClickListener(this);
 	    allButton.setOnTouchListener(this);
 	    
-	    //Get action bar
-	    ab = getActionBar();
-	    ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-	    
-	    //Create all action bar items and set their respective icons
-	    ActionBar.Tab personalStatsTab = ab.newTab().setText("Personal");
-	    personalStatsTab.setIcon(R.drawable.ic_personal_stats);
-	    ActionBar.Tab globalStatsTab = ab.newTab().setText("Community");
-	    globalStatsTab.setIcon(R.drawable.ic_global_stats);
-	    ActionBar.Tab rankingStatsTab = ab.newTab().setText("Ranking");
-	    rankingStatsTab.setIcon(R.drawable.ic_ranking_stats);
-	    
 	    /***********Gesture on list**************/
 	    detector = new GestureDetector(this,this);
 	    ListView list = (ListView)findViewById(R.id.statsListView);
@@ -104,17 +92,6 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    		return false;
 	    	}
 	    });
-	    
-	    /*********Set the tab listeners to this class*********/
-	    personalStatsTab.setTabListener(this);
-	    globalStatsTab.setTabListener(this);
-	    rankingStatsTab.setTabListener(this);
-	    
-	    
-	    //Finally add them to the action bar
-	    ab.addTab(personalStatsTab);
-	    ab.addTab(globalStatsTab);
-	    ab.addTab(rankingStatsTab);
 	    
 	    //Clean buttons up
 	    clearTimeframeButtons();
@@ -128,9 +105,32 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    rankingStatsRequest = new RankingStatistics.RankingStatisticRequest(this.selectedTimeframe,account);
 	    commStatsRequest = new CommunityStatistics.CommuntyStatisticRequest(this.selectedTimeframe,account);
 	    
-	    //Initializes screen by simulating a touch and click to the first button
+	    /******************************Action Bar Set up**************************************/
+	    ab = getActionBar();
+	    ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	    
+	    //Create all action bar items and set their respective icons
+	    ActionBar.Tab personalStatsTab = ab.newTab().setText("Personal");
+	    personalStatsTab.setIcon(R.drawable.ic_personal_stats);
+	    ActionBar.Tab globalStatsTab = ab.newTab().setText("Community");
+	    globalStatsTab.setIcon(R.drawable.ic_global_stats);
+	    ActionBar.Tab rankingStatsTab = ab.newTab().setText("Ranking");
+	    rankingStatsTab.setIcon(R.drawable.ic_ranking_stats);
+	    
+	    /*********Set the tab listeners to this class*********/
+	    personalStatsTab.setTabListener(this);
+	    globalStatsTab.setTabListener(this);
+	    rankingStatsTab.setTabListener(this);
+	    
+	    //Finally add them to the action bar
+	    //CAUTION:first action bar tab gets selected as soon as it is added. Hence all the action bar setup
+	    //is after the initialization of all variables
+	    ab.addTab(personalStatsTab);
+	    ab.addTab(globalStatsTab);
+	    ab.addTab(rankingStatsTab);
+	    
+	    //Initializes screen by simulating a touch of the first button
 	    this.onTouch(dayButton, null);
-	    this.onClick(dayButton);
 	}
 	
 	/**
@@ -174,6 +174,39 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	}
 	
 	
+	/**
+	 * Refreshes the list's content based on the time frame and action bar item selected.
+	 * Called after user interacts with Stats screen
+	 */
+	public void refreshListContent(){
+		//Clear List before getting new data
+		clearList();
+		pb.setVisibility(View.VISIBLE);
+
+		//Modify the appropiate request object and execute based on the currently selected
+		//action bar item
+		switch(ab.getSelectedNavigationIndex()){
+
+		case Stats.PERSONAL_STATS:
+			personalStatsRequest.setTimeFrame(selectedTimeframe);
+			NPersonalStats personalServer = new NPersonalStats(getApplicationContext(),this);
+			personalServer.execute(personalStatsRequest);
+			break;
+
+		case Stats.COMMUNITY_STATS:
+			commStatsRequest.setTimeFrame(selectedTimeframe);
+			NCommunityStats commServer = new NCommunityStats(getApplicationContext(),this);
+			commServer.execute(commStatsRequest);
+			break;
+
+		case Stats.RANKING_STATS:
+			rankingStatsRequest.setTimeFrame(selectedTimeframe);
+			break;
+
+		}
+	}
+	
+	
 	/**********************************************************************************************/
 	/***************************************TAB LISTENERS******************************************/
 	@Override
@@ -184,33 +217,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	//Update current position when tab is selected
 	@Override
 	public void onTabSelected(Tab t, FragmentTransaction arg1) {
-		currentTabPos=t.getPosition();
-		
-		
-		//Get the currently pressed button and send that as parameter to the
-		//on click method
-		switch(this.selectedTimeframe){
-		
-		case DAY:
-			break;
-			
-		case WEEK:
-			break;
-			
-		case MONTH:
-			break;
-			
-		case YEAR:
-			break;
-			
-		case ALL:
-			break;
-			
-			default:
-		
-		}
-		
-		
+		refreshListContent();
 	}
 
 	@Override
@@ -262,58 +269,35 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	 */
 	@Override
 	public void onClick(View v) {
-		
+		TimeFrame newTimeFrame;
 		//Choose appropriate timeframe according to the pressed button
 		switch(v.getId()){
 		
 		case R.id.statsDayButton:
-			this.selectedTimeframe=TimeFrame.DAY;
+			newTimeFrame=TimeFrame.DAY;
 			break;
 			
 		case R.id.statsWeekButton:
-			this.selectedTimeframe=TimeFrame.WEEK;
+			newTimeFrame=TimeFrame.WEEK;
 			break;
 			
 		case R.id.statsMonthButton:
-			this.selectedTimeframe=TimeFrame.MONTH;
+			newTimeFrame=TimeFrame.MONTH;
 			break;
 			
 		case R.id.statsYearButton:
-			this.selectedTimeframe=TimeFrame.YEAR;
+			newTimeFrame=TimeFrame.YEAR;
 			break;
 			
 		case R.id.statsAllButton:
-			this.selectedTimeframe=TimeFrame.ALL;
+			newTimeFrame=TimeFrame.ALL;
 			break;
 			
-			default:this.selectedTimeframe=TimeFrame.DAY;
+			default:newTimeFrame=TimeFrame.DAY;
 		}
 		
-		//Clear List before getting new data
-		clearList();
-		pb.setVisibility(View.VISIBLE);
-		
-		//Modify the appropiate request object and execute
-		switch(ab.getSelectedNavigationIndex()){
-		
-		case Stats.PERSONAL_STATS:
-			personalStatsRequest.setTimeFrame(selectedTimeframe);
-			NPersonalStats personalServer = new NPersonalStats(getApplicationContext(),this);
-			personalServer.execute(personalStatsRequest);
-			break;
-			
-		case Stats.COMMUNITY_STATS:
-			commStatsRequest.setTimeFrame(selectedTimeframe);
-			NCommunityStats commServer = new NCommunityStats(getApplicationContext(),this);
-			commServer.execute(commStatsRequest);
-			break;
-			
-		case Stats.RANKING_STATS:
-			rankingStatsRequest.setTimeFrame(selectedTimeframe);
-			break;
-		
-		}
-		
+		this.selectedTimeframe=newTimeFrame;
+		refreshListContent();
 	}
 	
 	/**
