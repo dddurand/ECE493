@@ -5,13 +5,13 @@
     android:orientation="horizontal">
     
     <View 
-        android:id="@+id/statsHelper1"
+        android:id="@+id/rankStatsHelper1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
     
     <TextView 
-        android:id="@+id/statsEntryText"
+        android:id="@+id/statsRankPosition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -19,13 +19,13 @@
         android:textSize="20sp"/>
     
     <View 
-        android:id="@+id/statsHelper2"
+        android:id="@+id/rankStatsHelper2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
     
     <TextView 
-        android:id="@+id/statsDataText"
+        android:id="@+id/statsRankUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
@@ -33,9 +33,17 @@
         android:textSize="20sp"/>
     
     <View 
-        android:id="@+id/statsHelper3"
+        android:id="@+id/rankStatsHelper3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
+    
+    <TextView 
+        android:id="@+id/statsRankScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_weight="1"
+        android:textSize="20sp"/>
 
 </LinearLayout>

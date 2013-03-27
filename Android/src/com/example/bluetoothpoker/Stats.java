@@ -3,9 +3,12 @@ package com.example.bluetoothpoker;
 import java.util.ArrayList;
 
 import misc.CustomAdapter;
+import misc.CustomRankAdapter;
+import misc.RankStatsRowObject;
 import misc.StatsRowObject;
 import networking.NCommunityStats;
 import networking.NPersonalStats;
+import networking.NRankStats;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -26,6 +29,7 @@ import dataModels.Account;
 import dataModels.CommunityStatistics;
 import dataModels.PersonalStatistics;
 import dataModels.RankingStatistics;
+import dataModels.SimpleRankStatistic;
 import dataModels.SimpleStatistic;
 import dataModels.TimeFrame;
 
@@ -146,7 +150,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	
 	/**
 	 * Method for changing the currently selected tab and its content in the list view.
-	 * Done after a left/right swipe.
+	 * Done after a left/right swipe. NOTE: This method only works when retrieving personal and
+	 * community statistics, not ranking!
 	 * @param currentTabPos
 	 */
 	private void setListContent(ArrayList<SimpleStatistic> content){
@@ -166,6 +171,29 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 		
 		CustomAdapter customAdapter = new CustomAdapter(this,rowObjects);
 		list.setAdapter(customAdapter);
+	}
+	
+	/**
+	 * Updates list with the object returned from the ranking stats server.
+	 * Similar functionality to setListContent.
+	 * @param content
+	 */
+	private void setListContentFromRank(ArrayList<SimpleRankStatistic> content){
+		//Get List
+		ListView list = (ListView)findViewById(R.id.statsListView);
+		RankStatsRowObject row;
+		int rowCount = content.size();
+
+		ArrayList<RankStatsRowObject> rowObjects = new ArrayList<RankStatsRowObject>();
+
+		for (int i=0; i<rowCount;i++){
+			row = new RankStatsRowObject(Integer.toString(i+1),content.get(i).getUsername(),content.get(i).getRankValue().toString());
+			rowObjects.add(row);
+		}
+
+
+		CustomRankAdapter customRankAdapter = new CustomRankAdapter(this,rowObjects);
+		list.setAdapter(customRankAdapter);
 	}
 	
 	private void clearList(){
@@ -201,6 +229,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 
 		case Stats.RANKING_STATS:
 			rankingStatsRequest.setTimeFrame(selectedTimeframe);
+			NRankStats rankServer = new NRankStats(this);
+			rankServer.execute(rankingStatsRequest);
 			break;
 
 		}
@@ -217,6 +247,7 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	//Update current position when tab is selected
 	@Override
 	public void onTabSelected(Tab t, FragmentTransaction arg1) {
+		currentTabPos=t.getPosition();
 		refreshListContent();
 	}
 
@@ -322,14 +353,14 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 		setListContent(stats);
 	}
 	
-//	public void onPostRankingStatsRequest(RankingStatistics result){
-//		//Hide ProgressBar
-//		pb.setVisibility(View.INVISIBLE);
-//		//Extract the statistics
-//		ArrayList<SimpleRankStatistic> stats = result.getAllStatistics();
-//		//Call method to change content
-//		setListContent(stats);
-//	}
+	public void onPostRankingStatsRequest(RankingStatistics result){
+		//Hide ProgressBar
+		pb.setVisibility(View.INVISIBLE);
+		//Extract the statistics
+		ArrayList<SimpleRankStatistic> stats = result.getAllStatistics();
+		//Call method to change content
+		setListContentFromRank(stats);
+	}
 
 	
 	/**
