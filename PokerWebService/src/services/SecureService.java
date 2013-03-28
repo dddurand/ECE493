@@ -215,7 +215,7 @@ public class SecureService {
 			//Load account from post data
 			Account account = gson.fromJson(postData, Account.class);
 			
-			if(account == null) return generateError("Invalid Username Provided", Codes.INVALID_USERNAME);
+			//if(account == null) return generateError("Invalid Account Data", Codes.INVALID_USERNAME);
 			
 			
 			return this.service.unsecureProcess(account, postData);

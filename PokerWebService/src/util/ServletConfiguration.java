@@ -159,4 +159,12 @@ public class ServletConfiguration {
 		return (Boolean) paramTable.get(PARAM_DEBUG);
 	}
 	
+	/**
+	 * For Testing
+	 */
+	public static synchronized void reset()
+	{
+		paramTable = null;
+	}
+	
 }

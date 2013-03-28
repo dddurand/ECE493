@@ -4,10 +4,19 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import services.CommunityStatisticsDelegateTest;
+import services.LoginDelegateTest;
+import services.LogoutDelegateTest;
+import services.PersonalStatisticsDelegateTest;
+import services.RankingStatisticsDelegateTest;
+import services.RegisterDelegateTest;
+import services.SecureServiceTest;
+import services.ServiceDelegateTest;
+import services.ServiceFactoryTest;
+import services.UploadDelegateTest;
 import util.CodesTest;
-import util.PasswordUtil;
 import util.PasswordUtilTest;
-
+import util.ServletConfigurationTest;
 import dataModels.AccountTest;
 import dataModels.CardTest;
 import dataModels.CommunityStatisticsTest;
@@ -37,7 +46,20 @@ import database.ResponseObjectTest;
 	PersonalStatisticsTest.class,
 	ResponseObjectTest.class,
 	CodesTest.class,
-	PasswordUtilTest.class
+	PasswordUtilTest.class,
+	ServletConfigurationTest.class,
+	CommunityStatisticsDelegateTest.class,
+	LoginDelegateTest.class,
+	LogoutDelegateTest.class,
+	PersonalStatisticsDelegateTest.class,
+	RankingStatisticsDelegateTest.class,
+	RegisterDelegateTest.class,
+	UploadDelegateTest.class,
+	SecureServiceTest.class,
+	ServiceDelegateTest.class,
+	ServiceFactoryTest.class
+	
+	
 })
 
 public class AllTests {

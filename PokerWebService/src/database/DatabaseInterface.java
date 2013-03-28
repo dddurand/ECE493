@@ -1086,7 +1086,7 @@ public class DatabaseInterface {
 	 * @author dddurand
 	 *
 	 */
-	public class DatabaseInterfaceException extends Exception
+	public static class DatabaseInterfaceException extends Exception
 	{
 		/**
 		 * 

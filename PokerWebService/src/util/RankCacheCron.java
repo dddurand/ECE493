@@ -54,8 +54,7 @@ public class RankCacheCron extends TimerTask {
 				
 				
 			} catch (DatabaseInterfaceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				context.log("Cron Failed Due to Database Failure...");
 			}
 			
 			context.log("Ranking Cache Cron Complete...");
