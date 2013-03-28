@@ -51,7 +51,7 @@
         android:layout_above="@+id/createTableButton"
         android:layout_alignLeft="@id/offlineUsernameTextField"
         android:layout_alignRight="@id/offlineUsernameTextField"
-        android:background="#333333"
+        android:background="@drawable/button_selector"
         android:src="@drawable/ic_add_funds" />
 
     <View
@@ -68,7 +68,7 @@
         android:layout_alignParentLeft="true"
         android:layout_margin="1dp"
         android:layout_toLeftOf="@id/buttons2_helper"
-        android:background="#333333"
+        android:background="@drawable/button_selector"
         android:minHeight="45dp"
         android:src="@drawable/ic_create_table_game"
         android:textColor="#cc0000" />
@@ -76,7 +76,7 @@
     <ImageButton
         android:id="@+id/joinTableButton"
         android:minHeight="45dp"
-        android:background="#333333"
+        android:background="@drawable/button_selector"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

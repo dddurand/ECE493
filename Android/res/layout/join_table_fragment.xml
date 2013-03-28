@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="#333333"
+        android:background="@drawable/button_selector"
         android:textColor="#ffffff"
         android:drawableLeft="@drawable/ic_refresh"
         android:layout_below="@id/joinTableImage"/>
@@ -33,7 +33,7 @@
         android:id="@+id/joinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#333333"
+        android:background="@drawable/button_selector"
         android:text="@string/joinTableButton"
         android:textColor="#ffffff"
         android:drawableLeft="@drawable/ic_accept_login_icon"

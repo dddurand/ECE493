@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/passwordConfirmField"
         android:layout_below="@id/passwordConfirmField"
-        android:background="#333333"
+        android:background="@drawable/button_selector"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:src="@drawable/ic_accept_login_icon" />
