@@ -10,7 +10,6 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,7 +18,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -41,7 +39,6 @@ import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
 
-@SuppressLint("ValidFragment")
 public class Login extends Fragment implements OnClickListener {
 	
 	private View view;
@@ -58,9 +55,22 @@ public class Login extends Fragment implements OnClickListener {
 	
 	SharedPreferences preferences;
 	
-	public Login(ServerCodes codes){
+	public Login(){
+		
+	}
+	
+	/**
+	 * Sets the server codes. This must be invoked after creating an instance of 
+	 * this fragment
+	 * @param codes
+	 */
+	public void setServerCodes(ServerCodes codes){
 		this.serverCodes = codes;
 	}
+	
+//	public Login(ServerCodes codes){
+//		this.serverCodes = codes;
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

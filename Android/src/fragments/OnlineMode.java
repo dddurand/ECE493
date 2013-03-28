@@ -1,14 +1,10 @@
 package fragments;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import misc.AmountDialog;
 import misc.BalanceUpdatable;
-import networking.NCommunityStats;
 import networking.NLogout;
-import networking.NPersonalStats;
-import networking.NRankStats;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -38,16 +34,6 @@ import com.example.bluetoothpoker.R;
 import com.example.bluetoothpoker.Stats;
 
 import dataModels.Account;
-import dataModels.CommunityStatistics;
-import dataModels.CommunityStatistics.CommuntyStatisticRequest;
-import dataModels.PersonalStatistics;
-import dataModels.PersonalStatistics.PersonalStatisticRequest;
-import dataModels.RankingStatistics;
-import dataModels.RankingStatistics.RankingStatisticRequest;
-import dataModels.RankingStatistics.RankingStatisticRequest.RankType;
-import dataModels.SimpleRankStatistic;
-import dataModels.SimpleStatistic;
-import dataModels.TimeFrame;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 

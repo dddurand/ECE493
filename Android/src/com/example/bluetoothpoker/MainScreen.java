@@ -10,7 +10,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -119,7 +118,9 @@ public class MainScreen extends Activity implements View.OnClickListener {
 		switch (screen) {
 		
 		case MainScreen.LOGIN_SCREEN:
-			newFragment = new Login(serverCodes);
+//			newFragment = new Login(serverCodes);
+			newFragment = new Login();
+			((Login)newFragment).setServerCodes(serverCodes);
 			break;
 		
 		case MainScreen.OFFLINE_SCREEN:
@@ -152,7 +153,10 @@ public class MainScreen extends Activity implements View.OnClickListener {
 			newFragment = new WaitingServer();
 			break;
 			
-		default: newFragment = new Login(serverCodes); 
+		default:newFragment = new Login();
+			((Login)newFragment).setServerCodes(serverCodes); 
+			//newFragment = new Login(serverCodes); 
+		break;
 		
 		}
 		//Change the fragment

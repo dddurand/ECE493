@@ -51,12 +51,6 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 	
 	private void refreshOpenTables(){
 		
-		String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-				  "Linux", "OS/2","Android", "iPhone", "WindowsMobile",
-				  "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-				  "Linux", "OS/2" };
-		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
 		
 		list.setAdapter(adapter);
