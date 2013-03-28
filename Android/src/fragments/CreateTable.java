@@ -2,6 +2,7 @@ package fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,8 @@ public class CreateTable extends Fragment implements OnClickListener {
 	private PokerApplication application;
 	private SharedPreferences preferences;
 	private Account account;
+	private EditText tableNameText;
+	public static final String TITLE_HOLDER = "728a8372-9e83-47c0-998b-3b89eeca3278";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +43,7 @@ public class CreateTable extends Fragment implements OnClickListener {
 		createTableButton.setOnClickListener(this);
 //		joinTableButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
-		
+		tableNameText = (EditText) view.findViewById(R.id.createTableNameField);
 		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 		this.application = (PokerApplication) this.getActivity().getApplication();
 		account = application.getAccount();
@@ -53,7 +56,11 @@ public class CreateTable extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		//bluetooth stuff here
+		String tableName = tableNameText.getText().toString();
+		Intent intent = new Intent();
+		intent.putExtra(CreateTable.TITLE_HOLDER,tableName);
 		MainScreen ms = (MainScreen)getActivity();
+		ms.setIntent(intent);
 		ms.switchFragment(ms.WAIT_CLIENT);
 		
 	}

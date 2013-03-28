@@ -30,7 +30,7 @@
         android:layout_toRightOf="@id/registrationIcon"
         android:layout_toLeftOf="@+id/validUsernameIcon"
         android:ems="10"
-        android:lines="1"
+        android:singleLine="true"
         android:hint="@string/username" >
 
         <requestFocus />

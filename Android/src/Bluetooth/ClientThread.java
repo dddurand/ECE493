@@ -8,7 +8,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
+
 import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
@@ -17,7 +19,9 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import application.PokerApplication;
@@ -30,8 +34,8 @@ import fragments.JoinTable;
  *	waits on socket until interrupt or the server accepts connection
  */
 	public class ClientThread extends AsyncTask<String, String, String>{
-	    private final BluetoothSocket mmSocket;
-	    private final BluetoothDevice mmDevice;
+	    private BluetoothSocket mmSocket = null;
+	    private final BluetoothDevice mDevice;
 	    private ArrayList<UUID> mUuid = new ArrayList<UUID>();
 		private String NAME = "BluetoothPoker";
 		private BluetoothAdapter mBluetoothAdapter;
@@ -43,6 +47,9 @@ import fragments.JoinTable;
 		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
 		private final UUID startMsg = UUID.fromString("c860afe0-2877-4042-b618-721ab1609cb9");
 		private TextView mText;
+		private ObjectOutputStream[] outStream = new ObjectOutputStream[1];
+		private ObjectInputStream[] inStream = new ObjectInputStream[1];
+		private int pos;
 		/**
 		 * Basic constructor that creates socket from bluetooth device
 		 * @param mBluetoothAdapter
@@ -65,22 +72,17 @@ import fragments.JoinTable;
 	        // Use a temporary object that is later assigned to mmSocket,
 	        // because mmSocket is final
 	        BluetoothSocket tmp = null;
-	        mmDevice = device;
+	        mDevice = device;
 	        application = (PokerApplication) mActivity.getApplication();
 			account = application.getAccount();
-	 
-	        // Get a BluetoothSocket to connect with the given BluetoothDevice
-	        try {
-	            // MY_UUID is the app's UUID string, also used by the server code
-	            tmp = device.createRfcommSocketToServiceRecord(mUuid.get(0));
-	        } catch (IOException e) { }
-	        mmSocket = tmp;
 	    }
 	 
 	    /** Will cancel an in-progress connection, and close the socket */
 	    public void cancel() {
 	        try {
-	            mmSocket.close();
+	        	if(mmSocket!=null) {
+	        		mmSocket.close();
+	        	}
 	        } catch (IOException e) { }
 	    }
 
@@ -89,11 +91,34 @@ import fragments.JoinTable;
 		protected String doInBackground(String... params) {
 			 // Cancel discovery because it will slow down the connection
 	        mBluetoothAdapter.cancelDiscovery();
-	 
+	        //Try every socket
 	        try {
-	            // Connect the device through the socket. This will block
+	        	int i;
+	        	for (i = 0; i < DiscoverableList.MAX_CONNECTION && mmSocket == null; i++) {
+	        		for (int j = 0; j < 3 && mmSocket == null; j++) {
+	        			mmSocket = mDevice.createRfcommSocketToServiceRecord(mUuid.get(i));
+	        			try{
+	        				mmSocket.connect();
+	        			} catch(IOException connectionfail){
+	        				mmSocket=null;
+	        			}
+	        			if (mmSocket == null) {
+	        				try {
+	        					Thread.sleep(200);
+	        					} catch (InterruptedException e) {
+	        						//Log.e("InterruptedException in connect", e);
+	        					}
+	                    }
+	        		}
+	        	}
+	        	if(mmSocket==null) {
+	        		return "BAD";
+	        	} else {
+	        		pos = i;
+	        	}
+	        	// Connect the device through the socket. This will block
 	            // until it succeeds or throws an exception
-	            mmSocket.connect();
+	            //mmSocket.connect();
 	            publishProgress("wait");
 	            OutputStream tmpOut = mmSocket.getOutputStream();
 		        ObjectOutputStream streamOut = new ObjectOutputStream(tmpOut);
@@ -113,6 +138,8 @@ import fragments.JoinTable;
 	        		publishProgress("wait2");
 	        		tmp = (UUID) streamIn.readObject();
 	        		if(tmp.equals(this.startMsg)) {
+	        			this.outStream[0] = streamOut;
+	        			this.inStream[0] = streamIn;
 	        			return "GO";
 	        		}
 	        		return "BAD";
@@ -160,7 +187,13 @@ import fragments.JoinTable;
 		protected void onPostExecute(String params) {
 			if(params.equals("GO")) {
 				//Server has started so start game on this end
-				mDiscoverableList.connected(mmSocket);
+				Intent intent = new Intent(mActivity, PlayingArea.class);
+				intent.putExtra(DiscoverableList.IS_CLIENT, true);
+				PokerApplication pokerApplication = (PokerApplication)mActivity.getApplication();
+				pokerApplication.setInStream(inStream);
+				pokerApplication.setOutStream(outStream);
+				mActivity.startActivity(intent);
+				//mDiscoverableList.connected(mmSocket);
 			} else {
 				cancel();
 				//Bad connection

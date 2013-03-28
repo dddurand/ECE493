@@ -2,6 +2,7 @@ package fragments;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import game.Player;
 import bluetooth.DiscoverableList;
@@ -34,8 +35,12 @@ import application.PokerApplication;
 public class WaitClient extends Fragment implements OnClickListener {
 
 	private View view;
-	private ServerThread mserver;
+	private Vector<ServerThread> mserver = new Vector<ServerThread>();
 	ArrayAdapter<String> mArrayAdapter;
+	String title = "untitle";
+	public void setTitle (String title) {
+		this.title = title;
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -57,8 +62,10 @@ public class WaitClient extends Fragment implements OnClickListener {
 		}
 		try {
 			mDiscoverableList.enableBluetooth(getActivity(),DiscoverableList.REQUEST_ENABLE_BT_SERVER);
-			mDiscoverableList.makeDiscoverable(getActivity());
-			this.mserver = mDiscoverableList.startServer(startTableButton);
+			mDiscoverableList.makeDiscoverable(getActivity(),title);
+			for (int i=0; i<DiscoverableList.MAX_CONNECTION;i++) {
+				this.mserver.add(mDiscoverableList.startServer(startTableButton,i));
+			}
 		} catch (BluetoothInitializeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -73,20 +80,29 @@ public class WaitClient extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Start game
 		Intent intent = new Intent(getActivity(), PlayingArea.class);
-		mserver.sendStart();
-		String msg = (String)mArrayAdapter.getItem(0);
-		String info[] = msg.split("\\r?\\n");
-		intent.putExtra(DiscoverableList.IS_CLIENT, false);
+		ObjectOutputStream[] outStream = new ObjectOutputStream[DiscoverableList.MAX_CONNECTION];
+		ObjectInputStream[] inStream = new ObjectInputStream[DiscoverableList.MAX_CONNECTION];
+		int test = mArrayAdapter.getCount();
 		ArrayList<Player> otherPlayer = new ArrayList<Player>();
-		otherPlayer.add(new Player(2, info[0], Integer.parseInt(info[1])));
+		for(int i =0; i<mArrayAdapter.getCount(); i++) {
+			String msg = (String)mArrayAdapter.getItem(i);
+			String info[] = msg.split("\\r?\\n");
+			int pos = Integer.parseInt(info[2]) - 1;
+			mserver.get(pos).sendStart();
+			outStream[pos] = mserver.get(pos).getOutStream();
+			inStream[pos] = mserver.get(pos).getInStream();
+			otherPlayer.add(new Player(Integer.parseInt(info[2]), info[0], Integer.parseInt(info[1])));
+			
+		}
+		intent.putExtra(DiscoverableList.IS_CLIENT, false);
 		intent.putExtra(DiscoverableList.PLAYER_HOLDER, otherPlayer);
 		
-		BluetoothSocket blueSocket[] = {mserver.getSocket()};
-		ObjectOutputStream outStream[] = {mserver.getOutStream()};
-		ObjectInputStream inStream[] = {mserver.getInStream()};
+		//BluetoothSocket blueSocket[] = {mserver.getSocket()};
+		//ObjectOutputStream outStream[] = {mserver.getOutStream()};
+		//ObjectInputStream inStream[] = {mserver.getInStream()};
 		//intent.putExtra(DiscoverableList.SOCKET_HOLDER, blueSocket);
 		PokerApplication pokerApplication = (PokerApplication)getActivity().getApplication();
-		pokerApplication.setSocket(blueSocket);
+		//pokerApplication.setSocket(blueSocket);
 		pokerApplication.setOutStream(outStream);
 		pokerApplication.setInStream(inStream);
 		//intent.putExtra(name, value)

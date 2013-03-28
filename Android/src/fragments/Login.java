@@ -13,13 +13,13 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,7 +33,6 @@ import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
-import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
@@ -48,7 +47,7 @@ public class Login extends Fragment implements OnClickListener {
 	private View view;
 	
 	private ServerCodes serverCodes;
-	CheckBox rememberMeCheckBox;
+	CheckBox rememberMeCheckBox, rememberUsernameCheckBox;
 	
 	private PokerApplication application;
 	private DatabaseDataSource dbInterface;
@@ -75,11 +74,15 @@ public class Login extends Fragment implements OnClickListener {
 		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
 		ImageButton onlineModeButton = (ImageButton) view.findViewById(R.id.loginButton);
 		rememberMeCheckBox = (CheckBox) view.findViewById(R.id.remember_me_checkbox);
+		rememberUsernameCheckBox = ((CheckBox)view.findViewById(R.id.remember_username));
 		
-		//set listeners
+		//set listeners for buttons
 		registerButton.setOnClickListener(this);
 		offlineModeButton.setOnClickListener(this);
 		onlineModeButton.setOnClickListener(this);
+		
+		//Set listeners for checkboxes
+		rememberMeCheckBox.setOnClickListener(this);
 		
 		application = (PokerApplication) (this.getActivity().getApplication());
 		dbInterface = application.getDataSource();
@@ -260,6 +263,25 @@ public class Login extends Fragment implements OnClickListener {
 	}
 	
 	/**
+	 * Updates the checkboxes if the user selected the remember me check box.
+	 * If it's selected, then it disables and checks the remember username only check box.
+	 * Otherwise, it enables it and unchecks it.
+	 * @param rememberAccount
+	 */
+	private void updateCheckBoxes(boolean rememberAccount){
+		
+		if (rememberAccount){
+			rememberUsernameCheckBox.setChecked(true);
+			rememberUsernameCheckBox.setEnabled(false);
+		}
+		else {
+			rememberUsernameCheckBox.setChecked(false);
+			rememberUsernameCheckBox.setEnabled(true);
+		}
+		
+	}
+	
+	/**
 	 * Methods for onClick listener.
 	 */
 	@Override
@@ -270,8 +292,6 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Offline mode button action***/
 		case R.id.offlineButton:
-			//TODO Back door to playing area, remove!!
-			
 			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "OfflinePlayer");
 			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
 			account = new Account(offlineUsername, balance);
@@ -279,10 +299,6 @@ public class Login extends Fragment implements OnClickListener {
 			
 			((MainScreen) getActivity()).switchFragment(MainScreen.OFFLINE_SCREEN);
 			
-			//Intent i = new Intent(getActivity().getApplicationContext(),PlayingArea.class);
-			//Add stuff here?
-			//startActivity(i);
-			//((MainScreen) this.getActivity()).test();
 			break;
 		
 		/*****Register button action***/
@@ -330,9 +346,13 @@ public class Login extends Fragment implements OnClickListener {
 				this.showLoginError("Timeout. Please ensure you're connected to the Internet");
 			}
 			break;
+			
+			/********Check Boxes*********/
+		case R.id.remember_me_checkbox:
+			updateCheckBoxes(rememberMeCheckBox.isChecked());
+			break;
 		}
 		
 	}
 
-	
 }

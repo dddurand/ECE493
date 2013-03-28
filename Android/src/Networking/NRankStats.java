@@ -74,7 +74,7 @@ public class NRankStats extends AsyncTask<RankingStatisticRequest,Integer, Ranki
 	
 	@Override
 	protected void onPostExecute(RankingStatistics result){
-//		this.parent.onPostRankingStatsRequest(result);
+		this.parent.onPostRankingStatsRequest(result);
 	}
 
 }
