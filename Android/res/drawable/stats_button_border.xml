@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false" android:drawable="@drawable/blue_button_unpressed_gradient" />
+    <item android:state_pressed="true" android:drawable="@drawable/blue_button_pressed_gradient" />
+    <item android:drawable="@drawable/blue_button_unpressed_gradient" />
+</selector>
+
+<!--  <shape xmlns:android="http://schemas.android.com/apk/res/android"
   android:shape="rectangle">
   <gradient android:startColor="#000000" 
     android:endColor="#000055"
     android:angle="0" />
   <corners android:radius="3dp" />
   <stroke android:width="1px" android:color="#ffffff" />
-</shape>
+</shape> -->
