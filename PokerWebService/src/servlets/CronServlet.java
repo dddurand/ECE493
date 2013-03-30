@@ -22,6 +22,8 @@ public class CronServlet extends ConfigHttpServlet {
 
 	private static final long serialVersionUID = -7672762555376487388L;
 	
+	private boolean isScheduled = false;
+	
 	/**
 	 * Run once per day
 	 */
@@ -35,8 +37,14 @@ public class CronServlet extends ConfigHttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		RankCacheCron rankCron = new RankCacheCron(this.getServletContext());
+		RankCacheCron rankCron = new RankCacheCron(this.getServletContext(), false);
 		rankCronTimer.schedule(rankCron, this.getTonightAtMidnight(), dayInMili);
+		isScheduled = true;
+	}
+	
+	public boolean isScheduled()
+	{
+		return isScheduled;
 	}
 	
 	/**

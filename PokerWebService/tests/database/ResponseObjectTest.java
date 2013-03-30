@@ -386,9 +386,7 @@ public class ResponseObjectTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
-			int test = 0; test++;
+
 			
 		}
 		

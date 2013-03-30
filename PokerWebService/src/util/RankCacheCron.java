@@ -1,5 +1,6 @@
 package util;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
@@ -8,8 +9,8 @@ import javax.servlet.ServletContext;
 import dataModels.Account;
 import dataModels.Filter;
 import dataModels.PersonalStatistics;
-import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
+import database.DatabaseOverride;
 
 /**
  * The cron process that updates the ranking caches.
@@ -20,13 +21,15 @@ import database.DatabaseInterface.DatabaseInterfaceException;
 public class RankCacheCron extends TimerTask {
 
 	private ServletContext context;
+	private boolean isTest;
 	
-	public RankCacheCron(ServletContext context)
+	public RankCacheCron(ServletContext context, boolean isTest)
 	{
 		this.context = context;
+		this.isTest = isTest;
 	}
 	
-	/**
+	/** 
 	 * For each account with an expired cache, we update their rank cache.
 	 * 
 	 */
@@ -35,9 +38,9 @@ public class RankCacheCron extends TimerTask {
 			
 			context.log("Ranking Cache Cron Started...");
 					
-			DatabaseInterface dbInterface;
+			DatabaseOverride dbInterface;
 			try {
-				dbInterface = new DatabaseInterface();
+				dbInterface = new DatabaseOverride(!isTest);
 				ArrayList<Account> accounts = dbInterface.getAllAccounts();
 				
 				for(Account account : accounts)
@@ -54,6 +57,10 @@ public class RankCacheCron extends TimerTask {
 				
 				
 			} catch (DatabaseInterfaceException e) {
+				context.log("Cron Failed Due to Database Failure...");
+			} catch (SQLException e) {
+				context.log("Cron Failed Due to Database Failure...");
+			} catch (ClassNotFoundException e) {
 				context.log("Cron Failed Due to Database Failure...");
 			}
 			

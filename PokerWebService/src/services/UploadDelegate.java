@@ -85,7 +85,6 @@ public class UploadDelegate extends ServiceDelegate{
 		for(int position = 0; position < miscDatas.size(); position++)
 		{
 			MiscGameData miscData = miscDatas.get(position);
-			dbInterface.saveMiscData(account, miscData);
 
 			try{
 				dbInterface.saveMiscData(account, miscData);

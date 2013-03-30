@@ -128,7 +128,7 @@ public class MockDbInterface extends DatabaseInterface {
 		/*
 		 * @TODO
 		 */
-		private DataSource getDataSource() throws NamingException, DatabaseInterfaceException
+		protected DataSource getDataSource() throws NamingException, DatabaseInterfaceException
 		{
 			if(this.throwException) throw new DatabaseInterfaceException();
 			return null;

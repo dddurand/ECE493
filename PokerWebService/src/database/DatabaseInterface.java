@@ -42,8 +42,8 @@ public class DatabaseInterface {
 	
 
 	
-	private Connection dbConnection;
-	private PasswordUtil passUtil;
+	protected Connection dbConnection;
+	protected PasswordUtil passUtil;
 	
 	
 	
@@ -261,7 +261,7 @@ public class DatabaseInterface {
 	 * @throws NamingException
 	 * @throws DatabaseInterfaceException
 	 */
-	private DataSource getDataSource() throws NamingException, DatabaseInterfaceException
+	protected DataSource getDataSource() throws NamingException, DatabaseInterfaceException
 	{
 		DataSource dataSource;
 		Context initContext  = new InitialContext();

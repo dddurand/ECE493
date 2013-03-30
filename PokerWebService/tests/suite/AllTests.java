@@ -1,5 +1,7 @@
 package suite;
 
+import misc.CronTest;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -14,6 +16,7 @@ import services.SecureServiceTest;
 import services.ServiceDelegateTest;
 import services.ServiceFactoryTest;
 import services.UploadDelegateTest;
+import system.SystemTest;
 import util.CodesTest;
 import util.PasswordUtilTest;
 import util.ServletConfigurationTest;
@@ -57,8 +60,7 @@ import database.ResponseObjectTest;
 	UploadDelegateTest.class,
 	SecureServiceTest.class,
 	ServiceDelegateTest.class,
-	ServiceFactoryTest.class
-	
+	ServiceFactoryTest.class,
 	
 })
 
