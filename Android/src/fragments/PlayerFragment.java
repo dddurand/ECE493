@@ -73,5 +73,10 @@ public class PlayerFragment extends Fragment {
 			nameText.setText(name);
 		}
 	}
+	
+	public void setAmount(long amount){
+		TextView moneyText = (TextView)view.findViewById(R.id.moneyAmountText);
+		moneyText.setText(String.valueOf(amount));
+	}
 
 }

@@ -10,6 +10,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -199,9 +200,8 @@ public class MainScreen extends Activity implements View.OnClickListener {
 	@Override
 	public void onClick(View v) {
 		//TODO Backdoor to join table screen. remove!
-//		Intent i = new Intent(this,Stats.class);
-//		startActivity(i);
-		this.switchFragment(MainScreen.JOIN_TABLE_SCREEN);
+		Intent i = new Intent(this,PlayingArea.class);
+		startActivity(i);
 	}
 
 }

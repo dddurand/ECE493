@@ -7,8 +7,6 @@ import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import bluetooth.DiscoverableList;
-
 import server.GameAction;
 import server.GameAction.PokerAction;
 import server.GameState;
@@ -25,19 +23,18 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.Preference;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import application.PokerApplication;
+import bluetooth.DiscoverableList;
 import client.Client;
 import dataModels.Account;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
-import fragments.OnlineMode;
 import fragments.PlayerFragment;
 import fragments.River;
 import game.Card;
@@ -79,9 +76,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    this.preferences = this.getPreferences(Context.MODE_PRIVATE);
 	    
 	    /***********Set listeners for buttons****************/
-	    Button b1 = (Button)findViewById(R.id.button1);
-	    Button b2 = (Button)findViewById(R.id.button2);
-	    Button b3 = (Button)findViewById(R.id.button3);
+	    Button b1 = (Button)findViewById(R.id.callCheckButton);
+	    Button b2 = (Button)findViewById(R.id.foldButton);
+	    Button b3 = (Button)findViewById(R.id.raiseButton);
 	    b1.setOnClickListener(this);
 	    b2.setOnClickListener(this);
 	    b3.setOnClickListener(this);
@@ -114,7 +111,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    
 	    initializeFragments(maxPlayers);
 	    
-	    ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+	    /*ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
 	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
 	    PokerApplication pA = (PokerApplication) this.getApplication();
 	    BluetoothSocket mySockets[] = pA.getSocket();
@@ -150,7 +147,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    }
+	    }*/
 	}
 	
 	/**
@@ -419,6 +416,23 @@ public class PlayingArea extends Activity implements OnClickListener {
 	}
 	
 	/**
+	 * Sets the player name to the specified string provided
+	 */
+	private void setPlayerName(int pos, String name){
+		this.playerObjects[pos].setName(name);
+	}
+	
+	/**
+	 * Updates the view of the player when it folds
+	 * @param pos
+	 */
+	private void foldPlayer(int pos){
+		this.playerObjects[pos].setCard(0, "folded");
+		this.playerObjects[pos].setCard(1, "folded");
+		this.playerObjects[pos].setName("Fold");
+	}
+	
+	/**
 	 * Sets the desired card into the river
 	 */
 	public void updateRiver(Card comm[]){
@@ -516,36 +530,42 @@ public class PlayingArea extends Activity implements OnClickListener {
 			clearActivePlayerBackground(i);
 	}
 	
-
+	/**
+	 * Click listener for the buttons on the main playing area. Send serializable objects according to what the user presses.
+	 */
 	@Override
 	public void onClick(View v) {
 		
+		GameAction action;
+		
 		switch (v.getId()){
 		
-		case R.id.button1:
-			//test commands
-			clearAll();
+		/******************Call/check****************/
+		case R.id.callCheckButton:
+//			this.setPlayerName(1, "Darks");
+			this.foldPlayer(3);
+			this.foldPlayer(2);
 			break;
 			
-		case R.id.button2:
-			riverObject.setCard(3, "hk");
-			riverObject.setCard(4, "hq");
-			playerObjects[3].setCard(1, "sk");
+		/******************Fold*******************/
+		case R.id.foldButton:
+			//TODO Get current player number
+			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
 			break;
-			
-		case R.id.button3:
-//			animateProgressBar(1);
-			if (current!=0) clearActivePlayerBackground(current-1);
-			if (current>=6) current=0;
-			setActivePlayerBackground(current);
-			animateProgressBar(current++);
+		
+		/*******************Raise Button***************/
+		case R.id.raiseButton:
+			//TODO Get current player number
+			action = new GameAction(this.myPositionAtTable,PokerAction.RAISE,0);
 			break;
 		
 		}
 		
-		
 	}
 	
+	/**
+	 * Shows a dialog confirming user to exit the game. The clean up methods necessary when a player leaves should be here.
+	 */
 	@Override
 	public void onBackPressed(){
 		
