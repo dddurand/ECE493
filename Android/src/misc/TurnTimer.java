@@ -3,7 +3,6 @@ package misc;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.bluetoothpoker.PlayingArea;
 

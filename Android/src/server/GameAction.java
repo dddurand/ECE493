@@ -1,12 +1,9 @@
 package server;
 
-import game.Card;
 import game.Player;
-import game.Pot;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * An object representing an action that has been made on the GUI.

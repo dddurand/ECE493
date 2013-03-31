@@ -4,16 +4,13 @@ import game.GameMechanics;
 import game.Player;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import server.GameAction.PokerAction;
-
 import android.app.Activity;
 
 /**

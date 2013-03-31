@@ -1,7 +1,6 @@
 package server;
 
 import game.GameMechanics;
-import game.Player;
 
 import java.util.Timer;
 import java.util.TimerTask;

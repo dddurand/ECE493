@@ -137,6 +137,7 @@ public class Login extends Fragment implements OnClickListener {
 			String username = preferences.getString(PreferenceConstants.REMEMBERED_USERNAME, "");
 			EditText userField = (EditText) this.view.findViewById(R.id.usernameField);
 			userField.setText(username);
+			rememberUsernameCheckBox.setChecked(true);
 			
 		}
 		super.onResume();
@@ -157,6 +158,7 @@ public class Login extends Fragment implements OnClickListener {
 		ProgressBar pb = (ProgressBar)this.view.findViewById(R.id.loginProgressBar);
 		NLogin loginAction = new NLogin(pb,this);
 		rememberMe = rememberMeCheckBox.isChecked();
+		rememberUsername = rememberUsernameCheckBox.isChecked();
 		
 		
 		//Execute AsyncTask

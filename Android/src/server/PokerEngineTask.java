@@ -5,8 +5,6 @@ import game.GameMechanics;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import android.util.Log;
-
 /**
  * Consumer than takes all events, and provides them to the game engine.
  * The resulting state objects should be generated in the game engine and passed
