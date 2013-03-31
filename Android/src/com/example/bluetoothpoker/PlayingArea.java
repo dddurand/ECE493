@@ -1,8 +1,15 @@
 package com.example.bluetoothpoker;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import bluetooth.DiscoverableList;
 
 import misc.CustomAdapter;
 import misc.StatsRowObject;
@@ -15,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -64,6 +72,17 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	private boolean debugServer = false;
 
+	private Button callCheckButton;
+	private Button foldButton;
+	private Button raiseButton;
+	
+	private PokerAction raiseState;
+	private PokerAction checkCallState;
+	
+	private int minimumBet;
+	
+	private LinkedBlockingQueue<GameAction> actionQueue;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,12 +98,13 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    this.preferences = this.getPreferences(Context.MODE_PRIVATE);
 	    
 	    /***********Set listeners for buttons****************/
-	    Button b1 = (Button)findViewById(R.id.callCheckButton);
-	    Button b2 = (Button)findViewById(R.id.foldButton);
-	    Button b3 = (Button)findViewById(R.id.raiseButton);
-	    b1.setOnClickListener(this);
-	    b2.setOnClickListener(this);
-	    b3.setOnClickListener(this);
+	    callCheckButton = (Button)findViewById(R.id.callCheckButton);
+	    foldButton = (Button)findViewById(R.id.foldButton);
+	    raiseButton = (Button)findViewById(R.id.raiseButton);
+	    
+	    callCheckButton.setOnClickListener(this);
+	    foldButton.setOnClickListener(this);
+	    raiseButton.setOnClickListener(this);
 	    
 	    
 	    /**********************Initialize fragment related variables************************/
@@ -114,16 +134,17 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    
 	    initializeFragments(maxPlayers);
 	    
-	    /*ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
-	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+	    ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+
 	    PokerApplication pA = (PokerApplication) this.getApplication();
-	    BluetoothSocket mySockets[] = pA.getSocket();
+
 	    ObjectInputStream inStream[] = pA.getInStream();
-	    ObjectOutputStream outStream[] =pA.getOutStream();
-	    LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
+	    ObjectOutputStream outStream[] = pA.getOutStream();
+	    actionQueue = new LinkedBlockingQueue<GameAction>();
 	    if(getIntent().getBooleanExtra(DiscoverableList.IS_CLIENT, true)) {
 	    	//Client
 	    	try {
+	    		this.myPositionAtTable = getIntent().getIntExtra(DiscoverableList.CLIENT_POS, 0);
 				Client client = new Client(this, inStream[0], outStream[0], actionQueue);
 			} catch (StreamCorruptedException e) {
 				// TODO Auto-generated catch block
@@ -138,6 +159,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    	
 	    	try {
 				Client client = new Client(this, server, actionQueue, 0);
+				this.myPositionAtTable = 0;
 				for (int i=0; i<myPlayer.size(); i++) {
 					//LinkedBlockingQueue<GameAction> FARTS = new LinkedBlockingQueue<GameAction>();
 					//Client tmp = new Client(this, mySockets[i].getInputStream(), mySockets[i].getOutputStream(),FARTS);
@@ -150,7 +172,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    }*/
+	    }
 	}
 	
 	/**
@@ -384,14 +406,15 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 */
 	public void updateAll(GameState data){
 		
-		//Log.d("GUI UPDATE CALLED", "TotalPlayers: " + data.getTotalPlayers());
-		
 		//Clear all players first
 		clearAllPlayers();
+		
+		clearAll();
+		
 		//Then clear the river
 		clearRiver();
-		//Then make all the players visible
-		//setVisiblePlayers(data.getTotalPlayers());
+		updateButtons(data);
+		
 		
 		ArrayList<Player> players = data.getPlayers();
 		
@@ -405,16 +428,28 @@ public class PlayingArea extends Activity implements OnClickListener {
 			{
 				this.setPlayerCard(player.getId(), 0, "back");
 				this.setPlayerCard(player.getId(), 1, "back");
-				continue;
 			}
-			
+			else
+			{
 			Card card = player.getCard(0);
-			this.setPlayerCard(player.getId(), 0, card.toString().toLowerCase());
+			this.setPlayerCard(player.getId(), 0, card.toString().toLowerCase(Locale.CANADA));
 			
 			card = player.getCard(1);
-			this.setPlayerCard(player.getId(), 1, card.toString().toLowerCase());
+			this.setPlayerCard(player.getId(), 1, card.toString().toLowerCase(Locale.CANADA));
+			}
+			
+			if(player.getActive() == Player.FOLDED)
+			{
+				this.foldPlayer(player.getId());
+			}
+			
+			this.clearActivePlayerBackground(player.getId());
+			this.setPlayerName(player.getId(), player.getUsername());
+			this.setPlayerAmount(player.getId(), player.getAmountMoney());
 		}
 		
+		this.takeTurn(data.getCurrentPlayerTurn());
+		this.setActivePlayerBackground(data.getCurrentPlayerTurn());
 		Card comm[] = data.getCommunity();
 		updateRiver(comm);
 		
@@ -493,6 +528,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 		playerObjects[playerNumber].setCard(cardNumber, c);
 	}
 	
+	public void setPlayerAmount(int playerNumber, int amount){
+		playerObjects[playerNumber].setAmount(amount);
+	}
+	
 	/**
 	 * Sets ALL players to invisible.
 	 */
@@ -558,24 +597,20 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		/******************Call/check****************/
 		case R.id.callCheckButton:
-			this.takeTurn(5);
+			action = new GameAction(this.myPositionAtTable,checkCallState,minimumBet);
+			actionQueue.add(action);
 			break;
 			
 		/******************Fold*******************/
 		case R.id.foldButton:
 			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
-			this.populateList();
+			actionQueue.add(action);
 			break;
 		
 		/*******************Raise Button***************/
 		case R.id.raiseButton:
-//			action = new GameAction(this.myPositionAtTable,PokerAction.RAISE,0);
-			if (this.turnTimer!=null){
-				turnTimer.hideProgressBar();
-				turnTimer.cancel();
-				turnTimer=null;
-				System.out.println("Turn taken");
-			} else System.out.println("No timer found");
+			action = new GameAction(this.myPositionAtTable,raiseState,0);
+			actionQueue.add(action);
 			break;
 		
 		}
@@ -601,103 +636,77 @@ public class PlayingArea extends Activity implements OnClickListener {
 		}).create().show();
 	}
 	
-	private class DebugRunnable implements Runnable
+	private void updateButtons(GameState state)
 	{
-		public void run()
-		{
-			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
-			LinkedBlockingQueue<GameAction> actionQueue2 = new LinkedBlockingQueue<GameAction>();
-			Server server = new Server(PlayingArea.this);
-			try {
-				Account account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
-				account.setUsername("BOB1");
-				account.setBalance(500);
-				Client client = new Client(PlayingArea.this, server, actionQueue, 0);
-				account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
-				account.setUsername("BOB2");
-				account.setBalance(500);
-				Client client2 = new Client(PlayingArea.this, server, actionQueue2, 3);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			ArrayList<GameAction> actions = new ArrayList<GameAction>();
-			
-			server.gameStart();
-			
-			GameAction action = new GameAction(0, PokerAction.BET, 15);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.BET, 15);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.BET, 5);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CALL, 5);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-
-			for(int i = 0; i < actions.size(); i++)
+		if(state == null || state.getPlayer().getActive() != Player.CURRENT)
 			{
-				GameAction temp = actions.get(i);
-				
-				Log.e("ACTION: ", i+"");
-				Log.e("ACTION: ", (i % 2)+"");
-				if(i % 2 == 1)
-				{
-					Log.e("queue2", (i % 2)+"");
-					actionQueue2.add(temp);
-				}
-				else
-				{
-					Log.e("queue", (i % 2)+"");
-					actionQueue.add(temp);	
-				}
-					
-				
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
+			disableButtons();
+			return;
 			}
+		
+		if(state.getCurrentPlayerTurn() == myPositionAtTable)
+			updateButtonState(state);
+		else
+			disableButtons();
+		
+		
+	}
+	
+	private void updateButtonState(GameState state)
+	{
+		ArrayList<Pot> sidePots = state.getSidePots();
+		Pot mainPot = state.getMainPot();
+		
+		int myBetAmount = 0;
+		int potAmount = 0;
+		for(Pot pot : sidePots)
+			{
+			potAmount += pot.getAmount();
+			myBetAmount += pot.getPlayerAmount(myPositionAtTable);
+			}
+		
+		potAmount += mainPot.getAmount();
+		myBetAmount += mainPot.getPlayerAmount(myPositionAtTable);
+		
+		minimumBet = potAmount - myBetAmount;
+		
+		if(myBetAmount == potAmount)
+		{
+			//raise && check
+			callCheckButton.setEnabled(true);
+			callCheckButton.setText(R.string.check);
 			
+		    foldButton.setEnabled(true);
+		    raiseButton.setEnabled(true);
 			
-			
+		    raiseState = PokerAction.RAISE;
+			checkCallState = PokerAction.CHECK;
+		    
 		}
+		else if(myBetAmount < potAmount)
+		{
+			//call & reraise
+			callCheckButton.setEnabled(true);
+			callCheckButton.setText(R.string.call);
+			
+		    foldButton.setEnabled(true);
+		    raiseButton.setEnabled(true);
+		    
+		    raiseState = PokerAction.RERAISE;
+			checkCallState = PokerAction.CALL;
+		}
+		else
+		{
+			Log.e("Game State", "Current bet amount more than pots");
+		}
+		
+	}
+	
+	private void disableButtons()
+	{
+		callCheckButton.setEnabled(false);
+		foldButton.setEnabled(false);
+		raiseButton.setEnabled(false);
 	}
 	
 }

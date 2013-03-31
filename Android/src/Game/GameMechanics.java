@@ -871,6 +871,7 @@ public class GameMechanics {
 		}
 
 		this.mainPot.setPlayerAmount(smallBlind, this.tempBets[smallBlind]);
+		this.mainPot.addTotal(this.tempBets[smallBlind]);
 	}
 
 	/**
@@ -888,6 +889,7 @@ public class GameMechanics {
 		}
 
 		this.mainPot.setPlayerAmount(bigBlind, this.tempBets[bigBlind]);
+		this.mainPot.addTotal(this.tempBets[bigBlind]);
 
 	}
 

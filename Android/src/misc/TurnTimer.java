@@ -46,7 +46,7 @@ public class TurnTimer extends CountDownTimer {
 	public void onFinish() {
 		pb.setVisibility(View.INVISIBLE);
 		//Player didnt take turn, fold
-		parent.foldPlayer(pos);
+		//parent.foldPlayer(pos);
 //		GameAction action = new GameAction(pos,PokerAction.FOLD,0);
 	}
 	

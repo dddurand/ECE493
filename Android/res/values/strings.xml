@@ -77,5 +77,8 @@
 	 <string name="netMoneyRanking">Net Money Ranking</string>
      <string name="optimalityRanking">Optimality Ranking</string>
 	 <string name="optimality">Optimality</string>
+	 <string name="call">call</string>
+	 <string name="raise">raise</string>
+	 <string name="check">check</string>
     
 </resources>

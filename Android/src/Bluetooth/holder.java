@@ -12,6 +12,7 @@ public class holder implements Serializable{
 	private int Balance;
 	private String Name;
 	private static final long serialVersionUID = 1L;
+	
 	public holder(int Balance, String Name) {
 		this.Balance = Balance;
 		this.Name = Name;

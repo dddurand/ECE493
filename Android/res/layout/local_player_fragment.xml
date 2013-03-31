@@ -32,4 +32,16 @@
         android:visibility="invisible"
         android:paddingBottom="2dp" />
 
+    <TextView
+        android:id="@+id/moneyAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progressBarTimeLeft"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/progressBarTimeLeft"
+        android:paddingTop="2dp"
+        android:text="500"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ffffe0" />
+
 </RelativeLayout>

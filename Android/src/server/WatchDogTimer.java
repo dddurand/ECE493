@@ -45,7 +45,7 @@ public class WatchDogTimer {
 		public void run() {
 
 			GameAction action = new GameAction(GameMechanics.SERVER_POSITION, PokerAction.TIMEOUT);
-			queue.add(action);
+			//queue.add(action);
 			
 		}
 		
