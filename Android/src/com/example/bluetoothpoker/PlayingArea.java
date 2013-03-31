@@ -53,7 +53,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	private int myPositionAtTable;
 	
-	private final int turnLength = 7000; //In MS
+	//NOTE: This value MUST be the same as in the XML file
+	//ie. android:max=10000
+	private final int turnLength = 10000; //In MS
 	
 	private PokerApplication pokerApp;
 	private Account account;
