@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -80,8 +81,8 @@ public class Login extends Fragment implements OnClickListener {
 		this.view = inflater.inflate(R.layout.login_fragment,container, false);
 		
 		/******************Set listener for buttons******************/
-		ImageButton registerButton = (ImageButton) view.findViewById(R.id.registerButton);
-		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
+		Button registerButton = (Button) view.findViewById(R.id.registerButton);
+		Button offlineModeButton = (Button) view.findViewById(R.id.offlineButton);
 		ImageButton onlineModeButton = (ImageButton) view.findViewById(R.id.loginButton);
 		rememberMeCheckBox = (CheckBox) view.findViewById(R.id.remember_me_checkbox);
 		rememberUsernameCheckBox = ((CheckBox)view.findViewById(R.id.remember_username));

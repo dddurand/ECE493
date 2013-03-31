@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import misc.CustomAdapter;
+import misc.StatsRowObject;
 import misc.TurnTimer;
 import server.GameAction;
 import server.GameAction.PokerAction;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import application.PokerApplication;
 import client.Client;
@@ -348,6 +351,21 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
+	public void populateList(){
+		
+		ListView listView = (ListView)findViewById(R.id.potList);
+		ArrayList<StatsRowObject> rowObjects = new ArrayList<StatsRowObject>();
+		StatsRowObject row;
+		
+		for (int i=0;i<35;i++)
+		{
+			row = new StatsRowObject("Pot "+i,"lol"+i);
+			rowObjects.add(row);
+		}
+		
+		CustomAdapter adapter = new CustomAdapter(this,rowObjects);
+		listView.setAdapter(adapter);
+	}
 	
 	public int getPositionAtTable(){
 		return this.myPositionAtTable;
@@ -544,7 +562,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		/******************Fold*******************/
 		case R.id.foldButton:
 			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
-			this.foldPlayer(2);
+			this.populateList();
 			break;
 		
 		/*******************Raise Button***************/

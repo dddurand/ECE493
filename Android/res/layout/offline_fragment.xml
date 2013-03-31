@@ -44,15 +44,17 @@
         <requestFocus />
     </EditText>
 
-    <ImageButton
+    <Button
         android:id="@+id/addFundsButton"
+        android:text="@string/addFunds"
+        android:textColor="#ffffff"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/createTableButton"
         android:layout_alignLeft="@id/offlineUsernameTextField"
         android:layout_alignRight="@id/offlineUsernameTextField"
         android:background="@drawable/button_selector"
-        android:src="@drawable/ic_add_funds" />
+        android:drawableLeft="@drawable/ic_add_funds" />
 
     <View
  		android:id="@+id/buttons2_helper"
@@ -60,7 +62,7 @@
  		android:layout_height="0dp"
  		android:layout_centerHorizontal="true" />
     
-    <ImageButton
+    <Button
         android:id="@+id/createTableButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -70,10 +72,11 @@
         android:layout_toLeftOf="@id/buttons2_helper"
         android:background="@drawable/button_selector"
         android:minHeight="45dp"
-        android:src="@drawable/ic_create_table_game"
-        android:textColor="#cc0000" />
+        android:drawableLeft="@drawable/ic_create_table_game"
+        android:textColor="#ffffff"
+        android:text="@string/hostTableString" />
 
-    <ImageButton
+    <Button
         android:id="@+id/joinTableButton"
         android:minHeight="45dp"
         android:background="@drawable/button_selector"
@@ -83,7 +86,8 @@
         android:layout_toRightOf="@id/buttons2_helper"
         android:layout_margin="1dp"
         android:layout_alignTop="@id/createTableButton"
-        android:src="@drawable/ic_join_table"
-        android:text="@string/joinTableString" />
+        android:drawableLeft="@drawable/ic_join_table"
+        android:text="@string/joinTableString"
+        android:textColor="#ffffff" />
 
 </RelativeLayout>

@@ -4,38 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
     
-    <View 
-        android:id="@+id/statsHelper1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    
     <TextView 
         android:id="@+id/statsEntryText"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="left"
+        android:gravity="center_horizontal"
         android:textSize="20sp"/>
-    
-    <View 
-        android:id="@+id/statsHelper2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
     
     <TextView 
         android:id="@+id/statsDataText"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
+        android:gravity="center_horizontal"
         android:layout_weight="1"
         android:textSize="20sp"/>
     
-    <View 
-        android:id="@+id/statsHelper3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-
 </LinearLayout>
