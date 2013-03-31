@@ -1,12 +1,10 @@
 package com.example.bluetoothpoker;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import misc.TurnTimer;
 import server.GameAction;
 import server.GameAction.PokerAction;
 import server.GameState;
@@ -15,14 +13,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +26,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import application.PokerApplication;
-import bluetooth.DiscoverableList;
 import client.Client;
 import dataModels.Account;
 import database.DatabaseDataSource;
@@ -51,8 +46,11 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
 	private int current = 0;
+	private TurnTimer turnTimer=null;
 	
 	private int myPositionAtTable;
+	
+	private final int turnLength = 7000; //In MS
 	
 	private PokerApplication pokerApp;
 	private Account account;
@@ -350,6 +348,15 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
+	
+	public int getPositionAtTable(){
+		return this.myPositionAtTable;
+	}
+	
+	public ProgressBar getPlayerProgressBar(int pos){
+		return (ProgressBar) playerLayouts[pos].findViewById(R.id.progressBarTimeLeft);
+	}
+	
 	/**
 	 * Method that updates everything in the view according to what's passed in the data object.
 	 * This is the primary method to be used from the game mechanics.
@@ -426,7 +433,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 * Updates the view of the player when it folds
 	 * @param pos
 	 */
-	private void foldPlayer(int pos){
+	public void foldPlayer(int pos){
 		this.playerObjects[pos].setCard(0, "folded");
 		this.playerObjects[pos].setCard(1, "folded");
 		this.playerObjects[pos].setName("Fold");
@@ -479,29 +486,18 @@ public class PlayingArea extends Activity implements OnClickListener {
 	}
 	
 	/**
-	 * Animates the progress bar for the given player in the parameter.
-	 * @param player The player's progress bar to be animated
+	 * Waits for the turn of the given player and animates the progress bar for the given player in the parameter.
+	 * @param player The player's position on the table
 	 */
-	public void animateProgressBar(int player){
-		//Get view
-		final ProgressBar pb = (ProgressBar) playerLayouts[player].findViewById(R.id.progressBarTimeLeft);
-		//Set it visible
+	public void takeTurn(int player){
+		ProgressBar pb = (ProgressBar)playerLayouts[player].findViewById(R.id.progressBarTimeLeft);
 		pb.setVisibility(View.VISIBLE);
 		
-		//Start the countdown timer and start
-		new CountDownTimer(7000,1){
-			
-			public void onTick(long millisUntilFinished){
-				pb.setProgress((int)millisUntilFinished);
-			}
-			
-			public void onFinish(){
-				pb.setVisibility(View.INVISIBLE);
-				//Player didnt take turn, fold
-			}
-		}.start();
-		
+		turnTimer = new TurnTimer(this.turnLength,1,this,player);
+		turnTimer.start();
 	}
+	
+	
 	
 	/**
 	 * Changes background of selected player to indicate it's that player's turn.
@@ -542,21 +538,24 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		/******************Call/check****************/
 		case R.id.callCheckButton:
-//			this.setPlayerName(1, "Darks");
-			this.foldPlayer(3);
-			this.foldPlayer(2);
+			this.takeTurn(5);
 			break;
 			
 		/******************Fold*******************/
 		case R.id.foldButton:
-			//TODO Get current player number
 			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
+			this.foldPlayer(2);
 			break;
 		
 		/*******************Raise Button***************/
 		case R.id.raiseButton:
-			//TODO Get current player number
-			action = new GameAction(this.myPositionAtTable,PokerAction.RAISE,0);
+//			action = new GameAction(this.myPositionAtTable,PokerAction.RAISE,0);
+			if (this.turnTimer!=null){
+				turnTimer.hideProgressBar();
+				turnTimer.cancel();
+				turnTimer=null;
+				System.out.println("Turn taken");
+			} else System.out.println("No timer found");
 			break;
 		
 		}
