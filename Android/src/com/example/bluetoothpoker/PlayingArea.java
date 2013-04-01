@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import misc.AnimationTimer;
 import misc.CustomAdapter;
+import misc.RaiseDialog;
 import misc.StatsRowObject;
 import misc.TurnTimer;
 import server.GameAction;
@@ -27,8 +28,12 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -134,7 +139,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    
 	    initializeFragments(maxPlayers);
 	    
-	    @SuppressWarnings("unchecked")
+	    //@SuppressWarnings("unchecked")
 		ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
 
 	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
@@ -398,18 +403,43 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
+	private void showRaiseDialog(int min, int max){
+		//Instantiate
+		RaiseDialog dlg = new RaiseDialog(this,min,max);
+		Window window = dlg.getWindow();
+		WindowManager.LayoutParams wlp = window.getAttributes();
+		
+		//Set window attributes
+		wlp.height=LayoutParams.WRAP_CONTENT;
+		wlp.width=this.foldButton.getWidth();
+		wlp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+		wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+		window.setAttributes(wlp);
+		//Show
+		dlg.show();
+	}
+	
+	
+	/**
+	 * Clears the pot list.
+	 */
+	public void clearPots(){
+		ListView listView = (ListView)findViewById(R.id.potList);
+		listView.setAdapter(null);
+	}
+	
 	/**
 	 * Populates the pot list with the given data in the array.
 	 */
-	public void populateList(){
+	public void populatePotsList(ArrayList<String> pots){
 		
 		ListView listView = (ListView)findViewById(R.id.potList);
 		ArrayList<StatsRowObject> rowObjects = new ArrayList<StatsRowObject>();
 		StatsRowObject row;
 		
-		for (int i=0;i<35;i++)
+		for (int i=0;i<pots.size();i++)
 		{
-			row = new StatsRowObject("Pot "+i,"lol"+i);
+			row = new StatsRowObject("Pot "+i,pots.get(i));
 			rowObjects.add(row);
 		}
 		
@@ -678,6 +708,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		case R.id.raiseButton:
 			action = new GameAction(this.myPositionAtTable,raiseState,0);
 			actionQueue.add(action);
+//			this.showRaiseDialog(0, 1200);
 			break;
 		
 		}
