@@ -98,7 +98,7 @@ public class Login extends Fragment implements OnClickListener {
 		application = (PokerApplication) (this.getActivity().getApplication());
 		dbInterface = application.getDataSource();
 		account = application.getAccount();
-		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		preferences = this.getActivity().getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 
 		//Perform login button action if user is logged in
 		if (application.isLoggedIn())

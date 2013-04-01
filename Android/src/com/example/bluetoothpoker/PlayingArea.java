@@ -98,7 +98,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    this.pokerApp = (PokerApplication) this.getApplication();
 	    this.account = pokerApp.getAccount();
 	    dbInterface = pokerApp.getDataSource();
-	    this.preferences = this.getPreferences(Context.MODE_PRIVATE);
+	    this.preferences = this.getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 	    
 	    /***********Set listeners for buttons****************/
 	    callCheckButton = (Button)findViewById(R.id.callCheckButton);
@@ -221,14 +221,15 @@ public class PlayingArea extends Activity implements OnClickListener {
 			if(player.getId() == this.myPositionAtTable && player.getUsername().equals(this.account.getUsername()))
 			{
 				this.account.setBalance(player.getAmountMoney());
-				if(this.account.isOnline())
-					dbInterface.updateAccount(account);
-				else
-				{
-					Editor editor = this.preferences.edit();
-					editor.putInt(PreferenceConstants.OFFLINE_BALANCE, account.getBalance());
-					editor.commit();
-				}
+					if(this.account.isOnline())
+						dbInterface.updateAccount(account);
+					else
+					{
+						Editor editor = this.preferences.edit();
+						editor.putInt(PreferenceConstants.OFFLINE_BALANCE, account.getBalance());
+						boolean result = editor.commit();
+						int test = 0;
+					}
 				
 				break;
 			}
@@ -489,7 +490,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		/*
 		 * Update Account
 		 */
-		//updateAccount(data);
+		updateAccount(data);
 		
 		/*
 		 * Disabled until we have bluetooth clients...

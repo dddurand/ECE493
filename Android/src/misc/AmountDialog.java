@@ -68,7 +68,7 @@ public class AmountDialog extends Dialog {
 		seekBar.setOnSeekBarChangeListener(new SeekBarWatcher());
 		
 		dbInterface = application.getDataSource();
-		preferences = activity.getPreferences(Context.MODE_PRIVATE);
+		preferences = activity.getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 		
 		setupListeners();
 	}
