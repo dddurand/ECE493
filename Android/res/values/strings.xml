@@ -30,6 +30,8 @@
     <string name="addFunds">Add Funds</string>
     <string name="register">Register</string>
     <string name="offlineMode">Offline Play</string>
+    <string name="connecting">Connecting to Host</string>
+    <string name="pleaseWait">Please Wait</string>
 	
 	<string name="server_invalid_login">Invalid Login Credentials</string>
     <string name="server_duplicate_user">Username already in use</string>
