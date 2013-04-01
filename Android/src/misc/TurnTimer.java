@@ -57,5 +57,10 @@ public class TurnTimer extends CountDownTimer {
 	public void onTick(long millisUntilFinished) {
 		pb.setProgress((int)millisUntilFinished);
 	}
+	
+	public void stop(){
+		pb.setVisibility(View.INVISIBLE);
+		this.cancel();
+	}
 
 }

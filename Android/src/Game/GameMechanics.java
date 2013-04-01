@@ -198,7 +198,7 @@ public class GameMechanics {
 
 			if(next == this.positionOfCurrentPlayer)
 			{
-				//Log.e("GameMechanics", "Player turn ended at original person");
+				//.e("GameMechanics", "Player turn ended at original person");
 				return this.positionOfCurrentPlayer;
 			}
 

@@ -9,8 +9,12 @@ import java.util.Locale;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+<<<<<<< HEAD
 import bluetooth.DiscoverableList;
 
+=======
+import misc.AnimationTimer;
+>>>>>>> Added AnimationTimer class, plus implemented more of the updateAll method based on assumptions
 import misc.CustomAdapter;
 import misc.StatsRowObject;
 import misc.TurnTimer;
@@ -37,6 +41,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import application.PokerApplication;
+import bluetooth.DiscoverableList;
 import client.Client;
 import dataModels.Account;
 import database.DatabaseDataSource;
@@ -57,7 +62,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
 	private int current = 0;
+	
+	//Turn Timers
 	private TurnTimer turnTimer=null;
+	private AnimationTimer animationTimer=null;
+	
+	private LinkedBlockingQueue<GameAction> actionQueue;
 	
 	private int myPositionAtTable;
 	
@@ -135,11 +145,19 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    initializeFragments(maxPlayers);
 	    
 	    ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+<<<<<<< HEAD
 
+=======
+	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+>>>>>>> Added AnimationTimer class, plus implemented more of the updateAll method based on assumptions
 	    PokerApplication pA = (PokerApplication) this.getApplication();
 
 	    ObjectInputStream inStream[] = pA.getInStream();
+<<<<<<< HEAD
 	    ObjectOutputStream outStream[] = pA.getOutStream();
+=======
+	    ObjectOutputStream outStream[] =pA.getOutStream();
+>>>>>>> Added AnimationTimer class, plus implemented more of the updateAll method based on assumptions
 	    actionQueue = new LinkedBlockingQueue<GameAction>();
 	    if(getIntent().getBooleanExtra(DiscoverableList.IS_CLIENT, true)) {
 	    	//Client
@@ -185,7 +203,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 */
 	private void initializeFragments(int totalPlayers){
 		
-		//Transaction begins here
+		//Transaction begins heref
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.setTransitionStyle(FragmentTransaction.TRANSIT_NONE);
 		
@@ -375,6 +393,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
+	/**
+	 * Populates the pot list with the given data in the array.
+	 */
 	public void populateList(){
 		
 		ListView listView = (ListView)findViewById(R.id.potList);
@@ -413,13 +434,19 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		//Then clear the river
 		clearRiver();
+<<<<<<< HEAD
 		updateButtons(data);
 		
 		
+=======
+		//Get players and make the active ones visible
+>>>>>>> Added AnimationTimer class, plus implemented more of the updateAll method based on assumptions
 		ArrayList<Player> players = data.getPlayers();
-		
 		setVisiblePlayers(players);
 		
+		//----------------------------------------------------------------------------------------------------------
+		//---------------------------------------------Update Players-----------------------------------------------
+		//----------------------------------------------------------------------------------------------------------
 		for(Player player : players)
 		{
 			if(player == null) continue;
@@ -429,8 +456,15 @@ public class PlayingArea extends Activity implements OnClickListener {
 				this.setPlayerCard(player.getId(), 0, "back");
 				this.setPlayerCard(player.getId(), 1, "back");
 			}
+<<<<<<< HEAD
 			else
 			{
+=======
+			
+			//Sets the names for all the active players
+			this.setPlayerName(player.getId(),player.getUsername());
+			
+>>>>>>> Added AnimationTimer class, plus implemented more of the updateAll method based on assumptions
 			Card card = player.getCard(0);
 			this.setPlayerCard(player.getId(), 0, card.toString().toLowerCase(Locale.CANADA));
 			
@@ -448,8 +482,30 @@ public class PlayingArea extends Activity implements OnClickListener {
 			this.setPlayerAmount(player.getId(), player.getAmountMoney());
 		}
 		
+<<<<<<< HEAD
 		this.takeTurn(data.getCurrentPlayerTurn());
 		this.setActivePlayerBackground(data.getCurrentPlayerTurn());
+=======
+		//----------------------------------------------------------------------------------------------------------
+		//---------------------------------------------Progress Bar-------------------------------------------------
+		//----------------------------------------------------------------------------------------------------------
+		//If local player: wait for move
+		if (data.getCurrentPlayerTurn()==this.myPositionAtTable)
+		{
+			this.takeTurn(0);
+			this.setActivePlayerBackground(0);
+		}
+		else
+		//Someone else's turn
+		{
+			this.animatePB(data.getCurrentPlayerTurn());
+			this.setActivePlayerBackground(data.getCurrentPlayerTurn());
+		}
+		
+		//----------------------------------------------------------------------------------------------------------
+		//-------------------------------------------------River----------------------------------------------------
+		//----------------------------------------------------------------------------------------------------------
+>>>>>>> Added AnimationTimer class, plus implemented more of the updateAll method based on assumptions
 		Card comm[] = data.getCommunity();
 		updateRiver(comm);
 		
@@ -485,13 +541,14 @@ public class PlayingArea extends Activity implements OnClickListener {
 	}
 	
 	/**
-	 * Updates the view of the player when it folds
+	 * Updates the view of the player when it folds and changes the name to  "Fold"
+	 * Note: does not changes the name if it is the local player (ie. pos==0)
 	 * @param pos
 	 */
 	public void foldPlayer(int pos){
 		this.playerObjects[pos].setCard(0, "folded");
 		this.playerObjects[pos].setCard(1, "folded");
-		this.playerObjects[pos].setName("Fold");
+		if (pos!=0) this.playerObjects[pos].setName("Fold");
 	}
 	
 	/**
@@ -541,11 +598,13 @@ public class PlayingArea extends Activity implements OnClickListener {
 			playerObjects[i].setCard(0, "back");
 			playerObjects[i].setCard(1, "back");
 			playerLayouts[i].setVisibility(View.INVISIBLE);
+			this.clearActivePlayerBackground(i);
 		}
 	}
 	
 	/**
 	 * Waits for the turn of the given player and animates the progress bar for the given player in the parameter.
+	 * Parameter should always be 0 (the local player)
 	 * @param player The player's position on the table
 	 */
 	public void takeTurn(int player){
@@ -554,6 +613,18 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		turnTimer = new TurnTimer(this.turnLength,1,this,player);
 		turnTimer.start();
+	}
+	
+	/**
+	 * Simply animates a progress bar for the given player. Should be called to all players except the local one on this view.
+	 * @param player
+	 */
+	public void animatePB(int player){
+		final ProgressBar pb = (ProgressBar)playerLayouts[player].findViewById(R.id.progressBarTimeLeft);
+		pb.setVisibility(View.VISIBLE);
+		
+		animationTimer = new AnimationTimer(this.turnLength,1,this,player);
+		animationTimer.start();
 	}
 	
 	
@@ -603,8 +674,15 @@ public class PlayingArea extends Activity implements OnClickListener {
 			
 		/******************Fold*******************/
 		case R.id.foldButton:
+<<<<<<< HEAD
 			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
 			actionQueue.add(action);
+=======
+			if (turnTimer!=null) {
+				action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
+				actionQueue.add(action);
+			}
+>>>>>>> Added AnimationTimer class, plus implemented more of the updateAll method based on assumptions
 			break;
 		
 		/*******************Raise Button***************/
