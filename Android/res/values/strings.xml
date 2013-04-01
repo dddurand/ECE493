@@ -33,6 +33,8 @@
     <string name="connecting">Connecting to Host</string>
     <string name="pleaseWait">Please Wait</string>
     <string name="raiseLabel">Raise amount</string>
+    <string name="totalMoneyStats">Total Money Generated</string>
+    <string name="handOptStats">Hand Optimality</string>
 	
 	<string name="server_invalid_login">Invalid Login Credentials</string>
     <string name="server_duplicate_user">Username already in use</string>

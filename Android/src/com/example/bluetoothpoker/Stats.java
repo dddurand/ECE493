@@ -22,19 +22,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import application.PokerApplication;
 import dataModels.Account;
 import dataModels.CommunityStatistics;
 import dataModels.PersonalStatistics;
 import dataModels.RankingStatistics;
+import dataModels.RankingStatistics.RankingStatisticRequest.RankType;
 import dataModels.SimpleRankStatistic;
 import dataModels.SimpleStatistic;
 import dataModels.TimeFrame;
 
-public class Stats extends Activity implements TabListener, OnGestureListener, OnTouchListener, OnClickListener {
+public class Stats extends Activity implements TabListener, OnGestureListener, OnTouchListener, OnClickListener, CompoundButton.OnCheckedChangeListener {
 	
 	public static final int PERSONAL_STATS = 0;
 	public static final int COMMUNITY_STATS = 1;
@@ -48,6 +52,9 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	private GestureDetector detector;
 	private TimeFrame selectedTimeframe = TimeFrame.DAY;
 	private ProgressBar pb;
+	private ToggleButton tb;
+	private TextView rankingCriteriaLabel;
+	private boolean handOptimalitySelected = false;
 	
 	//Account
 	private Account account;
@@ -70,6 +77,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    yearButton = (Button)findViewById(R.id.statsYearButton);
 	    allButton = (Button)findViewById(R.id.statsAllButton);
 	    pb = (ProgressBar)findViewById(R.id.statsProgressBar);
+	    tb = (ToggleButton)findViewById(R.id.optimalityToggleButton);
+	    rankingCriteriaLabel = (TextView)findViewById(R.id.rankingCriteriaLabel);;
 	    
 	    /********Set button listeners*********/
 	    dayButton.setOnClickListener(this);
@@ -86,6 +95,8 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 	    
 	    allButton.setOnClickListener(this);
 	    allButton.setOnTouchListener(this);
+	    
+	    tb.setOnCheckedChangeListener(this);
 	    
 	    /***********Gesture on list**************/
 	    detector = new GestureDetector(this,this);
@@ -197,11 +208,28 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 		list.setAdapter(customRankAdapter);
 	}
 	
+	/**
+	 * Clears the list.
+	 */
 	private void clearList(){
 		ListView list = (ListView)findViewById(R.id.statsListView);
 		list.setAdapter(null);
 	}
 	
+	/**
+	 * Sets the views of the ranking stats (togglebutton and textview) visible or invisible
+	 * according to the parameter
+	 * @param visible true for visible, false for invisible
+	 */
+	private void setVisibleRankingViews(boolean visible){
+		if (visible){
+			tb.setVisibility(View.VISIBLE);
+			rankingCriteriaLabel.setVisibility(View.VISIBLE);
+		} else {
+			tb.setVisibility(View.INVISIBLE);
+			rankingCriteriaLabel.setVisibility(View.INVISIBLE);
+		}
+	}
 	
 	/**
 	 * Refreshes the list's content based on the time frame and action bar item selected.
@@ -220,18 +248,24 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 			personalStatsRequest.setTimeFrame(selectedTimeframe);
 			NPersonalStats personalServer = new NPersonalStats(getApplicationContext(),this);
 			personalServer.execute(personalStatsRequest);
+			setVisibleRankingViews(false);
 			break;
 
 		case Stats.COMMUNITY_STATS:
 			commStatsRequest.setTimeFrame(selectedTimeframe);
 			NCommunityStats commServer = new NCommunityStats(getApplicationContext(),this);
 			commServer.execute(commStatsRequest);
+			setVisibleRankingViews(false);
 			break;
 
 		case Stats.RANKING_STATS:
 			rankingStatsRequest.setTimeFrame(selectedTimeframe);
+			//Set Rank Type according to saved variable
+			if (this.handOptimalitySelected) rankingStatsRequest.setRankType(RankType.OPTIMALITY);
+			else rankingStatsRequest.setRankType(RankType.NET_MONEY);
 			NRankStats rankServer = new NRankStats(this);
 			rankServer.execute(rankingStatsRequest);
+			setVisibleRankingViews(true);
 			break;
 
 		}
@@ -392,6 +426,23 @@ public class Stats extends Activity implements TabListener, OnGestureListener, O
 		b.setBackgroundResource(R.drawable.timeframe_button_border_selected);
 		
 		return false;
+	}
+	
+	/**
+	 * Listener for Toggle button. Switches between Hand Optimality and Money values only when
+	 * ranking stats is selected.
+	 */
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (isChecked)
+			rankingCriteriaLabel.setText(R.string.handOptStats);
+		else rankingCriteriaLabel.setText(R.string.totalMoneyStats);
+		
+		//Set if hand optimality is selected
+		this.handOptimalitySelected=isChecked;
+		
+		//Refresh List
+		this.refreshListContent();
 	}
 	
 	/**----------------------Other Listeners not being used but required by interface------------------*/

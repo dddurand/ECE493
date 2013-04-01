@@ -180,6 +180,14 @@ public class RankingStatistics {
 			}
 			
 			/**
+			 * Sets the rank type for the request class
+			 * @param type
+			 */
+			public void setRankType(RankType type){
+				this.type=type;
+			}
+			
+			/**
 			 * TimeFrame enum of all possible timeframes the object supports.
 			 * 
 			 * @author dddurand
