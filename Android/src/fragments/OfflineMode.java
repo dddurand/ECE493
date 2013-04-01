@@ -56,7 +56,7 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		
 		offlineUsername.addTextChangedListener(this);
 		
-		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		preferences = this.getActivity().getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 		this.application = (PokerApplication) this.getActivity().getApplication();
 		account = application.getAccount();
 		

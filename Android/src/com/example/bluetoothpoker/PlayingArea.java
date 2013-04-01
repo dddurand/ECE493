@@ -6,9 +6,8 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import bluetooth.DiscoverableList;
+
 import misc.AnimationTimer;
 import misc.CustomAdapter;
 import misc.StatsRowObject;
@@ -21,7 +20,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -65,6 +63,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private LinkedBlockingQueue<GameAction> actionQueue;
 	
 	private int myPositionAtTable;
+	private int displayPlayerOffset;
 	
 	//NOTE: This value MUST be the same as in the XML file
 	//ie. android:max=10000
@@ -74,8 +73,6 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private Account account;
 	private DatabaseDataSource dbInterface;
 	private SharedPreferences preferences;
-	
-	private boolean debugServer = false;
 
 	private Button callCheckButton;
 	private Button foldButton;
@@ -137,7 +134,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    
 	    initializeFragments(maxPlayers);
 	    
-	    ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+	    @SuppressWarnings("unchecked")
+		ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
 
 	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
 
@@ -149,6 +147,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    	//Client
 	    	try {
 	    		this.myPositionAtTable = getIntent().getIntExtra(DiscoverableList.CLIENT_POS, 0);
+	    		loadZerothDisplayOffset(this.myPositionAtTable);
+				@SuppressWarnings("unused")
 				Client client = new Client(this, inStream[0], outStream[0], actionQueue);
 			} catch (StreamCorruptedException e) {
 				// TODO Auto-generated catch block
@@ -162,8 +162,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    	Server server = new Server(this);
 	    	
 	    	try {
+				@SuppressWarnings("unused")
 				Client client = new Client(this, server, actionQueue, 0);
 				this.myPositionAtTable = 0;
+				loadZerothDisplayOffset(this.myPositionAtTable);
 				for (int i=0; i<myPlayer.size(); i++) {
 					//LinkedBlockingQueue<GameAction> FARTS = new LinkedBlockingQueue<GameAction>();
 					//Client tmp = new Client(this, mySockets[i].getInputStream(), mySockets[i].getOutputStream(),FARTS);
@@ -183,6 +185,23 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 * A test for the server instrastructure
 	 */
 	
+	
+	private void loadZerothDisplayOffset(int actualPosition)
+	{
+		
+		int offset = 0;
+		while((actualPosition + offset) % (this.maxPlayers) != 0)
+		{
+			offset++;
+		}
+		
+		this.displayPlayerOffset = offset;
+	}
+	
+	private int getDisplayOffset(int actualPosition)
+	{
+		return (actualPosition + this.displayPlayerOffset) % (this.maxPlayers);
+	}
 	
 	/**
 	 * Initializes the playing area by placing the fragments. only called by constructor
@@ -227,8 +246,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 					{
 						Editor editor = this.preferences.edit();
 						editor.putInt(PreferenceConstants.OFFLINE_BALANCE, account.getBalance());
-						boolean result = editor.commit();
-						int test = 0;
+						editor.commit();
 					}
 				
 				break;
@@ -425,7 +443,6 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		//Get players and make the active ones visible
 		ArrayList<Player> players = data.getPlayers();
-		setVisiblePlayers(players);
 		
 		//----------------------------------------------------------------------------------------------------------
 		//---------------------------------------------Update Players-----------------------------------------------
@@ -433,37 +450,42 @@ public class PlayingArea extends Activity implements OnClickListener {
 		for(Player player : players)
 		{
 			if(player == null) continue;
+		
+			int playerPosition = getDisplayOffset(player.getId());
+			setVisiblePlayer(playerPosition);
 			
 			if(player.getCard(0) == null)
 			{
-				this.setPlayerCard(player.getId(), 0, "back");
-				this.setPlayerCard(player.getId(), 1, "back");
+				this.setPlayerCard(playerPosition, 0, "back");
+				this.setPlayerCard(playerPosition, 1, "back");
 			}
 			else
 			{
 			
 			//Sets the names for all the active players
-			this.setPlayerName(player.getId(),player.getUsername());
+			this.setPlayerName(playerPosition,player.getUsername());
 			
 			Card card = player.getCard(0);
-			this.setPlayerCard(player.getId(), 0, card.toString().toLowerCase(Locale.CANADA));
+			this.setPlayerCard(playerPosition, 0, card.toString().toLowerCase(Locale.CANADA));
 			
 			card = player.getCard(1);
-			this.setPlayerCard(player.getId(), 1, card.toString().toLowerCase(Locale.CANADA));
+			this.setPlayerCard(playerPosition, 1, card.toString().toLowerCase(Locale.CANADA));
 			}
 			
 			if(player.getActive() == Player.FOLDED)
 			{
-				this.foldPlayer(player.getId());
+				this.foldPlayer(playerPosition);
 			}
 			
-			this.clearActivePlayerBackground(player.getId());
-			this.setPlayerName(player.getId(), player.getUsername());
-			this.setPlayerAmount(player.getId(), player.getAmountMoney());
+			this.clearActivePlayerBackground(playerPosition);
+			this.setPlayerName(playerPosition, player.getUsername());
+			this.setPlayerAmount(playerPosition, player.getAmountMoney());
 		}
 		
-		this.takeTurn(data.getCurrentPlayerTurn());
-		this.setActivePlayerBackground(data.getCurrentPlayerTurn());
+		int currentDisplayTurn = getDisplayOffset(data.getCurrentPlayerTurn());
+		
+		this.takeTurn(currentDisplayTurn);
+		this.setActivePlayerBackground(currentDisplayTurn);
 		
 		//----------------------------------------------------------------------------------------------------------
 		//---------------------------------------------Progress Bar-------------------------------------------------
@@ -471,14 +493,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 		//If local player: wait for move
 		if (data.getCurrentPlayerTurn()==this.myPositionAtTable)
 		{
-			this.takeTurn(0);
-			this.setActivePlayerBackground(0);
+			this.takeTurn(currentDisplayTurn);
 		}
 		else
 		//Someone else's turn
 		{
-			this.animatePB(data.getCurrentPlayerTurn());
-			this.setActivePlayerBackground(data.getCurrentPlayerTurn());
+			this.animatePB(currentDisplayTurn);
 		}
 		
 		//----------------------------------------------------------------------------------------------------------
@@ -502,13 +522,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 * Sets the number of players that are visible on the playing area
 	 * @param totalPlayers
 	 */
-	private void setVisiblePlayers(ArrayList<Player> players){
-		
-		for(Player player : players)
-		{
-			if(player == null) continue;
-			playerLayouts[player.getId()].setVisibility(View.VISIBLE);
-		}
+	private void setVisiblePlayer(int id){
+			playerLayouts[id].setVisibility(View.VISIBLE);
 	}
 	
 	/**
@@ -537,11 +552,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 		for(int i = 0; i < comm.length; i++)
 		{
 			if(comm[i]==null) break;
-			riverObject.setCard(i, comm[i].toString().toLowerCase());
+			riverObject.setCard(i, comm[i].toString().toLowerCase(Locale.CANADA));
 			
 		}	
-		int test = 0;;
-		test++;
 	}
 	
 	/**
@@ -624,6 +637,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		playerLayouts[n].setBackgroundColor(Color.parseColor("#00000000"));
 	}
 	
+	@SuppressWarnings("unused")
 	private void animateAll(){
 		for (int i=0;i<this.maxPlayers;i++)
 			setActivePlayerBackground(i);

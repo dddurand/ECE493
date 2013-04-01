@@ -37,7 +37,7 @@ public class AnimationTimer extends CountDownTimer {
 	public void onFinish() {
 		pb.setVisibility(View.INVISIBLE);
 		//TODO player fold?
-		parent.foldPlayer(pos);
+		//parent.foldPlayer(pos);
 	}
 
 	@Override
