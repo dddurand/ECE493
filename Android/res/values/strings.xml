@@ -80,5 +80,6 @@
 	 <string name="call">call</string>
 	 <string name="raise">raise</string>
 	 <string name="check">check</string>
+	 <string name="connection_to_server_lost">Connection to Poker Table Lost...</string>
     
 </resources>

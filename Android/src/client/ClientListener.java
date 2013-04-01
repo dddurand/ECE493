@@ -52,7 +52,7 @@ public class ClientListener extends ListenableThread<ClientTaskListener> {
 	@Override
 	public void run() {
 		
-		while(!cancelled || !userCancelled)
+		while(!cancelled && !userCancelled)
 		{
 			try {
 				GameState gameState = (GameState) objectInputStream.readObject();

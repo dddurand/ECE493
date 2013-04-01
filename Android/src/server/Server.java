@@ -143,14 +143,14 @@ public class Server implements PlayerTaskListener {
 	public void removePlayer(Player player)
 	{
 		
-		if(playerListenerTasks.contains(player))
+		if(playerListenerTasks.containsKey(player.getId()))
 		{
 		//Generate game action to remove player
 		GameAction removePlayerAction = new GameAction(player, false);
-		removePlayerAction.setPlayer(this.serverPlayer);
+		removePlayerAction.setPlayer(player);
 		removePlayerAction.setPosition(this.serverPlayer.getId());
 		
-		ServerClientListener task = playerListenerTasks.remove(player);
+		ServerClientListener task = playerListenerTasks.remove(player.getId());
 		task.cancel();
 		gameActionQueue.add(removePlayerAction);
 		gameBroadCaster.removePlayer(player);
