@@ -8,6 +8,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 public class RaiseDialog extends Dialog {
@@ -17,10 +18,13 @@ public class RaiseDialog extends Dialog {
 	private ImageButton okButton, cancelButton;
 	private SeekBar sb;
 	
-	public RaiseDialog(Activity activity, int min, int max){
+	public PlayingArea parent;
+	
+	public RaiseDialog(PlayingArea activity, int min, int max){
 		
 		//Set up dialog
 		super(activity);
+		this.parent=activity;
 		this.setContentView(R.layout.raise_dialog);
 		this.setTitle("Raise Amount");
 		
@@ -35,12 +39,12 @@ public class RaiseDialog extends Dialog {
 		this.sb=(SeekBar)this.findViewById(R.id.raiseAmountSeekBar);
 		
 		//Initialize Views
-		amountLabel.setText("$"+Integer.toString(min));
+		amountLabel.setText(Integer.toString(min));
 		sb.setMax(max-min);
 		sb.setProgress(0);
 		sb.setOnSeekBarChangeListener(new SeekBarWatcher());
 		
-		//Listeners for buttons
+		/******************************Listeners for buttons*************************/
 		//Cancel Button
 		cancelButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -50,12 +54,14 @@ public class RaiseDialog extends Dialog {
 			}
 		});
 		
-		//Ok Button
+		//Ok Button:calls the activity raiseFromDialog
 		okButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				//TODO ask dustin how to return value
+				//Get quantity
+				int raiseAmount = Integer.parseInt(amountLabel.getText().toString());
+				RaiseDialog.this.parent.raiseFromDialog(raiseAmount);
 			}
 		});
 	}
@@ -71,7 +77,7 @@ public class RaiseDialog extends Dialog {
 		@Override
 		public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 			TextView label = RaiseDialog.this.amountLabel;
-			label.setText("$"+Integer.toString(arg1+RaiseDialog.this.min));
+			label.setText(Integer.toString(arg1+RaiseDialog.this.min));
 		}
 
 		@Override

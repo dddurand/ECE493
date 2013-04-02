@@ -156,10 +156,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 				@SuppressWarnings("unused")
 				Client client = new Client(this, inStream[0], outStream[0], actionQueue);
 			} catch (StreamCorruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    } else {
@@ -180,7 +178,6 @@ public class PlayingArea extends Activity implements OnClickListener {
 				}
 				server.gameStart();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
@@ -403,6 +400,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
+	/**
+	 * Shows the raise dialog. If user presses the OK button the method
+	 * called will be "raiseFromDialog(n)"
+	 * @param min
+	 * @param max
+	 */
 	private void showRaiseDialog(int min, int max){
 		//Instantiate
 		RaiseDialog dlg = new RaiseDialog(this,min,max);
@@ -417,6 +420,17 @@ public class PlayingArea extends Activity implements OnClickListener {
 		window.setAttributes(wlp);
 		//Show
 		dlg.show();
+	}
+	
+	/**
+	 * Executed after the user presses the OK button on the raise dialog.
+	 * Sends the game action to the actionQueue
+	 */
+	public void raiseFromDialog(int quantity){
+		GameAction action = new GameAction(this.myPositionAtTable,raiseState,quantity);
+		actionQueue.add(action);
+		//TODO disable buttons?
+		//disableButtons();
 	}
 	
 	
@@ -706,9 +720,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		/*******************Raise Button***************/
 		case R.id.raiseButton:
-			action = new GameAction(this.myPositionAtTable,raiseState,0);
-			actionQueue.add(action);
-//			this.showRaiseDialog(0, 1200);
+//			action = new GameAction(this.myPositionAtTable,raiseState,0);
+//			actionQueue.add(action);
+			//TODO Hardcoded value of 2000. Ask for max bet
+			this.showRaiseDialog(this.minimumBet, 2000);
 			break;
 		
 		}
