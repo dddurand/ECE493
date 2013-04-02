@@ -22,6 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BlurMaskFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -33,6 +34,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 /**
  * with help from http://developer.android.com/guide/topics/connectivity/bluetooth.html#DiscoveringDevices
@@ -104,6 +106,17 @@ public class DiscoverableList {
 	        }
 	        if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 	        	//TODO if discoverable set to off
+	        }
+	        if(BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+	        	switch(BlueAdapt.getState()) {
+	        	case BluetoothAdapter.STATE_DISCONNECTED:
+	        	case BluetoothAdapter.STATE_DISCONNECTING:
+	        		Toast.makeText(mActivity, "WE GOT A DISCONNECT!", Toast.LENGTH_SHORT).show();
+	        		break;
+	        	default:
+	        		Toast.makeText(mActivity, "WE GOT SOMETHING ELSE", Toast.LENGTH_SHORT).show();
+	        		break;
+	        	}
 	        }
 	    }
 	    
