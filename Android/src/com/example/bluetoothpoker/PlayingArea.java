@@ -38,6 +38,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import application.PokerApplication;
 import bluetooth.DiscoverableList;
 import client.Client;
@@ -60,6 +61,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
 	private int current = 0;
+	private TextView actionLabel;
 	
 	//Turn Timers
 	private TurnTimer turnTimer=null;
@@ -102,10 +104,11 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    dbInterface = pokerApp.getDataSource();
 	    this.preferences = this.getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 	    
-	    /***********Set listeners for buttons****************/
+	    /***********Set listeners for views****************/
 	    callCheckButton = (Button)findViewById(R.id.callCheckButton);
 	    foldButton = (Button)findViewById(R.id.foldButton);
 	    raiseButton = (Button)findViewById(R.id.raiseButton);
+	    actionLabel = (TextView)findViewById(R.id.actionLabel);
 	    
 	    callCheckButton.setOnClickListener(this);
 	    foldButton.setOnClickListener(this);
@@ -401,6 +404,21 @@ public class PlayingArea extends Activity implements OnClickListener {
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
 	/**
+	 * Sets the action label to the specified message
+	 * @param msg
+	 */
+	private void setActionLabel(String msg){
+		actionLabel.setText(msg);
+	}
+	
+	/**
+	 * Clears the action label
+	 */
+	private void clearActionLabel(){
+		actionLabel.setText("");
+	}
+	
+	/**
 	 * Shows the raise dialog. If user presses the OK button the method
 	 * called will be "raiseFromDialog(n)"
 	 * @param min
@@ -429,6 +447,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	public void raiseFromDialog(int quantity){
 		GameAction action = new GameAction(this.myPositionAtTable,raiseState,quantity);
 		actionQueue.add(action);
+		cancelProgressBarTimer();
 		//TODO disable buttons?
 		//disableButtons();
 	}
@@ -662,6 +681,16 @@ public class PlayingArea extends Activity implements OnClickListener {
 		animationTimer.start();
 	}
 	
+	/**
+	 * Cancels the timer and sets the progress bar to invisible
+	 * Note: sets turnTimer to null.
+	 */
+	public void cancelProgressBarTimer(){
+		if (turnTimer!=null) {
+			turnTimer.stop();
+			turnTimer=null;
+		}
+	}
 	
 	
 	/**
@@ -706,24 +735,21 @@ public class PlayingArea extends Activity implements OnClickListener {
 		case R.id.callCheckButton:
 			action = new GameAction(this.myPositionAtTable,checkCallState,minimumBet);
 			actionQueue.add(action);
+			cancelProgressBarTimer();
 			break;
 			
 		/******************Fold*******************/
 		case R.id.foldButton:
 			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
 			actionQueue.add(action);
-//			if (turnTimer!=null) {
-//				action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
-//				actionQueue.add(action);
-//			}
+			cancelProgressBarTimer();
 			break;
 		
 		/*******************Raise Button***************/
 		case R.id.raiseButton:
 //			action = new GameAction(this.myPositionAtTable,raiseState,0);
 //			actionQueue.add(action);
-			//TODO Hardcoded value of 2000. Ask for max bet
-			this.showRaiseDialog(this.minimumBet, 2000);
+			this.showRaiseDialog(this.minimumBet, this.account.getBalance());
 			break;
 		
 		}
@@ -745,6 +771,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 			public void onClick(DialogInterface arg0, int arg1) {
 				//Add stuff for cleaning up here
 				PlayingArea.super.onBackPressed();
+				
 			}
 		}).create().show();
 	}

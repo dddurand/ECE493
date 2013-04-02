@@ -71,15 +71,14 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		ImageButton logoutButton = (ImageButton) view.findViewById(R.id.logoutButton);
 		ImageButton addFunds = (ImageButton) view.findViewById(R.id.addFundsButtonOnline);
 		Button statsButton = (Button) view.findViewById(R.id.statsButtonOnlineMode);
+		Button joinTableButton = (Button) view.findViewById(R.id.onlineModeJoinTable);
+		Button createTableButton = (Button) view.findViewById(R.id.onlineModeCreateTable);
 		
-		
-//		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);
-//		ImageButton offlineModeButton = (ImageButton) view.findViewById(R.id.offlineButton);
 		logoutButton.setOnClickListener(this);
 		addFunds.setOnClickListener(this);
 		statsButton.setOnClickListener(this);
-//		joinTableButton.setOnClickListener(this);
-//		offlineModeButton.setOnClickListener(this);
+		joinTableButton.setOnClickListener(this);
+		createTableButton.setOnClickListener(this);
 		
 		application.getUploadServiceSemaphore().release();
 		
@@ -184,7 +183,15 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		
 		switch (v.getId()){
 		
-		/**Logout Button**/
+		case R.id.onlineModeJoinTable:
+			((MainScreen)getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
+			break;
+			
+		case R.id.onlineModeCreateTable:
+			((MainScreen)getActivity()).switchFragment(MainScreen.CREATE_TABLE_SCREEN);
+			break;
+		
+		/************************************Logout Button*********************************/
 		case R.id.logoutButton:
 			try {
 				if (isConnectedInternet()) sendLogoutRequest();
@@ -200,12 +207,12 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 			}
 			break;
 			
-		/*****Add funds button***/
+		/**************************************Add funds button******************************/
 		case R.id.addFundsButtonOnline:
 			this.showAmountDialog("How much do you want to add to your balance?");
 			break;
 			
-		/*******START THE NEW ACTIVITY FOR THE STATS*******/
+		/******************************START THE NEW ACTIVITY FOR THE STATS***************************/
 		case R.id.statsButtonOnlineMode:
 			Intent i = new Intent(getActivity(),Stats.class);
 			startActivity(i);
