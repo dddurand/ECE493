@@ -4,16 +4,13 @@ import game.GameMechanics;
 import game.Player;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import server.GameAction.PokerAction;
-
 import android.app.Activity;
 
 /**
@@ -146,14 +143,14 @@ public class Server implements PlayerTaskListener {
 	public void removePlayer(Player player)
 	{
 		
-		if(playerListenerTasks.contains(player))
+		if(playerListenerTasks.containsKey(player.getId()))
 		{
 		//Generate game action to remove player
 		GameAction removePlayerAction = new GameAction(player, false);
-		removePlayerAction.setPlayer(this.serverPlayer);
+		removePlayerAction.setPlayer(player);
 		removePlayerAction.setPosition(this.serverPlayer.getId());
 		
-		ServerClientListener task = playerListenerTasks.remove(player);
+		ServerClientListener task = playerListenerTasks.remove(player.getId());
 		task.cancel();
 		gameActionQueue.add(removePlayerAction);
 		gameBroadCaster.removePlayer(player);

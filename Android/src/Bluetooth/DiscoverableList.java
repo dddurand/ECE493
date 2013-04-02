@@ -48,6 +48,8 @@ public class DiscoverableList {
 	public final static int REQUEST_ENABLE_BT_SERVER = 50;
 	public final static int REQUEST_ENABLE_BT_CLIENT =51;
 	public static final String EXTRA_DEVICE_ADDRESS = "device_address";
+	public static final String CLIENT_POS = "client_position";
+	
 	private Vector<BluetoothSocket> mSockets = new Vector<BluetoothSocket>();
 	private Vector<ServerThread> serverThreads = new Vector<ServerThread>();
 	private Vector<ClientThread> clientThreads = new Vector<ClientThread>();

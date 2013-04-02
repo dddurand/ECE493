@@ -60,7 +60,7 @@ public class Pot implements Serializable{
 			{
 				continue;
 			}
-			if(participants.get(i)==winners[j].getId()) {
+			if(winners.length > j && participants.get(i)==winners[j].getId()) {
 				j++;
 			} else {
 				losers[k]=participants.get(i);
@@ -214,6 +214,8 @@ public class Pot implements Serializable{
 		this.playeramount = (Hashtable<Integer, Integer>) in.readObject();
 		this.winners = (Player[]) in.readObject();
 	}
+	
+	
 
 	
 }

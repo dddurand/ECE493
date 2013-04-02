@@ -13,8 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import application.PokerApplication;
 
@@ -41,9 +41,12 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		this.view = inflater.inflate(R.layout.offline_fragment,container, false);
 		
 		/******************Set listener for buttons******************/
-		ImageButton addFundsButton = (ImageButton) view.findViewById(R.id.addFundsButton);
-		ImageButton joinTableButton = (ImageButton) view.findViewById(R.id.joinTableButton);
-		ImageButton createTableButton = (ImageButton) view.findViewById(R.id.createTableButton);
+//		ImageButton addFundsButton = (ImageButton) view.findViewById(R.id.addFundsButton);
+//		ImageButton joinTableButton = (ImageButton) view.findViewById(R.id.joinTableButton);
+//		ImageButton createTableButton = (ImageButton) view.findViewById(R.id.createTableButton);
+		Button addFundsButton = (Button) view.findViewById(R.id.addFundsButton);
+		Button joinTableButton = (Button) view.findViewById(R.id.joinTableButton);
+		Button createTableButton = (Button) view.findViewById(R.id.createTableButton);
 		addFundsButton.setOnClickListener(this);
 		joinTableButton.setOnClickListener(this);
 		createTableButton.setOnClickListener(this);
@@ -53,7 +56,7 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		
 		offlineUsername.addTextChangedListener(this);
 		
-		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		preferences = this.getActivity().getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 		this.application = (PokerApplication) this.getActivity().getApplication();
 		account = application.getAccount();
 		

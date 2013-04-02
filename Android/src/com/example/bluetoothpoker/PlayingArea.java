@@ -5,10 +5,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import bluetooth.DiscoverableList;
-
+import misc.AnimationTimer;
+import misc.CustomAdapter;
+import misc.RaiseDialog;
+import misc.StatsRowObject;
+import misc.TurnTimer;
 import server.GameAction;
 import server.GameAction.PokerAction;
 import server.GameState;
@@ -17,27 +21,29 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.preference.Preference;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import application.PokerApplication;
+import bluetooth.DiscoverableList;
 import client.Client;
 import dataModels.Account;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
-import fragments.OnlineMode;
 import fragments.PlayerFragment;
 import fragments.River;
 import game.Card;
@@ -55,15 +61,33 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private FragmentManager fm;
 	private int current = 0;
 	
+	//Turn Timers
+	private TurnTimer turnTimer=null;
+	private AnimationTimer animationTimer=null;
+	
+	private LinkedBlockingQueue<GameAction> actionQueue;
+	
 	private int myPositionAtTable;
+	private int displayPlayerOffset;
+	
+	//NOTE: This value MUST be the same as in the XML file
+	//ie. android:max=10000
+	private final int turnLength = 10000; //In MS
 	
 	private PokerApplication pokerApp;
 	private Account account;
 	private DatabaseDataSource dbInterface;
 	private SharedPreferences preferences;
-	
-	private boolean debugServer = false;
 
+	private Button callCheckButton;
+	private Button foldButton;
+	private Button raiseButton;
+	
+	private PokerAction raiseState;
+	private PokerAction checkCallState;
+	
+	private int minimumBet;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,15 +100,16 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    this.pokerApp = (PokerApplication) this.getApplication();
 	    this.account = pokerApp.getAccount();
 	    dbInterface = pokerApp.getDataSource();
-	    this.preferences = this.getPreferences(Context.MODE_PRIVATE);
+	    this.preferences = this.getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 	    
 	    /***********Set listeners for buttons****************/
-	    Button b1 = (Button)findViewById(R.id.button1);
-	    Button b2 = (Button)findViewById(R.id.button2);
-	    Button b3 = (Button)findViewById(R.id.button3);
-	    b1.setOnClickListener(this);
-	    b2.setOnClickListener(this);
-	    b3.setOnClickListener(this);
+	    callCheckButton = (Button)findViewById(R.id.callCheckButton);
+	    foldButton = (Button)findViewById(R.id.foldButton);
+	    raiseButton = (Button)findViewById(R.id.raiseButton);
+	    
+	    callCheckButton.setOnClickListener(this);
+	    foldButton.setOnClickListener(this);
+	    raiseButton.setOnClickListener(this);
 	    
 	    
 	    /**********************Initialize fragment related variables************************/
@@ -114,16 +139,21 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    
 	    initializeFragments(maxPlayers);
 	    
-	    ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+	    //@SuppressWarnings("unchecked")
+		ArrayList<Player> myPlayer = (ArrayList<Player>)this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+
 	    //Player myPlayer[] =(Player[])this.getIntent().getSerializableExtra(DiscoverableList.PLAYER_HOLDER);
+
 	    PokerApplication pA = (PokerApplication) this.getApplication();
-	    BluetoothSocket mySockets[] = pA.getSocket();
 	    ObjectInputStream inStream[] = pA.getInStream();
-	    ObjectOutputStream outStream[] =pA.getOutStream();
-	    LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
+	    ObjectOutputStream outStream[] = pA.getOutStream();
+	    actionQueue = new LinkedBlockingQueue<GameAction>();
 	    if(getIntent().getBooleanExtra(DiscoverableList.IS_CLIENT, true)) {
 	    	//Client
 	    	try {
+	    		this.myPositionAtTable = getIntent().getIntExtra(DiscoverableList.CLIENT_POS, 0);
+	    		loadZerothDisplayOffset(this.myPositionAtTable);
+				@SuppressWarnings("unused")
 				Client client = new Client(this, inStream[0], outStream[0], actionQueue);
 			} catch (StreamCorruptedException e) {
 				// TODO Auto-generated catch block
@@ -137,7 +167,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    	Server server = new Server(this);
 	    	
 	    	try {
+				@SuppressWarnings("unused")
 				Client client = new Client(this, server, actionQueue, 0);
+				this.myPositionAtTable = 0;
+				loadZerothDisplayOffset(this.myPositionAtTable);
 				for (int i=0; i<myPlayer.size(); i++) {
 					//LinkedBlockingQueue<GameAction> FARTS = new LinkedBlockingQueue<GameAction>();
 					//Client tmp = new Client(this, mySockets[i].getInputStream(), mySockets[i].getOutputStream(),FARTS);
@@ -158,12 +191,29 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 */
 	
 	
+	private void loadZerothDisplayOffset(int actualPosition)
+	{
+		
+		int offset = 0;
+		while((actualPosition + offset) % (this.maxPlayers) != 0)
+		{
+			offset++;
+		}
+		
+		this.displayPlayerOffset = offset;
+	}
+	
+	private int getDisplayOffset(int actualPosition)
+	{
+		return (actualPosition + this.displayPlayerOffset) % (this.maxPlayers);
+	}
+	
 	/**
 	 * Initializes the playing area by placing the fragments. only called by constructor
 	 */
 	private void initializeFragments(int totalPlayers){
 		
-		//Transaction begins here
+		//Transaction begins heref
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.setTransitionStyle(FragmentTransaction.TRANSIT_NONE);
 		
@@ -195,14 +245,14 @@ public class PlayingArea extends Activity implements OnClickListener {
 			if(player.getId() == this.myPositionAtTable && player.getUsername().equals(this.account.getUsername()))
 			{
 				this.account.setBalance(player.getAmountMoney());
-				if(this.account.isOnline())
-					dbInterface.updateAccount(account);
-				else
-				{
-					Editor editor = this.preferences.edit();
-					editor.putInt(PreferenceConstants.OFFLINE_BALANCE, account.getBalance());
-					editor.commit();
-				}
+					if(this.account.isOnline())
+						dbInterface.updateAccount(account);
+					else
+					{
+						Editor editor = this.preferences.edit();
+						editor.putInt(PreferenceConstants.OFFLINE_BALANCE, account.getBalance());
+						editor.commit();
+					}
 				
 				break;
 			}
@@ -353,6 +403,58 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	/*********************************************************Methods for Game Mechanics***********************************************************/
 	
+	private void showRaiseDialog(int min, int max){
+		//Instantiate
+		RaiseDialog dlg = new RaiseDialog(this,min,max);
+		Window window = dlg.getWindow();
+		WindowManager.LayoutParams wlp = window.getAttributes();
+		
+		//Set window attributes
+		wlp.height=LayoutParams.WRAP_CONTENT;
+		wlp.width=this.foldButton.getWidth();
+		wlp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+		wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+		window.setAttributes(wlp);
+		//Show
+		dlg.show();
+	}
+	
+	
+	/**
+	 * Clears the pot list.
+	 */
+	public void clearPots(){
+		ListView listView = (ListView)findViewById(R.id.potList);
+		listView.setAdapter(null);
+	}
+	
+	/**
+	 * Populates the pot list with the given data in the array.
+	 */
+	public void populatePotsList(ArrayList<String> pots){
+		
+		ListView listView = (ListView)findViewById(R.id.potList);
+		ArrayList<StatsRowObject> rowObjects = new ArrayList<StatsRowObject>();
+		StatsRowObject row;
+		
+		for (int i=0;i<pots.size();i++)
+		{
+			row = new StatsRowObject("Pot "+i,pots.get(i));
+			rowObjects.add(row);
+		}
+		
+		CustomAdapter adapter = new CustomAdapter(this,rowObjects);
+		listView.setAdapter(adapter);
+	}
+	
+	public int getPositionAtTable(){
+		return this.myPositionAtTable;
+	}
+	
+	public ProgressBar getPlayerProgressBar(int pos){
+		return (ProgressBar) playerLayouts[pos].findViewById(R.id.progressBarTimeLeft);
+	}
+	
 	/**
 	 * Method that updates everything in the view according to what's passed in the data object.
 	 * This is the primary method to be used from the game mechanics.
@@ -360,44 +462,85 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 */
 	public void updateAll(GameState data){
 		
-		//Log.d("GUI UPDATE CALLED", "TotalPlayers: " + data.getTotalPlayers());
-		
 		//Clear all players first
 		clearAllPlayers();
+		
+		clearAll();
+		
 		//Then clear the river
 		clearRiver();
-		//Then make all the players visible
-		//setVisiblePlayers(data.getTotalPlayers());
+		updateButtons(data);
 		
+		//Get players and make the active ones visible
 		ArrayList<Player> players = data.getPlayers();
 		
-		setVisiblePlayers(players);
-		
+		//----------------------------------------------------------------------------------------------------------
+		//---------------------------------------------Update Players-----------------------------------------------
+		//----------------------------------------------------------------------------------------------------------
 		for(Player player : players)
 		{
 			if(player == null) continue;
+		
+			int playerPosition = getDisplayOffset(player.getId());
+			setVisiblePlayer(playerPosition);
 			
 			if(player.getCard(0) == null)
 			{
-				this.setPlayerCard(player.getId(), 0, "back");
-				this.setPlayerCard(player.getId(), 1, "back");
-				continue;
+				this.setPlayerCard(playerPosition, 0, "back");
+				this.setPlayerCard(playerPosition, 1, "back");
 			}
+			else
+			{
+			
+			//Sets the names for all the active players
+			this.setPlayerName(playerPosition,player.getUsername());
 			
 			Card card = player.getCard(0);
-			this.setPlayerCard(player.getId(), 0, card.toString().toLowerCase());
+			this.setPlayerCard(playerPosition, 0, card.toString().toLowerCase(Locale.CANADA));
 			
 			card = player.getCard(1);
-			this.setPlayerCard(player.getId(), 1, card.toString().toLowerCase());
+			this.setPlayerCard(playerPosition, 1, card.toString().toLowerCase(Locale.CANADA));
+			}
+			
+			if(player.getActive() == Player.FOLDED)
+			{
+				this.foldPlayer(playerPosition);
+			}
+			
+			this.clearActivePlayerBackground(playerPosition);
+			this.setPlayerName(playerPosition, player.getUsername());
+			this.setPlayerAmount(playerPosition, player.getAmountMoney());
 		}
 		
+		int currentDisplayTurn = getDisplayOffset(data.getCurrentPlayerTurn());
+		
+		this.takeTurn(currentDisplayTurn);
+		this.setActivePlayerBackground(currentDisplayTurn);
+		
+		//----------------------------------------------------------------------------------------------------------
+		//---------------------------------------------Progress Bar-------------------------------------------------
+		//----------------------------------------------------------------------------------------------------------
+		//If local player: wait for move
+		if (data.getCurrentPlayerTurn()==this.myPositionAtTable)
+		{
+			this.takeTurn(currentDisplayTurn);
+		}
+		else
+		//Someone else's turn
+		{
+			this.animatePB(currentDisplayTurn);
+		}
+		
+		//----------------------------------------------------------------------------------------------------------
+		//-------------------------------------------------River----------------------------------------------------
+		//----------------------------------------------------------------------------------------------------------
 		Card comm[] = data.getCommunity();
 		updateRiver(comm);
 		
 		/*
 		 * Update Account
 		 */
-		//updateAccount(data);
+		updateAccount(data);
 		
 		/*
 		 * Disabled until we have bluetooth clients...
@@ -409,13 +552,26 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 * Sets the number of players that are visible on the playing area
 	 * @param totalPlayers
 	 */
-	private void setVisiblePlayers(ArrayList<Player> players){
-		
-		for(Player player : players)
-		{
-			if(player == null) continue;
-			playerLayouts[player.getId()].setVisibility(View.VISIBLE);
-		}
+	private void setVisiblePlayer(int id){
+			playerLayouts[id].setVisibility(View.VISIBLE);
+	}
+	
+	/**
+	 * Sets the player name to the specified string provided
+	 */
+	private void setPlayerName(int pos, String name){
+		this.playerObjects[pos].setName(name);
+	}
+	
+	/**
+	 * Updates the view of the player when it folds and changes the name to  "Fold"
+	 * Note: does not changes the name if it is the local player (ie. pos==0)
+	 * @param pos
+	 */
+	public void foldPlayer(int pos){
+		this.playerObjects[pos].setCard(0, "folded");
+		this.playerObjects[pos].setCard(1, "folded");
+		if (pos!=0) this.playerObjects[pos].setName("Fold");
 	}
 	
 	/**
@@ -426,11 +582,9 @@ public class PlayingArea extends Activity implements OnClickListener {
 		for(int i = 0; i < comm.length; i++)
 		{
 			if(comm[i]==null) break;
-			riverObject.setCard(i, comm[i].toString().toLowerCase());
+			riverObject.setCard(i, comm[i].toString().toLowerCase(Locale.CANADA));
 			
 		}	
-		int test = 0;;
-		test++;
 	}
 	
 	/**
@@ -452,6 +606,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 		playerObjects[playerNumber].setCard(cardNumber, c);
 	}
 	
+	public void setPlayerAmount(int playerNumber, int amount){
+		playerObjects[playerNumber].setAmount(amount);
+	}
+	
 	/**
 	 * Sets ALL players to invisible.
 	 */
@@ -461,33 +619,36 @@ public class PlayingArea extends Activity implements OnClickListener {
 			playerObjects[i].setCard(0, "back");
 			playerObjects[i].setCard(1, "back");
 			playerLayouts[i].setVisibility(View.INVISIBLE);
+			this.clearActivePlayerBackground(i);
 		}
 	}
 	
 	/**
-	 * Animates the progress bar for the given player in the parameter.
-	 * @param player The player's progress bar to be animated
+	 * Waits for the turn of the given player and animates the progress bar for the given player in the parameter.
+	 * Parameter should always be 0 (the local player)
+	 * @param player The player's position on the table
 	 */
-	public void animateProgressBar(int player){
-		//Get view
-		final ProgressBar pb = (ProgressBar) playerLayouts[player].findViewById(R.id.progressBarTimeLeft);
-		//Set it visible
+	public void takeTurn(int player){
+		ProgressBar pb = (ProgressBar)playerLayouts[player].findViewById(R.id.progressBarTimeLeft);
 		pb.setVisibility(View.VISIBLE);
 		
-		//Start the countdown timer and start
-		new CountDownTimer(7000,1){
-			
-			public void onTick(long millisUntilFinished){
-				pb.setProgress((int)millisUntilFinished);
-			}
-			
-			public void onFinish(){
-				pb.setVisibility(View.INVISIBLE);
-				//Player didnt take turn, fold
-			}
-		}.start();
-		
+		turnTimer = new TurnTimer(this.turnLength,1,this,player);
+		turnTimer.start();
 	}
+	
+	/**
+	 * Simply animates a progress bar for the given player. Should be called to all players except the local one on this view.
+	 * @param player
+	 */
+	public void animatePB(int player){
+		final ProgressBar pb = (ProgressBar)playerLayouts[player].findViewById(R.id.progressBarTimeLeft);
+		pb.setVisibility(View.VISIBLE);
+		
+		animationTimer = new AnimationTimer(this.turnLength,1,this,player);
+		animationTimer.start();
+	}
+	
+	
 	
 	/**
 	 * Changes background of selected player to indicate it's that player's turn.
@@ -506,6 +667,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		playerLayouts[n].setBackgroundColor(Color.parseColor("#00000000"));
 	}
 	
+	@SuppressWarnings("unused")
 	private void animateAll(){
 		for (int i=0;i<this.maxPlayers;i++)
 			setActivePlayerBackground(i);
@@ -516,36 +678,46 @@ public class PlayingArea extends Activity implements OnClickListener {
 			clearActivePlayerBackground(i);
 	}
 	
-
+	/**
+	 * Click listener for the buttons on the main playing area. Send serializable objects according to what the user presses.
+	 */
 	@Override
 	public void onClick(View v) {
 		
+		GameAction action;
+		
 		switch (v.getId()){
 		
-		case R.id.button1:
-			//test commands
-			clearAll();
+		/******************Call/check****************/
+		case R.id.callCheckButton:
+			action = new GameAction(this.myPositionAtTable,checkCallState,minimumBet);
+			actionQueue.add(action);
 			break;
 			
-		case R.id.button2:
-			riverObject.setCard(3, "hk");
-			riverObject.setCard(4, "hq");
-			playerObjects[3].setCard(1, "sk");
+		/******************Fold*******************/
+		case R.id.foldButton:
+			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
+			actionQueue.add(action);
+//			if (turnTimer!=null) {
+//				action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
+//				actionQueue.add(action);
+//			}
 			break;
-			
-		case R.id.button3:
-//			animateProgressBar(1);
-			if (current!=0) clearActivePlayerBackground(current-1);
-			if (current>=6) current=0;
-			setActivePlayerBackground(current);
-			animateProgressBar(current++);
+		
+		/*******************Raise Button***************/
+		case R.id.raiseButton:
+			action = new GameAction(this.myPositionAtTable,raiseState,0);
+			actionQueue.add(action);
+//			this.showRaiseDialog(0, 1200);
 			break;
 		
 		}
 		
-		
 	}
 	
+	/**
+	 * Shows a dialog confirming user to exit the game. The clean up methods necessary when a player leaves should be here.
+	 */
 	@Override
 	public void onBackPressed(){
 		
@@ -562,103 +734,77 @@ public class PlayingArea extends Activity implements OnClickListener {
 		}).create().show();
 	}
 	
-	private class DebugRunnable implements Runnable
+	private void updateButtons(GameState state)
 	{
-		public void run()
-		{
-			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			LinkedBlockingQueue<GameAction> actionQueue = new LinkedBlockingQueue<GameAction>();
-			LinkedBlockingQueue<GameAction> actionQueue2 = new LinkedBlockingQueue<GameAction>();
-			Server server = new Server(PlayingArea.this);
-			try {
-				Account account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
-				account.setUsername("BOB1");
-				account.setBalance(500);
-				Client client = new Client(PlayingArea.this, server, actionQueue, 0);
-				account = ((PokerApplication) PlayingArea.this.getApplication()).getAccount();
-				account.setUsername("BOB2");
-				account.setBalance(500);
-				Client client2 = new Client(PlayingArea.this, server, actionQueue2, 3);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			ArrayList<GameAction> actions = new ArrayList<GameAction>();
-			
-			server.gameStart();
-			
-			GameAction action = new GameAction(0, PokerAction.BET, 15);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.BET, 15);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.BET, 5);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CALL, 5);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(0, PokerAction.CHECK, 0);
-			actions.add(action);
-			
-			action = new GameAction(3, PokerAction.CHECK, 0);
-			actions.add(action);
-
-			for(int i = 0; i < actions.size(); i++)
+		if(state == null || state.getPlayer().getActive() != Player.CURRENT)
 			{
-				GameAction temp = actions.get(i);
-				
-				Log.e("ACTION: ", i+"");
-				Log.e("ACTION: ", (i % 2)+"");
-				if(i % 2 == 1)
-				{
-					Log.e("queue2", (i % 2)+"");
-					actionQueue2.add(temp);
-				}
-				else
-				{
-					Log.e("queue", (i % 2)+"");
-					actionQueue.add(temp);	
-				}
-					
-				
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
+			disableButtons();
+			return;
 			}
+		
+		if(state.getCurrentPlayerTurn() == myPositionAtTable)
+			updateButtonState(state);
+		else
+			disableButtons();
+		
+		
+	}
+	
+	private void updateButtonState(GameState state)
+	{
+		ArrayList<Pot> sidePots = state.getSidePots();
+		Pot mainPot = state.getMainPot();
+		
+		int myBetAmount = 0;
+		int potAmount = 0;
+		for(Pot pot : sidePots)
+			{
+			potAmount += pot.getAmount();
+			myBetAmount += pot.getPlayerAmount(myPositionAtTable);
+			}
+		
+		potAmount += mainPot.getAmount();
+		myBetAmount += mainPot.getPlayerAmount(myPositionAtTable);
+		
+		minimumBet = potAmount - myBetAmount;
+		
+		if(myBetAmount == potAmount)
+		{
+			//raise && check
+			callCheckButton.setEnabled(true);
+			callCheckButton.setText(R.string.check);
 			
+		    foldButton.setEnabled(true);
+		    raiseButton.setEnabled(true);
 			
-			
+		    raiseState = PokerAction.RAISE;
+			checkCallState = PokerAction.CHECK;
+		    
 		}
+		else if(myBetAmount < potAmount)
+		{
+			//call & reraise
+			callCheckButton.setEnabled(true);
+			callCheckButton.setText(R.string.call);
+			
+		    foldButton.setEnabled(true);
+		    raiseButton.setEnabled(true);
+		    
+		    raiseState = PokerAction.RERAISE;
+			checkCallState = PokerAction.CALL;
+		}
+		else
+		{
+			Log.e("Game State", "Current bet amount more than pots");
+		}
+		
+	}
+	
+	private void disableButtons()
+	{
+		callCheckButton.setEnabled(false);
+		foldButton.setEnabled(false);
+		raiseButton.setEnabled(false);
 	}
 	
 }

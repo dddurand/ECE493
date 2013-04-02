@@ -3,10 +3,8 @@ package client;
 import game.Player;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.StreamCorruptedException;
@@ -15,9 +13,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import server.GameAction;
 import server.Server;
+import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.PlayingArea;
+import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
 
@@ -134,13 +134,15 @@ public class Client implements ClientTaskListener {
 	@Override
 	public void onPlayerTaskClose() {
 		//signal activity that we disconnected
-		
+		this.close();
 	}
 	
 	public void close()
 	{
 		listener.cancel();
 		broadCaster.cancel();
+		Toast.makeText(this.activity, R.string.connection_to_server_lost, Toast.LENGTH_LONG).show();
+		this.activity.finish();
 	}
 
 

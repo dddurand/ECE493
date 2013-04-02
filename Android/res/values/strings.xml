@@ -11,6 +11,7 @@
     <string name="offlineUserHint">Temp. Name</string>
     <string name="joinTableString">Join Table</string>
     <string name="createTableString">Create Table</string>
+    <string name="hostTableString">Host Table</string>
     <string name="passwordFieldString">Password</string>
     <string name="passwordConfirmFieldString">Confirm Password</string>
     <string name="fundsDialogMessage">Desired Amount of Funds</string>
@@ -26,6 +27,14 @@
     <string name="monthLabel">Month</string>
     <string name="yearLabel">Year</string>
     <string name="allTimeLabel">All Time</string>
+    <string name="addFunds">Add Funds</string>
+    <string name="register">Register</string>
+    <string name="offlineMode">Offline Play</string>
+    <string name="connecting">Connecting to Host</string>
+    <string name="pleaseWait">Please Wait</string>
+    <string name="raiseLabel">Raise amount</string>
+    <string name="totalMoneyStats">Total Money Generated</string>
+    <string name="handOptStats">Hand Optimality</string>
 	
 	<string name="server_invalid_login">Invalid Login Credentials</string>
     <string name="server_duplicate_user">Username already in use</string>
@@ -73,5 +82,9 @@
 	 <string name="netMoneyRanking">Net Money Ranking</string>
      <string name="optimalityRanking">Optimality Ranking</string>
 	 <string name="optimality">Optimality</string>
+	 <string name="call">call</string>
+	 <string name="raise">raise</string>
+	 <string name="check">check</string>
+	 <string name="connection_to_server_lost">Connection to Poker Table Lost...</string>
     
 </resources>

@@ -56,7 +56,7 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		
 		application = (PokerApplication) this.getActivity().getApplication();
 		account = application.getAccount();
-		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		preferences = this.getActivity().getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 		dbInterface = this.application.getDataSource();
 		
 		/**Change User Label**/

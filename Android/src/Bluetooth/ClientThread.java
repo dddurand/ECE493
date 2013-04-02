@@ -189,6 +189,7 @@ import fragments.JoinTable;
 				//Server has started so start game on this end
 				Intent intent = new Intent(mActivity, PlayingArea.class);
 				intent.putExtra(DiscoverableList.IS_CLIENT, true);
+				intent.putExtra(DiscoverableList.CLIENT_POS, pos);
 				PokerApplication pokerApplication = (PokerApplication)mActivity.getApplication();
 				pokerApplication.setInStream(inStream);
 				pokerApplication.setOutStream(outStream);

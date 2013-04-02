@@ -198,7 +198,7 @@ public class GameMechanics {
 
 			if(next == this.positionOfCurrentPlayer)
 			{
-				//Log.e("GameMechanics", "Player turn ended at original person");
+				//.e("GameMechanics", "Player turn ended at original person");
 				return this.positionOfCurrentPlayer;
 			}
 
@@ -871,6 +871,7 @@ public class GameMechanics {
 		}
 
 		this.mainPot.setPlayerAmount(smallBlind, this.tempBets[smallBlind]);
+		this.mainPot.addTotal(this.tempBets[smallBlind]);
 	}
 
 	/**
@@ -888,6 +889,7 @@ public class GameMechanics {
 		}
 
 		this.mainPot.setPlayerAmount(bigBlind, this.tempBets[bigBlind]);
+		this.mainPot.addTotal(this.tempBets[bigBlind]);
 
 	}
 

@@ -38,7 +38,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignRight="@id/rightCard"
         android:layout_below="@id/rightCard"
-        android:max="7000"
+        android:max="10000"
         android:paddingTop="2dp"
         android:visibility="invisible" />
     

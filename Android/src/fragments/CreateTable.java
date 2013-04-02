@@ -44,7 +44,7 @@ public class CreateTable extends Fragment implements OnClickListener {
 //		joinTableButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
 		tableNameText = (EditText) view.findViewById(R.id.createTableNameField);
-		preferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		preferences = this.getActivity().getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 		this.application = (PokerApplication) this.getActivity().getApplication();
 		account = application.getAccount();
 		
