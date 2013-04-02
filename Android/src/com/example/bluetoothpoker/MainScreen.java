@@ -105,6 +105,10 @@ public class MainScreen extends Activity implements View.OnClickListener {
 		getMenuInflater().inflate(R.menu.activity_main_screen, menu);
 		return true;
 	}
+	
+	public void setScreen(int newScreen){
+		currentScreen = newScreen;
+	}
 
 	/**
 	 * Method for changing the fragment in the main screen. Fragment changed to specified code.

@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -90,8 +92,6 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		test();
 		super.onActivityCreated(savedInstanceState);
 	}
-	
-	
 	
 	public void test()
 	{

@@ -1,13 +1,15 @@
 package fragments;
 
-import com.example.bluetoothpoker.R;
-
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+
+import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.R;
 
 public class WaitingServer extends Fragment implements OnClickListener {
 
@@ -20,10 +22,21 @@ public class WaitingServer extends Fragment implements OnClickListener {
 			
 			return view;
 	}
+	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		//Get Fragment Manager
+		FragmentManager fm = getActivity().getFragmentManager();
+		//Get the last screen in the back stack
+		fm.popBackStack();
+		//Tell the main screen we changed the screens
+		((MainScreen)getActivity()).setScreen(MainScreen.JOIN_TABLE_SCREEN);
 	}
 
 }
