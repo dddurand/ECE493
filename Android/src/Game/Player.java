@@ -16,7 +16,7 @@ public class Player implements Serializable{
 	private int id;
 	private int money;
 	private int active;
-	private String username;
+	private String username=null;
 	
 	public static final int FOLDED = 0;
 	public static final int ALL_IN = 1;
@@ -33,44 +33,86 @@ public class Player implements Serializable{
 		this.username = username;
 	}
 	
-	
+	/**
+	 * get the string username of the player
+	 * @return
+	 */
 	public String getUsername()
 	{
 		return this.username;
 	}
 	
+	/**
+	 * get the id of the player which represents the position of the player
+	 * at the table
+	 * @return
+	 */
 	public int getId() {
 		return this.id;
 	}
+	
+	/**
+	 * set the cards for the player
+	 * @param card
+	 * @param pos
+	 */
 	protected void setCard(Card card, int pos) {
 		this.hand[pos]=card;
 	}
 	
+	/**
+	 * returns card belonging to the player at given position
+	 * player has two cards position 0 and 1
+	 * @param pos
+	 * @return
+	 */
 	public Card getCard(int pos) {
 		return this.hand[pos];
 	}
 	
+	/**
+	 * returns entire hand of the player
+	 * @return
+	 */
 	public Card[] getHand() {
 		return this.hand;
 	}
 	
+	/**
+	 * add money to the player amount
+	 * @param money
+	 */
 	protected void addMoney(int money) {
 		this.money+= money;
 	}
 	
+	/**
+	 * returns the amount of money the player has
+	 * @return
+	 */
 	public int getAmountMoney() {
 		return this.money;
 	}
 	
+	/**
+	 * remove anmount from total amount of money player has
+	 * @param money
+	 */
 	protected void removeMoney(int money) {
 		this.money-=money;
 	}
 	
+	/**
+	 * set the mode of the player
+	 * use folded, all_in or current
+	 * @param mode
+	 */
 	protected void setActive(int mode) {
 		this.active = mode;
 	}
 	
-	/*
+	/**
+	 * get the mode of the player
 	 * 0 - folded
 	 * 1 - all in
 	 * 2 - current

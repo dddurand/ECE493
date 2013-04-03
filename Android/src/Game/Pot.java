@@ -71,8 +71,9 @@ public class Pot implements Serializable{
 	}
 	
 
-
-
+	/**
+	 * sets the pot to a mainpot
+	 */
 	protected void mainPot(){
 		for(int i=0; i<this.participants.size();i++) {
 			if(participants.get(i)==null) 
@@ -83,6 +84,9 @@ public class Pot implements Serializable{
 		}
 	}
 	
+	/**
+	 * resets the amount each player currently has in pot
+	 */
 	protected void resetPlayerAmount() {
 		Enumeration<Integer> e = this.playeramount.keys();
 		while(e.hasMoreElements()) {
@@ -90,6 +94,10 @@ public class Pot implements Serializable{
 			this.playeramount.put(id, 0);
 		}
 	}
+	/**
+	 * checks to see if there are any participants who have not matched the current bet level
+	 * @return boolean
+	 */
 	protected boolean checkPlayersBet() {
 		Enumeration<Integer> e = this.playeramount.keys();
 		while(e.hasMoreElements()) {
@@ -100,15 +108,33 @@ public class Pot implements Serializable{
 		}
 		return true;
 	}
+	/**
+	 * adds entire list to participants in the pot
+	 * @param participants
+	 */
 	protected void addList(ArrayList<Integer> participants) {
 		this.participants.addAll(participants);
 	}
+	/**
+	 * sets how much money player has put in towards pot
+	 * @param id
+	 * @param amount
+	 */
 	protected void setPlayerAmount(int id, int amount) {
 		this.playeramount.put(id, amount);
 	}
+	/**
+	 * returns how much money player has put in towards pot
+	 * @param id
+	 * @return
+	 */
 	public int getPlayerAmount(int id) {
 		return this.playeramount.get(id);
 	}
+	/**
+	 * 
+	 * @param newpot
+	 */
 	protected void decrementPlayerAmount(int newpot) {
 		Enumeration<Integer> e = this.playeramount.keys();
 		while(e.hasMoreElements()) {
@@ -116,32 +142,59 @@ public class Pot implements Serializable{
 			this.playeramount.put(id, this.playeramount.get(id)-newpot);
 		}
 	}
+	/**
+	 * set amount needed to call
+	 * @param amount
+	 */
 	protected void setAmount(int amount) {
 		this.amount = amount;
 	}
-	
+	/**
+	 * get amount needed to call
+	 * @return
+	 */
 	public int getAmount() {
 		return this.amount;
 	}
 	
+	/**
+	 * add to the total amount of the pot
+	 * @param amount
+	 * @return
+	 */
 	protected int addTotal(int amount) {
 		this.totalAmount += amount;
 		return this.totalAmount;
 	}
 	
+	/**
+	 * subtract money from total amount of pot
+	 * @param amount
+	 * @return
+	 */
 	protected int take(int amount) {
 		this.totalAmount-=amount;
 		return this.totalAmount;
 	}
-	
+	/**
+	 * get the total amount of money in the pot
+	 * @return
+	 */
 	public int getTotal() {
 		return this.totalAmount;
 	}
 	
+	/**
+	 * get the id of the owner of this sidepot (will just return server's id if mainpot)
+	 * @return
+	 */
 	protected int getOwner() {
 		return this.participants.get(0);
 	}
-	
+	/**
+	 * returns ids of all Players who currently have money in the mainpot
+	 * @return
+	 */
 	protected ArrayList<Integer> getMainParticipants() {
 		ArrayList<Integer> temp = new ArrayList<Integer>();
 		Enumeration<Integer> e = this.playeramount.keys();
@@ -153,20 +206,37 @@ public class Pot implements Serializable{
 		return temp;
 	}
 	
+	/**
+	 * return number of participants in pot
+	 * @return
+	 */
 	protected int size() {
 		return this.participants.size();
 	}
 	
+	/**
+	 * returnn arraylist of all participants in pot
+	 * @return
+	 */
 	protected ArrayList<Integer> getParticipants() {
 		return this.participants;
 	}
 	
 	
+	/**
+	 * add player id to participant list
+	 * @param id
+	 */
 	protected void addParticipants(int id) {
 		this.participants.add(id);
 	}
 
 
+	/**
+	 * checks to see if id exists in partcipants list
+	 * @param id
+	 * @return
+	 */
 	public boolean exist(int id) {
 		for(int i=0; i<this.participants.size();i++) {
 			if(this.participants.get(i)==id) {
@@ -176,6 +246,11 @@ public class Pot implements Serializable{
 		return false;
 	}
 	
+	/**
+	 * return bollean of whether the id given is the winner of the pot
+	 * @param playerPosition
+	 * @return
+	 */
 	public boolean isWinner(int playerPosition)
 	{
 		for(int i=0; i<this.winners.length;i++) {
