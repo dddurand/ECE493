@@ -269,6 +269,8 @@ public final class R {
         public static final int current_balance_prefix=0x7f040027;
         public static final int dayLabel=0x7f040014;
         public static final int fundsDialogMessage=0x7f04000c;
+        public static final int game_end_msg=0x7f040052;
+        public static final int game_start_msg=0x7f040053;
         public static final int gamesPlayed=0x7f040047;
         public static final int handOptStats=0x7f040020;
         public static final int hello_world=0x7f040001;
@@ -288,6 +290,12 @@ public final class R {
         public static final int optimalityRanking=0x7f04004b;
         public static final int passwordConfirmFieldString=0x7f04000b;
         public static final int passwordFieldString=0x7f04000a;
+        public static final int player_called=0x7f040054;
+        public static final int player_checked=0x7f040055;
+        public static final int player_folded=0x7f040056;
+        public static final int player_joined_table=0x7f040051;
+        public static final int player_raised=0x7f040057;
+        public static final int player_reraise=0x7f040058;
         public static final int pleaseWait=0x7f04001d;
         public static final int raise=0x7f04004e;
         public static final int raiseLabel=0x7f04001e;

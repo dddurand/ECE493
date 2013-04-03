@@ -558,22 +558,24 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		int currentDisplayTurn = getDisplayOffset(data.getCurrentPlayerTurn());
 		
+//		this.cancelProgressBarTimer();
+		
 		this.takeTurn(currentDisplayTurn);
 		this.setActivePlayerBackground(currentDisplayTurn);
 		
 		//----------------------------------------------------------------------------------------------------------
 		//---------------------------------------------Progress Bar-------------------------------------------------
 		//----------------------------------------------------------------------------------------------------------
-		//If local player: wait for move
-		if (data.getCurrentPlayerTurn()==this.myPositionAtTable)
-		{
-			this.takeTurn(currentDisplayTurn);
-		}
-		else
-		//Someone else's turn
-		{
-			this.animatePB(currentDisplayTurn);
-		}
+//		//If local player: wait for move
+//		if (data.getCurrentPlayerTurn()==this.myPositionAtTable)
+//		{
+//			this.takeTurn(currentDisplayTurn);
+//		}
+//		else
+//		//Someone else's turn
+//		{
+//			this.animatePB(currentDisplayTurn);
+//		}
 		
 		//----------------------------------------------------------------------------------------------------------
 		//-------------------------------------------------River----------------------------------------------------
@@ -840,7 +842,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		case R.id.foldButton:
 			action = new GameAction(this.myPositionAtTable,PokerAction.FOLD,0);
 			actionQueue.add(action);
-			cancelProgressBarTimer();
+			this.cancelProgressBarTimer();
 			break;
 		
 		/*******************Raise Button***************/

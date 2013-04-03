@@ -159,7 +159,6 @@ public class MainScreen extends Activity implements View.OnClickListener {
 			
 		default:newFragment = new Login();
 			((Login)newFragment).setServerCodes(serverCodes); 
-			//newFragment = new Login(serverCodes); 
 		break;
 		
 		}
