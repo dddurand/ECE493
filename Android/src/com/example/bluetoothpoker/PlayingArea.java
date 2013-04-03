@@ -594,7 +594,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		/*
 		 * Disabled until we have bluetooth clients...
 		 */
-		//storeGameState(data);
+		storeGameState(data);
 	}
 	
 	private void updateLastActionLabel(GameState data)
