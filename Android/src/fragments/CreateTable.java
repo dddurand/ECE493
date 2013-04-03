@@ -61,7 +61,7 @@ public class CreateTable extends Fragment implements OnClickListener {
 		intent.putExtra(CreateTable.TITLE_HOLDER,tableName);
 		MainScreen ms = (MainScreen)getActivity();
 		ms.setIntent(intent);
-		ms.switchFragment(ms.WAIT_CLIENT);
+		ms.switchFragment(MainScreen.WAIT_CLIENT);
 		
 	}
 

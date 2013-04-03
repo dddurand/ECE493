@@ -34,7 +34,7 @@ public class WaitingServer extends Fragment implements OnClickListener {
 		//Get Fragment Manager
 		FragmentManager fm = getActivity().getFragmentManager();
 		//Get the last screen in the back stack
-		fm.popBackStack();
+		//fm.popBackStack();
 		//Tell the main screen we changed the screens
 		((MainScreen)getActivity()).setScreen(MainScreen.JOIN_TABLE_SCREEN);
 	}

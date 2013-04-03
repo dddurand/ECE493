@@ -62,6 +62,7 @@ public class RaiseDialog extends Dialog {
 				//Get quantity
 				int raiseAmount = Integer.parseInt(amountLabel.getText().toString());
 				RaiseDialog.this.parent.raiseFromDialog(raiseAmount);
+				RaiseDialog.this.dismiss();
 			}
 		});
 	}

@@ -296,6 +296,12 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 					{
 						showToast("User information conflict. Please log in again.");
 						application.setLoggedIn(false);
+						
+						Account account = this.application.getAccount();
+						account.setAuthenticationToken("");
+						dbInterface.updateAccount(account);
+						this.application.getAccount().clear();
+						
 						Editor editor = preferences.edit();
 						editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
 						editor.commit();

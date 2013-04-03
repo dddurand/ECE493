@@ -48,7 +48,7 @@ public class PokerEngineTask implements Runnable {
 				if(action == null) continue;
 				
 				gameEngine.processGameAction(action);
-				
+
 			} catch (InterruptedException e) {
 				//When timeout occurs, just restart listening
 				//this allows cancels to stop task

@@ -86,5 +86,13 @@
 	 <string name="raise">raise</string>
 	 <string name="check">check</string>
 	 <string name="connection_to_server_lost">Connection to Poker Table Lost...</string>
+	 <string name="player_joined_table">Joined Table!</string>
+	 <string name="game_end_msg">Game Starting Soon...</string>
+	 <string name="game_start_msg">Place your bets.</string>
+	 <string name="player_called">called for $</string>
+	 <string name="player_checked">checked</string>
+	 <string name="player_folded">folded</string>
+	 <string name="player_raised">raised for $</string>
+	 <string name="player_reraise">reraised for $</string>
     
 </resources>
