@@ -9,10 +9,12 @@ import bluetooth.DiscoverableList;
 import bluetooth.DiscoverableList.BluetoothInitializeException;
 import bluetooth.ServerThread;
 
+import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
@@ -76,6 +78,24 @@ public class WaitClient extends Fragment implements OnClickListener {
 //		offlineModeButton.setOnClickListener(this);
 		return view;
 	}
+	
+	/**
+	 * Executed when the fragment is paused. Only happens when the user joins a game.
+	 * This is where it will remove itself from the back stack so it won't be displayed when
+	 * the user comes back from the playing area.
+	 */
+	//TODO Implement
+	@Override
+	public void onPause(){
+		super.onPause();
+		//Get Fragment Manager
+		FragmentManager fm = getActivity().getFragmentManager();
+		//Get the last screen in the back stack
+		//fm.popBackStack();
+		//Tell the main screen we changed the screens
+		//((MainScreen)getActivity()).setScreen(MainScreen.CREATE_TABLE_SCREEN);
+	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Start game

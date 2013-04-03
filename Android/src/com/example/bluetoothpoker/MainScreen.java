@@ -65,8 +65,7 @@ public class MainScreen extends Activity implements View.OnClickListener {
 			
 		}
 	}
-
-
+	
 	/**
 	 * Initializes the upload service for the whole application.
 	 */
@@ -105,6 +104,10 @@ public class MainScreen extends Activity implements View.OnClickListener {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main_screen, menu);
 		return true;
+	}
+	
+	public void setScreen(int newScreen){
+		currentScreen = newScreen;
 	}
 
 	/**
@@ -164,8 +167,11 @@ public class MainScreen extends Activity implements View.OnClickListener {
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		
 		transaction.replace(R.id.fragment_container, newFragment);
-		//If changed to the login screen, then it doesn't need to be added to the backstack
-		if (screen!=MainScreen.LOGIN_SCREEN) transaction.addToBackStack(null);
+		
+		//If changed to the login screen, join table r create table screens, then it doesn't need to be added to the backstack
+		if (screen!=MainScreen.LOGIN_SCREEN) 
+				transaction.addToBackStack(null);
+		
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		
 		transaction.commit();

@@ -237,6 +237,7 @@ public class GameState implements Serializable  {
 		out.writeInt(this.timeoutSeconds);
 		out.writeObject(this.UUID);
 		out.writeObject(this.lastPokerGameAction);
+		out.writeInt(this.gameUpdateNumber);
 	}
 
 	/**
@@ -259,6 +260,7 @@ public class GameState implements Serializable  {
 		this.timeoutSeconds = in.readInt();
 		this.UUID = (java.util.UUID) in.readObject();
 		this.lastPokerGameAction = (GameAction) in.readObject();
+		this.gameUpdateNumber = in.readInt();
 	}
 	
 	

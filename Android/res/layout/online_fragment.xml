@@ -49,7 +49,7 @@
     
     
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/onlineModeJoinTable"
         android:drawableLeft="@drawable/ic_join_table"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
         android:textSize="15sp"/>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/onlineModeCreateTable"
         android:drawableLeft="@drawable/ic_create_table_game"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

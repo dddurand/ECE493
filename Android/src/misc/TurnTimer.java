@@ -59,7 +59,7 @@ public class TurnTimer extends CountDownTimer {
 	}
 	
 	public void stop(){
-		pb.setVisibility(View.INVISIBLE);
+		hideProgressBar();
 		this.cancel();
 	}
 

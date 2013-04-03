@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
+import android.util.Log;
+
 import server.GameAction;
 import server.GameState;
 import server.WatchDogTimer;
@@ -127,10 +129,9 @@ public class GameMechanics {
 
 
 			case TIMEOUT:
-				this.processBet(ACTION_FOLD);
 				this.lastPokerGameAction = new GameAction(positionOfCurrentPlayer, PokerAction.FOLD);
 				lastPokerGameAction.setPlayer(this.playerList.get(positionOfCurrentPlayer));
-				updateState();
+				this.processBet(ACTION_FOLD);
 				break;
 
 			default:
@@ -145,6 +146,9 @@ public class GameMechanics {
 		if(this.positionOfCurrentPlayer != action.getPosition())
 			return;
 
+		if(this.playTimer!=null)
+			this.playTimer.cancel();
+		
 		lastPokerGameAction = action;
 
 		/*
@@ -158,27 +162,20 @@ public class GameMechanics {
 		case RAISE:
 		case RERAISE:
 			this.processBet(action.getValue());
-			updateState();
 			break;
 
 		case FOLD:
 			this.processBet(ACTION_FOLD);
-			updateState();
 			break;
 
 		case CHECK:
 			this.processBet(0);
-			updateState();
 			break;
 
 		default:
 			break;
 
 		}
-		
-		if(this.playTimer!=null)
-			this.playTimer.cancel();
-
 	}
 
 	/**
@@ -241,7 +238,7 @@ public class GameMechanics {
 
 			if(next == position)
 			{
-				//Log.e("GameMechanics", "Next Dealer ended at original person");
+				Log.e("GameMechanics", "Next Dealer ended at original person");
 				return position;
 			}
 
@@ -374,7 +371,8 @@ public class GameMechanics {
 		}
 
 		this.currentDealer = getValidUser(this.currentDealer);
-
+		this.positionOfCurrentPlayer = getValidUser(this.currentDealer);
+		
 		/*
 		 * get deck shuffle
 		 * setup pots and start betting
@@ -413,6 +411,9 @@ public class GameMechanics {
 	 * go to the next round
 	 */
 	public void nextTurn() {
+		
+		noBets = false;
+		
 		if (this.currentTurn%2 == 1){
 			this.mainPot.resetPlayerAmount();
 			//first round only
@@ -791,6 +792,8 @@ public class GameMechanics {
 			if(this.mainPot.checkPlayersBet() || noBets)
 			{
 				this.nextTurn();
+				if(this.lastPokerGameAction.getAction() == PokerAction.ENDGAME || 
+				   this.lastPokerGameAction.getAction() == PokerAction.STARTGAME) return;
 			}
 			else 
 				playerBetsInARound.clear();
@@ -800,9 +803,8 @@ public class GameMechanics {
 		}
 
 		this.positionOfCurrentPlayer = next;
-		
+		this.updateState();
 		this.playTimer.startTimer();
-		
 	}
 	/**
 	 * Checks to see if all other players have folded
