@@ -291,7 +291,9 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 					editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
 					editor.apply();
 					
-					((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
+					FragmentManager fm = getActivity().getFragmentManager();
+					fm.popBackStack();
+					((MainScreen)getActivity()).setScreen(MainScreen.LOGIN_SCREEN);
 				} else 
 					{
 						showToast("User information conflict. Please log in again.");
@@ -305,7 +307,10 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 						Editor editor = preferences.edit();
 						editor.putBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
 						editor.commit();
-						((MainScreen) getActivity()).switchFragment(MainScreen.LOGIN_SCREEN);
+						
+						FragmentManager fm = getActivity().getFragmentManager();
+						fm.popBackStack();
+						((MainScreen)getActivity()).setScreen(MainScreen.LOGIN_SCREEN);
 					}
 			} 
 			else showToast(timeoutMessage);

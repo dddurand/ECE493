@@ -10,10 +10,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 import application.PokerApplication;
 import client.UploadService;
 import database.DatabaseDataSource;
@@ -26,7 +24,7 @@ import fragments.RegisterUser;
 import fragments.WaitClient;
 import fragments.WaitingServer;
 
-public class MainScreen extends Activity implements View.OnClickListener {
+public class MainScreen extends Activity {
 	
 	public final static int LOGIN_SCREEN = 0;
 	public final static int OFFLINE_SCREEN = 1;
@@ -54,9 +52,6 @@ public class MainScreen extends Activity implements View.OnClickListener {
 			if (savedInstanceState != null) {
 				return;
 			}
-			
-			View v = (View) findViewById(R.id.mainscreenLeft);
-			v.setOnClickListener(this);
 			
 			this.serverCodes = new ServerCodes(this);
 			this.switchFragment(MainScreen.LOGIN_SCREEN);
@@ -159,7 +154,6 @@ public class MainScreen extends Activity implements View.OnClickListener {
 			
 		default:newFragment = new Login();
 			((Login)newFragment).setServerCodes(serverCodes); 
-			//newFragment = new Login(serverCodes); 
 		break;
 		
 		}
@@ -199,15 +193,50 @@ public class MainScreen extends Activity implements View.OnClickListener {
 				}
 			}).create().show();
 		}
-		else MainScreen.super.onBackPressed();
-	}
-
-
-	@Override
-	public void onClick(View v) {
-		//TODO Backdoor to join table screen. remove!
-		Intent i = new Intent(this,PlayingArea.class);
-		startActivity(i);
+		else 
+			//Update current screen accordingly
+			{
+				PokerApplication app=(PokerApplication)getApplication();
+				boolean online = app.getAccount().isOnline();
+				
+				switch (currentScreen){
+				
+				
+				case MainScreen.REGISTER_SCREEN:
+					currentScreen=MainScreen.LOGIN_SCREEN;
+					break;
+					
+				case MainScreen.JOIN_TABLE_SCREEN:
+					if (online)
+						currentScreen=MainScreen.ONLINE_MODE;
+					else currentScreen=MainScreen.OFFLINE_SCREEN;
+					break;
+					
+				case MainScreen.CREATE_TABLE_SCREEN:
+					if (online)
+						currentScreen=MainScreen.ONLINE_MODE;
+					else currentScreen=MainScreen.OFFLINE_SCREEN;
+					break;
+					
+				case MainScreen.WAIT_CLIENT:
+					currentScreen=MainScreen.CREATE_TABLE_SCREEN;
+					break;
+					
+				case MainScreen.WAIT_SERVER:
+					if (online)
+						currentScreen=MainScreen.ONLINE_MODE;
+					else currentScreen=MainScreen.OFFLINE_SCREEN;
+					break;
+					
+				case MainScreen.OFFLINE_SCREEN:
+					currentScreen=MainScreen.LOGIN_SCREEN;
+					break;
+					
+					
+				
+				}
+				MainScreen.super.onBackPressed();
+			}
 	}
 
 }

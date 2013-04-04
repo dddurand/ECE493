@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#00000000" >
+    android:background="#00000000">
 
     <TextView
         android:id="@+id/playerNameText"
@@ -16,7 +16,6 @@
         android:id="@+id/leftCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@id/playerNameText"
         android:src="@drawable/back" />
     
@@ -25,10 +24,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/leftCard"
-        android:layout_alignLeft="@id/leftCard"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/leftCard"
         android:src="@drawable/back" />
+    
+    <!-- android:layout_marginLeft="12dp"
+        android:layout_marginTop="15dp" 
+        android:layout_alignTop="@id/leftCard"-->
 
     <ProgressBar
         android:id="@+id/progressBarTimeLeft"

@@ -84,16 +84,13 @@ public class WaitClient extends Fragment implements OnClickListener {
 	 * This is where it will remove itself from the back stack so it won't be displayed when
 	 * the user comes back from the playing area.
 	 */
-	//TODO Implement
-	@Override
-	public void onPause(){
-		super.onPause();
+	public void showPreviousScreen(){
 		//Get Fragment Manager
 		FragmentManager fm = getActivity().getFragmentManager();
 		//Get the last screen in the back stack
-		//fm.popBackStack();
+		fm.popBackStack();fm.popBackStack();
 		//Tell the main screen we changed the screens
-		//((MainScreen)getActivity()).setScreen(MainScreen.CREATE_TABLE_SCREEN);
+		((MainScreen)getActivity()).setScreen(MainScreen.CREATE_TABLE_SCREEN);
 	}
 	
 	@Override
@@ -126,6 +123,9 @@ public class WaitClient extends Fragment implements OnClickListener {
 		pokerApplication.setOutStream(outStream);
 		pokerApplication.setInStream(inStream);
 		//intent.putExtra(name, value)
+		//Show previous screen right before going into the activity
+		this.showPreviousScreen();
+		//Start Game
 		getActivity().startActivity(intent);
 	}
 
