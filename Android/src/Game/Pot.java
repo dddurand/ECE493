@@ -23,11 +23,16 @@ public class Pot implements Serializable{
 	private Hashtable<Integer, Integer> playeramount = new Hashtable<Integer, Integer>();
 	private Player[] winners = new Player[0];
 	private int[] losers = null;
+	public static int MAIN_POT = -1;
 	
 	
 	public Pot(int owner, int amount) {
-		this.participants.add(owner);
-		this.amount = amount;
+		//if(amount ==MAIN_POT) {
+		//	this.amount =0;
+		//} else {
+			this.participants.add(owner);
+			this.amount = amount;
+		//}
 	}
 	
 	
@@ -75,6 +80,7 @@ public class Pot implements Serializable{
 	 * sets the pot to a mainpot
 	 */
 	protected void mainPot(){
+		participants.remove(0);
 		for(int i=0; i<this.participants.size();i++) {
 			if(participants.get(i)==null) 
 			{
@@ -102,7 +108,7 @@ public class Pot implements Serializable{
 		Enumeration<Integer> e = this.playeramount.keys();
 		while(e.hasMoreElements()) {
 			int id = (int) e.nextElement();
-			if(this.playeramount.get(id)<this.amount){
+			if(this.playeramount.get(id)<this.amount&& exist(id)){
 				return false;
 			}
 		}
@@ -230,10 +236,22 @@ public class Pot implements Serializable{
 	protected void addParticipants(int id) {
 		this.participants.add(id);
 	}
-
+	
+	/**
+	 * remove player
+	 */
+	void removeParticipants(int id) {
+		for(int i =0; i<this.participants.size();i++) {
+			if(this.participants.get(i)==id){
+				this.participants.remove(id);
+				i--;
+			}
+		}
+		//this.playeramount.remove(id);
+	}
 
 	/**
-	 * checks to see if id exists in partcipants list
+	 * checks to see if id exists in participants list
 	 * @param id
 	 * @return
 	 */
@@ -273,6 +291,7 @@ public class Pot implements Serializable{
 		out.writeInt(this.totalAmount);
 		out.writeObject(this.playeramount);
 		out.writeObject(this.winners);
+		out.writeObject(this.participants);
 	}
 
 	
@@ -288,6 +307,7 @@ public class Pot implements Serializable{
 		this.totalAmount = in.readInt();
 		this.playeramount = (Hashtable<Integer, Integer>) in.readObject();
 		this.winners = (Player[]) in.readObject();
+		this.participants = (ArrayList<Integer>) in.readObject();
 	}
 	
 	

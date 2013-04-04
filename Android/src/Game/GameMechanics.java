@@ -52,7 +52,6 @@ public class GameMechanics {
 	private ArrayList<Integer> playerBetsInARound;
 	private ArrayList<Player> outGoingList = new ArrayList<Player>(6);
 	private ArrayList<Player> playerList = new ArrayList<Player>(6);
-	private ArrayList<Pot> sidePots;
 	private ArrayList<Pot> currentSidePots;
 	private BlockingQueue<GameState> queue;
 
@@ -78,7 +77,6 @@ public class GameMechanics {
 	private void newGameReset()
 	{
 		currentTurn = -1;
-		sidePots = new ArrayList<Pot>();
 		currentSidePots = new ArrayList<Pot>();
 		tempBets = new int[6];
 		communityCards = new Card[5];
@@ -200,7 +198,7 @@ public class GameMechanics {
 	 * 
 	 * @return
 	 */
-	public int getNextPositionTurn()
+	private int getNextPositionTurn()
 	{	
 		int temp = this.positionOfCurrentPlayer;
 		while(true)
@@ -253,7 +251,7 @@ public class GameMechanics {
 	 * Generates the GameState for each client and adds them to queue
 	 * 
 	 */
-	public void updateState(boolean unfilteredCurrentPlayers)
+	private void updateState(boolean unfilteredCurrentPlayers)
 	{
 		gameUpdateCount++;
 		ArrayList<Player> playersData = new ArrayList<Player>();
@@ -303,7 +301,7 @@ public class GameMechanics {
 					currentDealer, 
 					blindAmount, 
 					mainPot, 
-					sidePots, 
+					currentSidePots,
 					this.communityCards.clone(), 
 					this.lastPokerGameAction,
 					30,
@@ -317,7 +315,7 @@ public class GameMechanics {
 	 * Generates the GameState for each client and adds them to queue
 	 * 
 	 */
-	public void updateState()
+	private void updateState()
 	{
 		updateState(false);
 	}
@@ -329,7 +327,7 @@ public class GameMechanics {
 	 * @param p - player to be added
 	 * @return the new size of the game or -1 if already full
 	 */
-	public void addPlayer(Player p) {
+	private void addPlayer(Player p) {
 		this.playerList.add(p.getId(), p);
 
 		if(this.getValidPlayerCount() != 1 && this.currentTurn == 0)
@@ -343,7 +341,7 @@ public class GameMechanics {
 	 * @param p - player removed
 	 * @return new list of players present
 	 */
-	public void removePlayer(Player p) {
+	private void removePlayer(Player p) {
 		this.playerList.remove(p.getId());
 
 	}
@@ -351,7 +349,7 @@ public class GameMechanics {
 	/**
 	 * set up the game
 	 */
-	public void startGame() {
+	private void startGame() {
 
 		this.gameUUID = UUID.randomUUID();
 		gameUpdateCount = 0;
@@ -380,14 +378,13 @@ public class GameMechanics {
 		newGameReset();
 		myDeck.resetDeck();
 		this.myDeck.shuffle();
-		this.mainPot = new Pot(this.playerList.get(0).getId(), 0);
+		this.mainPot = new Pot(0, 0);
 		for(int i=0; this.playerList.size()>i;i++) {
 			Player player = this.playerList.get(i);
 			if(player == null) continue;
 			this.mainPot.addParticipants(this.playerList.get(i).getId());
 		}
 		this.mainPot.mainPot();
-		this.sidePots = new ArrayList<Pot>();
 		this.currentSidePots = new ArrayList<Pot>();
 		this.currentTurn=1;
 		for (int i = 0; i<this.playerList.size(); i++) {
@@ -410,7 +407,7 @@ public class GameMechanics {
 	/**
 	 * go to the next round
 	 */
-	public void nextTurn() {
+	private void nextTurn() {
 		
 		noBets = false;
 		
@@ -459,7 +456,7 @@ public class GameMechanics {
 	private void endGame() {
 
 		this.playTimer.cancel();
-		if(isAllFolded&& this.currentSidePots.size()==0&&this.sidePots.size()==0) {
+		if(isAllFolded&& this.currentSidePots.size()==0) {
 			int countfolds=0;
 			int inPlayer =-1;
 			for(int i=0; i<this.playerList.size();i++) {
@@ -484,12 +481,12 @@ public class GameMechanics {
 					currentPlayer.add(player);
 				}
 			}
-			for (int i = 0; i<this.sidePots.size();i++) {
+			for (int i = 0; i<this.currentSidePots.size();i++) {
 				Player[] winners = determineWinners();
-				this.sidePots.get(i).setWinners(winners);
+				this.currentSidePots.get(i).setWinners(winners);
 				for(int j=0; j<winners.length; j++) {
 					System.out.println("Players" +winners[j] + "Won");
-					winners[j].addMoney(this.sidePots.get(i).getTotal()/winners.length);
+					winners[j].addMoney(this.currentSidePots.get(i).getTotal()/winners.length);
 				}
 				/*WTF - why is this player folding? - ASK LAWTON*/
 				//this.playerList.get(i).setActive(0);
@@ -689,7 +686,7 @@ public class GameMechanics {
 		return BestPlayer;
 	}
 
-	public void placeBet(int bet)
+	private void placeBet(int bet)
 	{
 		int isCurrentPlayer = this.playerList.get(positionOfCurrentPlayer).getActive();
 		int playerCurrentBetInPot = this.mainPot.getPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId());
@@ -751,6 +748,12 @@ public class GameMechanics {
 	 */
 	private void processBet(int bet) {
 
+		if(bet == ACTION_FOLD) {
+			for (int i = 0; i<this.currentSidePots.size(); i++) {
+				this.currentSidePots.get(i).removeParticipants(this.positionOfCurrentPlayer);
+			}
+			this.mainPot.removeParticipants(this.positionOfCurrentPlayer);
+		}
 		System.out.println("Who is in for " + this.mainPot.getPlayerAmount(positionOfCurrentPlayer));
 		System.out.println("Main Pot " + this.mainPot.getAmount());
 		System.out.println("Please enter bet for (-1 to fold): Player " + positionOfCurrentPlayer);
@@ -827,10 +830,6 @@ public class GameMechanics {
 	}
 
 	private void winAllPots(int player) {
-		for(int i=0; this.sidePots.size()>i; i++) {
-			this.playerList.get(player).addMoney(this.sidePots.get(i).getTotal());
-			this.sidePots.get(i).setWinners(new Player[] {this.playerList.get(player)});
-		}
 		for(int i=0; this.currentSidePots.size()>i;i++) {
 			this.playerList.get(player).addMoney(this.currentSidePots.get(i).getTotal());
 			this.currentSidePots.get(i).setWinners(new Player[] {this.playerList.get(player)});

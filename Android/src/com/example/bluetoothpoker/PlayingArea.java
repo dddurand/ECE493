@@ -906,8 +906,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 		int potAmount = 0;
 		for(Pot pot : sidePots)
 			{
-			potAmount += pot.getAmount();
-			myBetAmount += pot.getPlayerAmount(myPositionAtTable);
+			if(pot.exist(myPositionAtTable)) {
+				potAmount += pot.getAmount();
+				myBetAmount += pot.getPlayerAmount(myPositionAtTable);
+			}
 			}
 		
 		potAmount += mainPot.getAmount();
