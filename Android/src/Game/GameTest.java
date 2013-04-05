@@ -1,6 +1,5 @@
 package game;
 
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
@@ -8,16 +7,17 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+
+import android.test.AndroidTestCase;
 
 import server.GameAction;
 import server.GameAction.PokerAction;
 import server.GameState;
 import server.WatchDogTimer;
 
-public class GameTest {
+public class GameTest extends AndroidTestCase{
 
-	@Test
+
 	public void testConstructor() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
@@ -27,7 +27,7 @@ public class GameTest {
 		assertTrue(gameMechanics.getValidPlayerCount()==1);
 	}
 	
-	@Test
+
 	public void testAddRemovePlayer() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
@@ -50,7 +50,7 @@ public class GameTest {
 		assertTrue(gameMechanics.getValidPlayerCount()==0);		
 	}
 	
-	@Test
+
 	public void testStartGame() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
@@ -92,7 +92,7 @@ public class GameTest {
 		}
 	}
 	
-	@Test
+
 	public void testPlayerAction() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();

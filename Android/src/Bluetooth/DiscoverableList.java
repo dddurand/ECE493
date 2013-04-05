@@ -73,6 +73,9 @@ public class DiscoverableList {
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 	
     
+    public void closeAll() {
+    	
+    }
     public void writeAll(byte[] msg) {
     	for(int i=0; i<connectedThreads.size();i++) {
     		connectedThreads.get(i).write(msg);

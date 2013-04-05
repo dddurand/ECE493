@@ -6,9 +6,11 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-public class DeckTest {
+import android.test.AndroidTestCase;
 
-	@Test
+public class DeckTest extends AndroidTestCase{
+
+	
 	public void testConstructor() {
 		Deck deck = new Deck();
 		ArrayList<Card> restDeck = new ArrayList<Card>();
@@ -24,7 +26,7 @@ public class DeckTest {
 		//Can assert error? make sure the deck is empty?
 	}
 	
-	@Test
+
 	public void testResetDeck() {
 		Deck deck = new Deck();
 		for(int i=0; i<52; i++) {

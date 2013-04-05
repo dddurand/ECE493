@@ -1,14 +1,14 @@
 package game;
 
-import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
-import org.junit.Test;
 
-public class CardTest {
+import android.test.AndroidTestCase;
 
-	@Test
+public class CardTest extends AndroidTestCase{
+
+
 	public void testConstructor() {
 		Card card = new Card(3, 2);
 		
@@ -16,7 +16,7 @@ public class CardTest {
 		assertTrue(card.getSuit()==2);
 	}
 	
-	@Test
+
 	public void testGetterSetters() {
 		Card card = new Card(0, 0);
 		
@@ -27,7 +27,7 @@ public class CardTest {
 		assertTrue(card.getSuit()==2);
 	}
 
-	@Test
+
 	public void testComparator() {
 		Card card1 = new Card(0, 6);
 		Card card2 = new Card(3, 1);

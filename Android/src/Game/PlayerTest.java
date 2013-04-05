@@ -2,10 +2,11 @@ package game;
 
 import org.junit.Test;
 
-import game.*;
-import junit.framework.TestCase;
+import android.test.AndroidTestCase;
 
-public class PlayerTest extends TestCase {
+import game.*;
+
+public class PlayerTest extends AndroidTestCase{
 	
 	@Test
 	public void TestConstructor() {

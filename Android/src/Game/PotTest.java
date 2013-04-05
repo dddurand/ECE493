@@ -1,14 +1,13 @@
 package game;
 
-import static org.junit.Assert.*;
+
 
 import java.util.ArrayList;
 
-import org.junit.Test;
+import android.test.AndroidTestCase;
 
-public class PotTest {
+public class PotTest extends AndroidTestCase{
 
-	@Test
 	public void testConstructor() {
 		Pot pot = new Pot(1, 999);
 		
@@ -17,7 +16,6 @@ public class PotTest {
 		assertTrue(pot.getOwner()==1);
 	}
 	
-	@Test
 	public void testParticipants() {
 		Pot pot = new Pot(1, 999);
 		pot.addParticipants(2);
@@ -30,7 +28,6 @@ public class PotTest {
 		assertTrue(pot.exist(5));
 	}
 	
-	@Test
 	public void testGetterSetter() {
 		Pot pot = new Pot(1, 999);
 		
@@ -74,7 +71,6 @@ public class PotTest {
 		assertTrue((pot.getLosers()[0]==4&&pot.getLosers()[1]==6)||(pot.getLosers()[0]==6 && pot.getLosers()[1]==4));
 	}
 	
-	@Test
 	public void testPlayerAmount() {
 		Pot pot = new Pot(1,999);
 		
