@@ -13,6 +13,7 @@ import org.junit.Test;
 import server.GameAction;
 import server.GameAction.PokerAction;
 import server.GameState;
+import server.Server;
 import server.WatchDogTimer;
 
 public class GameTest {
@@ -22,7 +23,8 @@ public class GameTest {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 10);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		assertTrue(gameMechanics.getValidPlayerCount()==1);
 	}
@@ -32,7 +34,7 @@ public class GameTest {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 10);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		Player myPlayer = new Player(2, "test name", 100);
 		
@@ -55,7 +57,7 @@ public class GameTest {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 90);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		Player myPlayer1 = new Player(1, "testname1", 100);
 		Player myPlayer2 = new Player(2, "testname2", 100);
@@ -97,7 +99,7 @@ public class GameTest {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 90);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		Player myPlayer1 = new Player(1, "testname1", 100);
 		Player myPlayer2 = new Player(2, "testname2", 100);

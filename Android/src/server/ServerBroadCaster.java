@@ -62,7 +62,15 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 	public void removePlayer(Player player)
 	{
 		synchronized (this) {
-			players.remove(player);
+			ObjectOutputStream stream = players.remove(player);
+			
+			if(stream == null) return;
+			
+			try{
+				stream.close();
+			} catch (Exception e)
+			{}
+			
 		}
 	}
 	
@@ -72,6 +80,20 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 	public void cancel()
 	{
 		this.canceled = true;
+		
+		for(Integer playerID : players.keySet())
+		{
+			ObjectOutputStream stream = players.get(playerID);
+			if(stream == null) continue;
+			
+			try
+			{
+				stream.close();
+			} catch (Exception e){}
+			
+			
+		}
+		
 	}
 	
 	/**
@@ -110,6 +132,11 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 					} catch (IOException e) {
 						PlayerTaskCompleteNotify runnable = new PlayerTaskCompleteNotify(player);
 						informListeners(runnable);
+						
+						try{
+							stream.close();
+						} catch(Exception f){}
+						
 					}
 					
 				}

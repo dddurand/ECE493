@@ -92,6 +92,10 @@ public class PlayingArea extends Activity implements OnClickListener {
 	
 	private int minimumBet;
 	
+	private boolean isServer;
+	private Server server;
+	private Client client;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -156,10 +160,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    if(getIntent().getBooleanExtra(DiscoverableList.IS_CLIENT, true)) {
 	    	//Client
 	    	try {
+	    		isServer = false;
+	    		
 	    		this.myPositionAtTable = getIntent().getIntExtra(DiscoverableList.CLIENT_POS, 0);
 	    		loadZerothDisplayOffset(this.myPositionAtTable);
-				@SuppressWarnings("unused")
-				Client client = new Client(this, inStream[0], outStream[0], actionQueue);
+
+				this.client = new Client(this, inStream[0], outStream[0], actionQueue);
 			} catch (StreamCorruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -167,11 +173,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 			}
 	    } else {
 	    	//Server
-	    	Server server = new Server(this);
+	    	server = new Server(this);
+	    	isServer = true;
 	    	
 	    	try {
-				@SuppressWarnings("unused")
-				Client client = new Client(this, server, actionQueue, 0);
+
+				this.client = new Client(this, server, actionQueue, 0);
 				this.myPositionAtTable = 0;
 				loadZerothDisplayOffset(this.myPositionAtTable);
 				for (int i=0; i<myPlayer.size(); i++) {
@@ -278,6 +285,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 		int playerPosition = gameAction.getPosition();
 		//If other players action (or not server action) ignore.
 		if(playerPosition != myPositionAtTable && playerPosition != GameMechanics.SERVER_POSITION) return;
+		
+		if(state == null) return;
 		
 		PokerAction action = gameAction.getAction();
 		
@@ -605,6 +614,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 		Player player = data.getPlayer();
 		String msg = "";
 		
+		if(action == null) return;
+		
 		switch (action.getAction()) {
 		case ADDPLAYER:
 			msg = player.getUsername() + " " + this.pokerApp.getString(R.string.player_joined_table);
@@ -870,6 +881,14 @@ public class PlayingArea extends Activity implements OnClickListener {
 
 			public void onClick(DialogInterface arg0, int arg1) {
 				//Add stuff for cleaning up here
+				
+				
+				if(PlayingArea.this.client != null)
+					PlayingArea.this.client.close();
+				
+				if(PlayingArea.this.isServer && PlayingArea.this.server != null)
+					PlayingArea.this.server.close();
+				
 				PlayingArea.super.onBackPressed();
 				
 			}

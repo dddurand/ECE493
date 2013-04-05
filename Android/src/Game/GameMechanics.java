@@ -13,6 +13,7 @@ import android.util.Log;
 
 import server.GameAction;
 import server.GameState;
+import server.Server;
 import server.WatchDogTimer;
 import server.GameAction.PokerAction;
 
@@ -55,6 +56,8 @@ public class GameMechanics {
 	private ArrayList<Pot> currentSidePots;
 	private BlockingQueue<GameState> queue;
 
+	private Server server;
+	
 	//private ArrayList<Integer> playerBetsInARound;
 	
 	/**
@@ -63,7 +66,7 @@ public class GameMechanics {
 	 * @param Dealer
 	 * @param blindAmount
 	 */
-	public GameMechanics(int Dealer, int blindAmount, BlockingQueue<GameState> queue, WatchDogTimer playTimer) {
+	public GameMechanics(int Dealer, int blindAmount, BlockingQueue<GameState> queue, WatchDogTimer playTimer, Server server) {
 		this.playerList = new ArrayList<Player>(6);
 		
 		for(int i = 0; i < 6; i++) this.playerList.add(null);
@@ -72,6 +75,7 @@ public class GameMechanics {
 		this.blindAmount = blindAmount;
 		this.queue = queue;
 		this.playTimer = playTimer;
+		this.server = server;
 	}
 	
 	private void newGameReset()
@@ -80,6 +84,7 @@ public class GameMechanics {
 		currentSidePots = new ArrayList<Pot>();
 		tempBets = new int[6];
 		communityCards = new Card[5];
+		mainPot = new Pot(0,0);
 	}
 
 	/**
@@ -110,9 +115,13 @@ public class GameMechanics {
 				break;
 
 			case REMOVEPLAYER:
+				
+				if(this.playerList.get(action.getPlayer().getId())==null)
+					return;
+				
 				this.outGoingList.add(action.getPlayer());
 				int position = action.getPlayer().getId();
-				if(positionOfCurrentPlayer == position)
+				if(positionOfCurrentPlayer == position && currentTurn!= -1)
 					this.processBet(ACTION_FOLD);
 				break;
 
@@ -272,7 +281,7 @@ public class GameMechanics {
 				if(temp == null) continue;
 
 				Player limitedPlayerData = new Player(temp.getId(), temp.getUsername(), temp.getAmountMoney());
-
+				
 				/*
 				 * If all in or current player - include cards
 				 * 
@@ -288,7 +297,7 @@ public class GameMechanics {
 					limitedPlayerData.setCard(temp.getCard(1), 1);
 				}
 
-				limitedPlayerData.setActive(player.getActive());
+				limitedPlayerData.setActive(temp.getActive());
 
 				playersData.add(limitedPlayerData);	
 			}
@@ -354,13 +363,30 @@ public class GameMechanics {
 		this.gameUUID = UUID.randomUUID();
 		gameUpdateCount = 0;
 
+		for(Player player : this.playerList)
+		{
+			if(player == null) continue;
+			
+			if(player.getAmountMoney() == 0)
+			{
+				this.server.removePlayerThreads(player);
+				this.outGoingList.add(player);
+			}
+		}
+		
+		
 		for(Player player : this.outGoingList)
 		{
 			this.playerList.remove(player.getId());
 		}
 		this.outGoingList.clear();
 
-		if(this.getValidPlayerCount() == 1) return;
+		newGameReset();
+		if(this.getValidPlayerCount() == 1) 
+			{
+			updateState();
+			return;
+			}
 
 		for(int i=0; this.playerList.size()>i;i++) {
 			Player player = this.playerList.get(i);
@@ -375,7 +401,7 @@ public class GameMechanics {
 		 * get deck shuffle
 		 * setup pots and start betting
 		 */
-		newGameReset();
+		
 		myDeck.resetDeck();
 		this.myDeck.shuffle();
 		this.mainPot = new Pot(0, 0);
@@ -754,10 +780,6 @@ public class GameMechanics {
 			}
 			this.mainPot.removeParticipants(this.positionOfCurrentPlayer);
 		}
-		System.out.println("Who is in for " + this.mainPot.getPlayerAmount(positionOfCurrentPlayer));
-		System.out.println("Main Pot " + this.mainPot.getAmount());
-		System.out.println("Please enter bet for (-1 to fold): Player " + positionOfCurrentPlayer);
-		System.out.println("BET: "+bet);
 
 		if(isAllFolded)
 		{
@@ -782,13 +804,6 @@ public class GameMechanics {
 		 * 
 		 * -We know it time for the next round.
 		 */
-		System.out.println(positionOfCurrentPlayer+": ");
-		System.out.print("[");
-		for(Integer i : playerBetsInARound)
-		{
-			System.out.print(i+",");
-		}
-		System.out.println("]");
 
 		if(playerBetsInARound.contains(next))
 		{

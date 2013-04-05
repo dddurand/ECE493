@@ -61,7 +61,7 @@ public class Server implements PlayerTaskListener {
 		
 		WatchDogTimer playTimer = new WatchDogTimer(gameActionQueue, 10);
 		
-		GameMechanics gameEngine = new GameMechanics( 0, 30, gameBroadCastQueue, playTimer);
+		GameMechanics gameEngine = new GameMechanics( 0, 30, gameBroadCastQueue, playTimer, this);
 		
 		gameEngineTask = new PokerEngineTask(gameActionQueue, gameEngine);
 		gameBroadCaster = new ServerBroadCaster(gameBroadCastQueue, activity);
@@ -150,9 +150,25 @@ public class Server implements PlayerTaskListener {
 		removePlayerAction.setPlayer(player);
 		removePlayerAction.setPosition(this.serverPlayer.getId());
 		
+		gameActionQueue.add(removePlayerAction);
+		
+		removePlayerThreads(player);
+		}
+		
+	}
+	
+	/**
+	 * Informs the server that a player should be removed from the server.
+	 * @param player
+	 */
+	public void removePlayerThreads(Player player)
+	{
+		
+		if(playerListenerTasks.containsKey(player.getId()))
+		{
 		ServerClientListener task = playerListenerTasks.remove(player.getId());
 		task.cancel();
-		gameActionQueue.add(removePlayerAction);
+
 		gameBroadCaster.removePlayer(player);
 		}
 		
@@ -172,11 +188,19 @@ public class Server implements PlayerTaskListener {
 	 * Test Method
 	 * @param player
 	 */
-	public void testState(Player player)
+	public void close()
 	{
-		//GameState test = new GameState(43);
-		//test.setPlayer(player);
-		//gameBroadCastQueue.add(test);
+		for(Integer playerID : playerListenerTasks.keySet())
+		{
+			ServerClientListener task  = this.playerListenerTasks.get(playerID);
+			if(task == null) continue;
+			
+			task.cancel();
+		}	
+		
+		gameBroadCaster.cancel();
+		
+		
 	}
 	
 
