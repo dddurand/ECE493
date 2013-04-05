@@ -18,7 +18,7 @@ public class Deck {
 	 * get card on top of deck
 	 * @return card
 	 */
-	protected Card getCard() {
+	public Card getCard() {
 		if (this.top ==-1) {
 			return null;
 		} else {
@@ -29,7 +29,7 @@ public class Deck {
 	/**
 	 * shuffles deck twenty times
 	 */
-	protected void shuffle() {
+	public void shuffle() {
 		this.resetDeck();
 		for(int j=0; j<20;j++) {
 			int randomNum = (int) (Math.random() * 52);

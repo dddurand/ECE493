@@ -56,7 +56,7 @@ public class Player implements Serializable{
 	 * @param card
 	 * @param pos
 	 */
-	protected void setCard(Card card, int pos) {
+	public void setCard(Card card, int pos) {
 		this.hand[pos]=card;
 	}
 	
@@ -82,7 +82,7 @@ public class Player implements Serializable{
 	 * add money to the player amount
 	 * @param money
 	 */
-	protected void addMoney(int money) {
+	public void addMoney(int money) {
 		this.money+= money;
 	}
 	
@@ -98,7 +98,7 @@ public class Player implements Serializable{
 	 * remove anmount from total amount of money player has
 	 * @param money
 	 */
-	protected void removeMoney(int money) {
+	public void removeMoney(int money) {
 		this.money-=money;
 	}
 	
@@ -107,7 +107,7 @@ public class Player implements Serializable{
 	 * use folded, all_in or current
 	 * @param mode
 	 */
-	protected void setActive(int mode) {
+	public void setActive(int mode) {
 		this.active = mode;
 	}
 	

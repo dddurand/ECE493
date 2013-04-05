@@ -552,8 +552,8 @@ public class GameMechanics {
 			if(CPlayer == null) continue;
 
 			Card hand[] = {CPlayer.getCard(0),CPlayer.getCard(1), this.communityCards[0], this.communityCards[1], this.communityCards[2], this.communityCards[3], this.communityCards[4]};
-			Comparator rankcompare = new rankComparator();
-			Comparator suitcompare = new suitComparator();
+			Comparator rankcompare = new Card.RankComparator();
+			Comparator suitcompare = new Card.SuitComparator();
 			if (CPlayer.getActive()!=Player.FOLDED) {
 				boolean flush = false;
 				boolean straight = false;
