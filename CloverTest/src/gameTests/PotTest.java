@@ -42,13 +42,15 @@ public class PotTest extends AndroidTestCase {
 		
 		assertTrue(pot.getAmount()==50);
 		
+		pot.addTotal(50);
+		
+		assertTrue(pot.getTotal()==50);
+		
 		pot.take(20);
 		
 		assertTrue(pot.getTotal()==30);
 		
-		pot.addTotal(40);
 		
-		assertTrue(pot.getTotal()==70);
 		
 		
 		pot.addParticipants(3);
@@ -76,6 +78,8 @@ public class PotTest extends AndroidTestCase {
 		assertTrue(pot.isWinner(3));
 		
 		assertTrue((pot.getLosers()[0]==4&&pot.getLosers()[1]==6)||(pot.getLosers()[0]==6 && pot.getLosers()[1]==4));
+		
+		assertTrue(pot.size()==4);
 	}
 	
 	public void testPlayerAmount() {

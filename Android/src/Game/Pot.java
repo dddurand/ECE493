@@ -216,7 +216,7 @@ public class Pot implements Serializable{
 	 * return number of participants in pot
 	 * @return
 	 */
-	protected int size() {
+	public int size() {
 		return this.participants.size();
 	}
 	
