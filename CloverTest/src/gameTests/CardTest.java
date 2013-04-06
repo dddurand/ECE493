@@ -31,22 +31,23 @@ public class CardTest extends AndroidTestCase {
 	}
 
 	public void testComparator() {
-		Card card1 = new Card(0, 6);
-		Card card2 = new Card(3, 1);
-		Card card3 = new Card(2, 7);
+		Card card1 = new Card(6, 0);
+		Card card2 = new Card(1, 3);
+		Card card3 = new Card(7, 2);
 		
 		Card[] cards = {card1, card2, card3};
 		
-		Arrays.sort(cards, new Card.RankComparator());
-		
-		assertEquals(cards[0], card2);
-		assertEquals(cards[1], card1);
-		assertEquals(cards[2], card3);
-		
 		Arrays.sort(cards, new Card.SuitComparator());
 		
-		assertEquals(cards[0], card1);
-		assertEquals(cards[1], card3);
-		assertEquals(cards[2], card2);
+		
+		assertTrue(cards[0].getRank()==card1.getRank() && cards[0].getSuit() ==card1.getSuit());
+		assertTrue(cards[1].getRank()== card3.getRank() && cards[1].getSuit()==card3.getSuit());
+		assertTrue(cards[2].getRank()== card2.getRank() && cards[2].getSuit()==card2.getSuit());
+		
+		Arrays.sort(cards, new Card.RankComparator());
+		
+		assertTrue(cards[0].getRank()==card2.getRank() && cards[0].getSuit() ==card2.getSuit());
+		assertTrue(cards[1].getRank()==card1.getRank() && cards[1].getSuit() ==card1.getSuit());
+		assertTrue(cards[2].getRank()==card3.getRank() && cards[2].getSuit() ==card3.getSuit());
 	}
 }
