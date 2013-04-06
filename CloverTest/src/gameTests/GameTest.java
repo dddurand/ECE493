@@ -1,38 +1,41 @@
-package game;
+package gameTests;
 
+import game.GameMechanics;
+import game.Player;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-
-
-import android.test.AndroidTestCase;
-
 import server.GameAction;
 import server.GameAction.PokerAction;
 import server.GameState;
 import server.WatchDogTimer;
+import android.test.AndroidTestCase;
 
-public class GameTest extends AndroidTestCase{
+public class GameTest extends AndroidTestCase  {
 
+	public void tearDown() throws Exception {
+	    ///CLOVER:FLUSH
+	    super.tearDown();
+	}
 
 	public void testConstructor() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 10);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		assertTrue(gameMechanics.getValidPlayerCount()==1);
 	}
 	
-
 	public void testAddRemovePlayer() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 10);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		Player myPlayer = new Player(2, "test name", 100);
 		
@@ -49,13 +52,12 @@ public class GameTest extends AndroidTestCase{
 		gameMechanics.processGameAction(gameAction);
 		assertTrue(gameMechanics.getValidPlayerCount()==0);		
 	}
-	
 
 	public void testStartGame() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 90);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		Player myPlayer1 = new Player(1, "testname1", 100);
 		Player myPlayer2 = new Player(2, "testname2", 100);
@@ -91,13 +93,12 @@ public class GameTest extends AndroidTestCase{
 			fail();
 		}
 	}
-	
 
 	public void testPlayerAction() {
 		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
 		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 90);
-		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer);
+		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
 		Player myPlayer1 = new Player(1, "testname1", 100);
 		Player myPlayer2 = new Player(2, "testname2", 100);

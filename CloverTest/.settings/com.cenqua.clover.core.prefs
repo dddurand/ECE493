@@ -3,7 +3,7 @@ eclipse.preferences.version=1
 flush_interval=1000
 flush_policy=0
 include_filter=**/*.java
-init_string=clover+remote\:file\:///E%3A%5CTemp%5Ctestandroid.db?localCoverageDir\=/data/data/com.example.bluetoothpoker/clover/
+init_string=clover+remote\:file\:///D%3A%5CTemp%5Ctestandroid.db?localCoverageDir\=/data/data/com.example.bluetoothpoker/clover/
 init_string_default=false
 init_string_project_relative=false
 instrument_selected_source_folders=false

@@ -1,14 +1,16 @@
-package game;
+package gameTests;
 
-import org.junit.Test;
 
 import android.test.AndroidTestCase;
-
 import game.*;
 
-public class PlayerTest extends AndroidTestCase{
+public class PlayerTest extends AndroidTestCase {
 	
-	@Test
+	public void tearDown() throws Exception {
+	    ///CLOVER:FLUSH
+	    super.tearDown();
+	}
+
 	public void TestConstructor() {
 		Player pTest = new Player(1, "my name", 10);
 		assertTrue(pTest.getAmountMoney()==10);
@@ -16,7 +18,6 @@ public class PlayerTest extends AndroidTestCase{
 		assertTrue(pTest.getId()==1);
 	}
 	
-	@Test
 	public void TestGettersSetters() {
 		Player pTest = new Player(0, null, 0);
 		
@@ -36,7 +37,6 @@ public class PlayerTest extends AndroidTestCase{
 		assertEquals(hand[1], cardTwo);
 	}
 	
-	@Test
 	public void AddRemoveMoney() {
 		Player pTest = new Player(2, "Test", 100);
 		

@@ -60,6 +60,8 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 			} catch (IOException e) {
 				Log.e("IOException", "ServerClientListener");
 				this.cancelled = true;
+			} catch (Exception e) {
+				this.cancelled = true;
 			}
 		}
 		
@@ -78,6 +80,11 @@ public class ServerClientListener extends ListenableThread<PlayerTaskListener> {
 	public void cancel()
 	{
 		this.cancelled = true;
+		
+		try {
+			objectInputStream.close();
+		} catch (IOException e) {}
+		
 	}
 	
 	

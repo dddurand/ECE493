@@ -1,12 +1,19 @@
-package game;
-
-
+package gameTests;
 
 import java.util.ArrayList;
 
 import android.test.AndroidTestCase;
+import game.Player;
+import game.Pot;
 
-public class PotTest extends AndroidTestCase{
+
+
+public class PotTest extends AndroidTestCase {
+
+	public void tearDown() throws Exception {
+	    ///CLOVER:FLUSH
+	    super.tearDown();
+	}
 
 	public void testConstructor() {
 		Pot pot = new Pot(1, 999);

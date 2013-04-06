@@ -1,16 +1,18 @@
-package game;
+package gameTests;
 
-import static org.junit.Assert.*;
+import game.Card;
+import game.Deck;
 
 import java.util.ArrayList;
-
-import org.junit.Test;
-
 import android.test.AndroidTestCase;
 
-public class DeckTest extends AndroidTestCase{
+public class DeckTest extends AndroidTestCase {
 
-	
+	public void tearDown() throws Exception {
+	    ///CLOVER:FLUSH
+	    super.tearDown();
+	}
+
 	public void testConstructor() {
 		Deck deck = new Deck();
 		ArrayList<Card> restDeck = new ArrayList<Card>();
@@ -26,7 +28,6 @@ public class DeckTest extends AndroidTestCase{
 		//Can assert error? make sure the deck is empty?
 	}
 	
-
 	public void testResetDeck() {
 		Deck deck = new Deck();
 		for(int i=0; i<52; i++) {

@@ -73,9 +73,6 @@ public class DiscoverableList {
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 	
     
-    public void closeAll() {
-    	
-    }
     public void writeAll(byte[] msg) {
     	for(int i=0; i<connectedThreads.size();i++) {
     		connectedThreads.get(i).write(msg);
@@ -135,6 +132,7 @@ public class DiscoverableList {
 		}
 		return true;
 	}
+	
 	public void enableBluetooth(Activity a, int identifier) throws BluetoothInitializeException {
 		if(BlueAdapt==null) {
 			throw new BluetoothInitializeException();
@@ -144,6 +142,7 @@ public class DiscoverableList {
 		    a.startActivityForResult(enableBtIntent, identifier);
 		}
 	}
+	
 	public void makeDiscoverable(Context c, String title) {
 		BlueAdapt.setName(title);
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -156,6 +155,7 @@ public class DiscoverableList {
 		mType =TYPE_SERVER;
 		ServerThread mServer = new ServerThread(BlueAdapt, mArrayAdapter, mActivity, this, startButton, pos);
 		mServer.execute("");
+		this.serverThreads.add(mServer);
 		return mServer;
 	}
 	
@@ -169,9 +169,6 @@ public class DiscoverableList {
         mClient.execute("");
 	}
 	
-	public void startConnection(BluetoothSocket bluetoothSocket) {
-	
-	}
 	
 	public void setList(Context c) {
 		if(BlueAdapt.isDiscovering()) {
@@ -187,10 +184,10 @@ public class DiscoverableList {
 	public void destroyList (Context c) {
 		BlueAdapt.cancelDiscovery();
 		c.unregisterReceiver(mReceiver);
-		//killThreads();
+		killThreads();
 	}
 	
-	private void killThreads() {
+	public void killThreads() {
 		// TODO Auto-generated method stub
 		for (int i=0; i<this.clientThreads.size();i++) {
 			clientThreads.get(i).cancel();
