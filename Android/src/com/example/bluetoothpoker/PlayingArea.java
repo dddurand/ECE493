@@ -532,7 +532,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 		for(Player player : players)
 		{
 			if(player == null) continue;
-		
+			
+			riverLayout.setVisibility(View.VISIBLE);
 			int playerPosition = getDisplayOffset(player.getId());
 			setVisiblePlayer(playerPosition);
 			
