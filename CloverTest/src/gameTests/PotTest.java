@@ -80,6 +80,39 @@ public class PotTest extends AndroidTestCase {
 		assertTrue((pot.getLosers()[0]==4&&pot.getLosers()[1]==6)||(pot.getLosers()[0]==6 && pot.getLosers()[1]==4));
 		
 		assertTrue(pot.size()==4);
+		
+	}
+	
+	public void testMainPot() {
+		Pot pot = new Pot(1, 10);
+		
+		pot.addParticipants(1);
+		pot.addParticipants(2);
+		pot.addParticipants(3);
+		pot.addParticipants(4);
+		
+		pot.mainPot();
+		pot.setPlayerAmount(1, 10);
+		pot.setPlayerAmount(2, 15);
+		pot.setPlayerAmount(3, 20);
+		pot.setPlayerAmount(4, 25);
+		
+		assertTrue(pot.getPlayerAmount(1)==10);
+		assertTrue(pot.getPlayerAmount(2)==15);
+		assertTrue(pot.getPlayerAmount(3)==20);
+		assertTrue(pot.getPlayerAmount(4)==25);
+		
+		pot.decrementPlayerAmount(5);
+		assertTrue(pot.getPlayerAmount(1)==5);
+		assertTrue(pot.getPlayerAmount(2)==10);
+		assertTrue(pot.getPlayerAmount(3)==15);
+		assertTrue(pot.getPlayerAmount(4)==20);
+		
+		pot.resetPlayerAmount();
+		assertTrue(pot.getPlayerAmount(1)==0);
+		assertTrue(pot.getPlayerAmount(2)==0);
+		assertTrue(pot.getPlayerAmount(3)==0);
+		assertTrue(pot.getPlayerAmount(4)==0);
 	}
 	
 	public void testPlayerAmount() {

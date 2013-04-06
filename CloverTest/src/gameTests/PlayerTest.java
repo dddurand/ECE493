@@ -11,14 +11,14 @@ public class PlayerTest extends AndroidTestCase {
 	    super.tearDown();
 	}
 
-	public void TestConstructor() {
+	public void testConstructor() {
 		Player pTest = new Player(1, "my name", 10);
 		assertTrue(pTest.getAmountMoney()==10);
 		assertTrue(pTest.getUsername().equals("my name"));
 		assertTrue(pTest.getId()==1);
 	}
 	
-	public void TestGettersSetters() {
+	public void testGettersSetters() {
 		Player pTest = new Player(0, null, 0);
 		
 		
@@ -37,7 +37,7 @@ public class PlayerTest extends AndroidTestCase {
 		assertEquals(hand[1], cardTwo);
 	}
 	
-	public void AddRemoveMoney() {
+	public void testAddRemoveMoney() {
 		Player pTest = new Player(2, "Test", 100);
 		
 		pTest.addMoney(40);
