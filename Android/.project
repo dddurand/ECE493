@@ -3,6 +3,7 @@
 	<name>BluetoothPoker</name>
 	<comment></comment>
 	<projects>
+		<project>CloverTest</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
