@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/discoverableItem" android:title="@string/setTableDiscoverable"></item>
+    <item android:id="@+id/closeTableItem" android:title="@string/closeTableLabel"></item>
+    
+
+</menu>

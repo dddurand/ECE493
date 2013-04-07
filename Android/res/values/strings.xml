@@ -35,6 +35,10 @@
     <string name="raiseLabel">Raise amount</string>
     <string name="totalMoneyStats">Total Money Generated</string>
     <string name="handOptStats">Hand Optimality</string>
+    <string name="leaveTableLabel">Leave Table</string>
+    <string name="setTableDiscoverable">Set Table as Discoverable</string>
+    <string name="closeTableLabel">Close Table</string>
+    
 	
 	<string name="server_invalid_login">Invalid Login Credentials</string>
     <string name="server_duplicate_user">Username already in use</string>

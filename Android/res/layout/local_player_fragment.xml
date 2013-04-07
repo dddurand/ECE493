@@ -16,6 +16,15 @@
         android:visibility="invisible"
         android:paddingBottom="2dp" />
     
+    <TextView 
+        android:id="@+id/moneyAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/leftCard"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ffffff"/>
+    
     <ImageView
         android:id="@+id/leftCard"
         android:layout_width="wrap_content"

@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -193,6 +194,17 @@ public class PlayingArea extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 	    }
+	}
+	
+	/**
+	 * For loading up the menus, depending if it's a server or a client
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		if (this.isServer) getMenuInflater().inflate(R.menu.server_menu, menu);
+		else getMenuInflater().inflate(R.menu.client_menu, menu);
+		return true;
 	}
 	
 	/**
