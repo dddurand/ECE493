@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -205,6 +206,29 @@ public class PlayingArea extends Activity implements OnClickListener {
 		if (this.isServer) getMenuInflater().inflate(R.menu.server_menu, menu);
 		else getMenuInflater().inflate(R.menu.client_menu, menu);
 		return true;
+	}
+	
+	/**
+	 * Handles the item selection from the menus.
+	 */
+	//TODO Implement!
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		
+		case R.id.closeTableItem:
+			return true;
+			
+		case R.id.discoverableItem:
+			return true;
+
+		case R.id.leaveTableItem:
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	/**
