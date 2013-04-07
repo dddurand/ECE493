@@ -377,7 +377,8 @@ public class GameMechanics {
 		
 		for(Player player : this.outGoingList)
 		{
-			this.playerList.remove(player.getId());
+			//Not sure if this is correct just reseting to null not removing
+			this.playerList.set(player.getId(),null);
 		}
 		this.outGoingList.clear();
 

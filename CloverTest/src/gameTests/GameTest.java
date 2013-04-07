@@ -28,7 +28,7 @@ public class GameTest extends AndroidTestCase  {
 		
 		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
-		assertTrue(gameMechanics.getValidPlayerCount()==1);
+		assertTrue(gameMechanics.getValidPlayerCount()==0);
 	}
 	
 	public void testAddRemovePlayer() {
@@ -37,20 +37,33 @@ public class GameTest extends AndroidTestCase  {
 		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 10);
 		GameMechanics gameMechanics = new GameMechanics(1, 10, blockingQueue, timer, null);
 		
+		Player myServer = new Player(1, "server", 110);
 		Player myPlayer = new Player(2, "test name", 100);
+		Player myPlayer2 = new Player(3, "test name2", 100);
 		
-		GameAction gameAction = new GameAction(myPlayer, true);
+		GameAction gameAction = new GameAction(myServer,true);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
+		GameAction gameAction2 = new GameAction(myPlayer, true);
+		gameAction2.setPosition(GameMechanics.SERVER_POSITION);
+		GameAction gameAction3 = new GameAction(myPlayer2, true);
+		gameAction3.setPosition(GameMechanics.SERVER_POSITION);
 		
 		
 		//Can't test state because you don't update state when you add someone
 		gameMechanics.processGameAction(gameAction);
-		assertTrue(gameMechanics.getValidPlayerCount()==1);
+		gameMechanics.processGameAction(gameAction2);
+		gameMechanics.processGameAction(gameAction3);
+		assertTrue(gameMechanics.getValidPlayerCount()==3);
+		
 		
 		gameAction = new GameAction(myPlayer, false);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
+		gameAction2 = new GameAction(GameMechanics.SERVER_POSITION, PokerAction.STARTTABLE);
 		
 		//This is wrong the player will not be removed will be removed at start of game
 		gameMechanics.processGameAction(gameAction);
-		assertTrue(gameMechanics.getValidPlayerCount()==0);		
+		gameMechanics.processGameAction(gameAction2);
+		assertTrue(gameMechanics.getValidPlayerCount()==2);		
 	}
 
 	public void testStartGame() {
@@ -63,15 +76,20 @@ public class GameTest extends AndroidTestCase  {
 		Player myPlayer2 = new Player(2, "testname2", 100);
 		
 		GameAction gameAction = new GameAction(myPlayer1, true);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
 		gameMechanics.processGameAction(gameAction);
 		
-		gameAction = new GameAction(PokerAction.STARTGAME);
+		gameAction = new GameAction(PokerAction.STARTTABLE);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
+		
+		gameMechanics.processGameAction(gameAction);
 		
 		//need to test bad start
 		assertTrue(myPlayer1.getCard(0)==null);
 		assertTrue(myPlayer1.getCard(1)==null);
 		
 		gameAction = new GameAction(myPlayer2, true);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
 		gameMechanics.processGameAction(gameAction);
 		
 		//now test good start
