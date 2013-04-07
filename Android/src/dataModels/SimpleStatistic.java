@@ -103,7 +103,7 @@ public class SimpleStatistic {
 	 * 
 	 * @return
 	 */
-	public float getValueAsInt() {
+	public int getValueAsInt() {
 		return value.intValue();
 	}
 

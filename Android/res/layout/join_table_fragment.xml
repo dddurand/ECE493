@@ -5,13 +5,23 @@
 
     <ImageView
         android:id="@+id/joinTableImage"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@android:drawable/btn_star_big_on" />
+        android:src="@drawable/ic_join_table_big" />
     
     <Button 
+        android:id="@+id/refreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_selector"
+        android:textColor="#ffffff"
+        android:drawableLeft="@drawable/ic_refresh"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+    
+    <!--  <Button 
         android:id="@+id/refreshButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,14 +29,14 @@
         android:background="@drawable/button_selector"
         android:textColor="#ffffff"
         android:drawableLeft="@drawable/ic_refresh"
-        android:layout_below="@id/joinTableImage"/>
+        android:layout_below="@id/joinTableImage"/> -->
     
     <ListView
         android:id="@+id/tablesList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/joinButton"
-        android:layout_below="@id/refreshButton"
+        android:layout_below="@id/joinTableImage"
         android:choiceMode="singleChoice" />
     
     <Button 

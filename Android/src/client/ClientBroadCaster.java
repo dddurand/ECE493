@@ -76,6 +76,7 @@ public class ClientBroadCaster extends ListenableThread<ClientTaskListener> {
 						objStream.flush();
 						objStream.reset();
 					} catch (IOException e) {
+						this.canceled = true;
 						ClientListenerTaskCompleteNotify runnable = new ClientListenerTaskCompleteNotify();
 						informListeners(runnable);
 					}				

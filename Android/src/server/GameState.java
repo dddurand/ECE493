@@ -246,6 +246,7 @@ public class GameState implements Serializable  {
 	 * @param out
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unchecked")
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
 		this.player = (Player)in.readObject();

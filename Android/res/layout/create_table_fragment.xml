@@ -7,7 +7,7 @@
         android:id="@+id/imageView1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_offline_icon" />
+        android:src="@drawable/ic_host_table_big" />
 
     <EditText
         android:id="@+id/createTableNameField"

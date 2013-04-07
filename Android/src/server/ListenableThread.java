@@ -39,7 +39,6 @@ public abstract class ListenableThread<T extends TaskListener> implements Runnab
 			for (T listener : listeners) 
 			{
 				runnable.setListener(listener);
-				//ListenerNotifyRunnable runnable = new ListenerNotifyRunnable(listener);
 				activity.runOnUiThread(runnable);
 			}		
 						

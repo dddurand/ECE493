@@ -1,11 +1,7 @@
 package bluetooth;
 
-import game.Player;
-
 import java.io.IOException;
 import java.io.Serializable;
-
-import server.GameAction.PokerAction;
 
 public class holder implements Serializable{
 
