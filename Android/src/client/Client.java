@@ -120,7 +120,7 @@ public class Client implements ClientTaskListener {
 		Account account = app.getAccount();
 		Player player = new Player(position, account.getUsername(), account.getBalance());
 		
-		ObjectInputStream sendInObjectStream=  new ObjectInputStream(sendInStream);
+		ObjectInputStream sendInObjectStream =  new ObjectInputStream(sendInStream);
 
 		
 		server.addPlayer(player, sendInObjectStream, sendOutObjectStream);
