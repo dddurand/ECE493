@@ -217,13 +217,16 @@ public class PlayingArea extends Activity implements OnClickListener {
 
 		switch (item.getItemId()) {
 		
+		//-----------------For Server----------------
 		case R.id.closeTableItem:
 			return true;
 			
 		case R.id.discoverableItem:
 			return true;
 
+		//----------------For Client------------------
 		case R.id.leaveTableItem:
+			this.onBackPressed();
 			return true;
 
 		default:
