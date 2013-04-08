@@ -91,6 +91,7 @@ public class ClientBroadCasterTest  extends ActivityUnitTestCase<PlayAreaMock> i
 		bOut.flush();
 		sendOutStream.flush();
 		
+		@SuppressWarnings("unused")
 		ObjectInputStream aIn = new ObjectInputStream(keepInStream);
 		LinkedBlockingQueue<GameAction> queue = new LinkedBlockingQueue<GameAction>();
 		

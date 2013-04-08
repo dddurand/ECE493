@@ -1,15 +1,11 @@
 package client.mock;
 
 import server.GameState;
+import android.os.Bundle;
+import android.view.Menu;
 
 import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.test.R;
-import com.example.bluetoothpoker.test.R.layout;
-import com.example.bluetoothpoker.test.R.menu;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
 
 public class PlayAreaMock extends PlayingArea {
 

@@ -46,9 +46,6 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 	 */
 	public void addPlayer(Player player, ObjectOutputStream stream) throws IOException
 	{
-		//ObjectOutputStream objStream = new ObjectOutputStream(stream);
-		//objStream.flush();
-		
 		synchronized (this) {
 			players.put(player.getId(), stream);
 		}
@@ -62,7 +59,7 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 	public void removePlayer(Player player)
 	{
 		synchronized (this) {
-			ObjectOutputStream stream = players.remove(player);
+			ObjectOutputStream stream = players.remove(player.getId());
 			
 			if(stream == null) return;
 			
@@ -123,7 +120,12 @@ public class ServerBroadCaster extends ListenableThread<PlayerTaskListener> {
 					
 					stream = players.get(player.getId());
 					
-					if(stream == null) continue;
+					if(stream == null)
+					{
+						PlayerTaskCompleteNotify runnable = new PlayerTaskCompleteNotify(player);
+						informListeners(runnable);
+						continue;
+					}
 					
 					try {
 						stream.writeObject(state);

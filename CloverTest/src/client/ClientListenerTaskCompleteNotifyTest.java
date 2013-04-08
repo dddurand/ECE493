@@ -1,7 +1,5 @@
 package client;
 
-import java.util.concurrent.Semaphore;
-
 import android.test.AndroidTestCase;
 
 public class ClientListenerTaskCompleteNotifyTest extends AndroidTestCase{
@@ -20,7 +18,10 @@ public class ClientListenerTaskCompleteNotifyTest extends AndroidTestCase{
 			fail();
 		}
 		
-		ct.isRun();
+		if(!ct.isRun())
+		{
+			fail();
+		}
 		
 		
 		

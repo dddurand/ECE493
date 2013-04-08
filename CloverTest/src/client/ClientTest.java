@@ -9,7 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import server.GameAction;
 import server.GameAction.PokerAction;
-import server.Server;
 import android.content.Intent;
 import android.test.ActivityUnitTestCase;
 import android.util.Log;
@@ -40,6 +39,7 @@ public class ClientTest extends ActivityUnitTestCase<PlayAreaMock> {
 		this.activity = this.getActivity();
 	}
 	
+	@SuppressWarnings("resource")
 	public void testBlueToothClient()
 	{
 		
@@ -57,6 +57,7 @@ public class ClientTest extends ActivityUnitTestCase<PlayAreaMock> {
 		bOut.flush();
 		sendOutStream.flush();
 		
+		@SuppressWarnings("unused")
 		ObjectOutputStream aOut = new ObjectOutputStream(keepOutStream);
 		ObjectInputStream bIn = new ObjectInputStream(sendInStream);
 		

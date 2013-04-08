@@ -357,8 +357,12 @@ public class Filter {
 			if(skipElement != null)
 				filter.setSkip(skipElement.getAsInt());
 			
+			if(filter.getSkip() < 0) throw new JsonParseException("Invalid Skip");
+			
 			if(maxElement != null)
 				filter.setMax(maxElement.getAsInt());
+			
+			if(filter.getMax() < 0) throw new JsonParseException("Invalid Max");
 			
 			if(rankTypeElement != null)
 				filter.setRankType(rankTypeElement.getAsString());

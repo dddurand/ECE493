@@ -32,6 +32,7 @@ public class ClientListenerCasterTest  extends ActivityUnitTestCase<PlayAreaMock
 			
 		PipedInputStream keepInStream = new PipedInputStream(1000);
 		
+		@SuppressWarnings("resource")
 		PipedOutputStream sendOutStream = new PipedOutputStream(keepInStream);
 		
 		final ObjectOutputStream bOut = new ObjectOutputStream(sendOutStream);
@@ -117,25 +118,6 @@ public class ClientListenerCasterTest  extends ActivityUnitTestCase<PlayAreaMock
 		
 		ClientListener cl = new ClientListener(aIn, pa);
 		
-		UUID uuid = UUID.randomUUID();
-		Player player = new Player(0, "bob", 22);
-		ArrayList<String> empty = new ArrayList<String>();
-		int currentTurn = 0;
-		
-		ArrayList<Player> players = new ArrayList<Player>();
-		players.add(player);
-		
-		int currentDealer = 0;
-		int blindAmount = 5;
-		Pot mainPot = new Pot(0, 25);
-		ArrayList<Pot> sidePots = new ArrayList<Pot>();
-		Card community[] = new Card[0];
-		GameAction lastAction = new GameAction(PokerAction.BET);
-		int timeoutSeconds = 5;
-		int gameUpdateNumber = 0;
-		
-		final GameState state = new GameState(uuid, player, empty, currentTurn, players, currentDealer, blindAmount, mainPot, sidePots, community, lastAction, timeoutSeconds, gameUpdateNumber);
-		
 		bOut.close();
 		
 		cl.addListener(this);
@@ -163,6 +145,7 @@ public class ClientListenerCasterTest  extends ActivityUnitTestCase<PlayAreaMock
 		
 		PipedOutputStream sendOutStream = new PipedOutputStream(keepInStream);
 		
+		@SuppressWarnings("resource")
 		final ObjectOutputStream bOut = new ObjectOutputStream(sendOutStream);
 		bOut.flush();
 		sendOutStream.flush();
