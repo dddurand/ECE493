@@ -232,7 +232,7 @@ public class Pot implements Serializable{
 	 * @param mainPot
 	 */
 	public void transfer(Pot mainPot) {
-		mainPot.take(this.amount);
+		mainPot.take(mainPot.getPlayerAmount(getOwner()));
 		this.setPlayerAmount(getOwner(), this.amount);
 		mainPot.removeParticipants(getOwner());
 		this.addList(mainPot.getMainParticipants());
@@ -245,9 +245,9 @@ public class Pot implements Serializable{
 				this.setPlayerAmount(tempId, this.amount);
 				this.addTotal(this.amount);
 			} else {
-				mainPot.setPlayerAmount(tempId, 0);
 				mainPot.take(mainPot.getPlayerAmount(tempId));
 				this.setPlayerAmount(tempId, mainPot.getPlayerAmount(tempId));
+				mainPot.setPlayerAmount(tempId, 0);
 				this.addTotal(this.amount);
 			}
 		}

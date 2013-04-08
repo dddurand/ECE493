@@ -920,6 +920,13 @@ public class GameMechanics {
 		} else {
 			this.tempBets[smallBlind] = p.getAmountMoney();
 			p.setActive(Player.ALL_IN);
+			this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), tempBets[smallBlind]));
+			this.currentSidePots.get(this.currentSidePots.size()-1).transfer(this.mainPot);
+			this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+			if(checkForFolds()){
+				isAllFolded = true;
+				noBets=true;
+			}
 		}
 
 		this.mainPot.setPlayerAmount(smallBlind, this.tempBets[smallBlind]);
@@ -938,6 +945,13 @@ public class GameMechanics {
 		} else {
 			this.tempBets[bigBlind] = p.getAmountMoney();
 			p.setActive(Player.ALL_IN);
+			this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), tempBets[bigBlind]));
+			this.currentSidePots.get(this.currentSidePots.size()-1).transfer(this.mainPot);
+			this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+			if(checkForFolds()){
+				isAllFolded = true;
+				noBets=true;
+			}
 		}
 
 		this.mainPot.setPlayerAmount(bigBlind, this.tempBets[bigBlind]);
