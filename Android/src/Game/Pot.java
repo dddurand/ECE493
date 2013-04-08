@@ -232,6 +232,11 @@ public class Pot implements Serializable{
 	 * @param mainPot
 	 */
 	public void transfer(Pot mainPot) {
+		if(mainPot.getAmount()>this.amount) {
+			mainPot.setAmount(mainPot.getAmount()-this.amount);
+		} else {
+			mainPot.setAmount(0);
+		}
 		mainPot.take(mainPot.getPlayerAmount(getOwner()));
 		this.setPlayerAmount(getOwner(), this.amount);
 		mainPot.removeParticipants(getOwner());

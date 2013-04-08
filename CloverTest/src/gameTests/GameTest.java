@@ -390,7 +390,7 @@ public class GameTest extends AndroidTestCase  {
 			if(state==null)
 				fail();
 			ArrayList<Player> players = state.getPlayers();
-			assertTrue(players.get(2).getActive()==1);
+			assertTrue(players.get(2).getActive()==Player.ALL_IN);
 			assertTrue(state.getLastPokerGameAction().getAction().equals(PokerAction.BET));
 			//assertTrue(state.getMainPot().getTotal()==130);
 			//assertTrue(state.getPlayer().getId()==2);

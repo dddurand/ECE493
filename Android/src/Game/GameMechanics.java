@@ -732,17 +732,19 @@ public class GameMechanics {
 				noBets=true;
 				return;
 			}
-		} else{
+		} else {
 			System.out.println(this.playerList.get(positionOfCurrentPlayer).getActive());
 			this.playerList.get(positionOfCurrentPlayer).removeMoney(bet);
 			for(int j=0; j<this.currentSidePots.size();j++) {
 				Pot sidePot = this.currentSidePots.get(j);
-				if(bet>=sidePot.getAmount() &&!sidePot.exist(this.playerList.get(positionOfCurrentPlayer).getId())) {
-					bet-=sidePot.getAmount();
-					sidePot.addTotal(sidePot.getAmount());
-					sidePot.addParticipants(this.playerList.get(positionOfCurrentPlayer).getId());
+				int amountOwing = (sidePot.getAmount()-sidePot.getPlayerAmount(positionOfCurrentPlayer));
+				if(bet>=amountOwing) {
+					bet-=amountOwing;
+					sidePot.addTotal(amountOwing);
+					sidePot.setPlayerAmount(positionOfCurrentPlayer, amountOwing);
+					//sidePot.addParticipants(this.playerList.get(positionOfCurrentPlayer).getId());
 				} else {
-					sidePot.setAmount(sidePot.getAmount()-bet);
+					//sidePot.setAmount(sidePot.getAmount()-bet);
 					//sidePot.take(bet*sidePot.size());
 					this.currentSidePots.add(j, new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), bet));
 					this.currentSidePots.get(j).transfer(sidePot);
