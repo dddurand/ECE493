@@ -743,17 +743,30 @@ public class GameMechanics {
 					sidePot.addParticipants(this.playerList.get(positionOfCurrentPlayer).getId());
 				} else {
 					sidePot.setAmount(sidePot.getAmount()-bet);
-					sidePot.take(bet*sidePot.size());
+					//sidePot.take(bet*sidePot.size());
 					this.currentSidePots.add(j, new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), bet));
-					this.currentSidePots.get(j).addList(sidePot.getParticipants());
+					this.currentSidePots.get(j).transfer(sidePot);
 					this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+					if(checkForFolds()){
+						isAllFolded = true;
+						noBets=true;
+						return;
+					}
 					break;
 				}
 			}
-			if (this.playerList.get(positionOfCurrentPlayer).getActive()!=1) {
+			if (this.playerList.get(positionOfCurrentPlayer).getActive()!=Player.ALL_IN) {
 				int totalbet = this.mainPot.getPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId()) + bet;
 				int amountOwing = this.mainPot.getAmount()-this.mainPot.getPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId());
-				if(totalbet>this.mainPot.getAmount()) {
+				if(this.playerList.get(positionOfCurrentPlayer).getAmountMoney()==0) {
+					this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), totalbet));
+					this.currentSidePots.get(this.currentSidePots.size()-1).transfer(this.mainPot);
+					this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+					if(checkForFolds()){
+						isAllFolded = true;
+						noBets=true;
+					}
+				} else if(totalbet>this.mainPot.getAmount()) {
 					this.mainPot.setAmount(totalbet);
 					this.mainPot.setPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId(), totalbet);
 					this.mainPot.addTotal(bet);
@@ -762,9 +775,12 @@ public class GameMechanics {
 					this.mainPot.setPlayerAmount(this.playerList.get(positionOfCurrentPlayer).getId(),totalbet);
 				} else {
 					this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), totalbet));
-					this.currentSidePots.get(this.currentSidePots.size()-1).addList(this.mainPot.getMainParticipants());
-					this.mainPot.decrementPlayerAmount(totalbet);
+					this.currentSidePots.get(this.currentSidePots.size()-1).transfer(this.mainPot);
 					this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+					if(checkForFolds()){
+						isAllFolded = true;
+						noBets=true;
+					}
 				}
 			}
 		}
@@ -825,6 +841,8 @@ public class GameMechanics {
 		this.updateState();
 		this.playTimer.startTimer();
 	}
+	
+
 	/**
 	 * Checks to see if all other players have folded
 	 * @return

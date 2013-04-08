@@ -80,7 +80,6 @@ public class Pot implements Serializable{
 	 * sets the pot to a mainpot
 	 */
 	public void mainPot(){
-		participants.remove(0);
 		for(int i=0; i<this.participants.size();i++) {
 			if(participants.get(i)==null) 
 			{
@@ -206,7 +205,7 @@ public class Pot implements Serializable{
 		Enumeration<Integer> e = this.playeramount.keys();
 		while(e.hasMoreElements()) {
 			int id = (int) e.nextElement();
-			if(this.playeramount.get(id)!=0)
+			if(this.exist(id))
 				temp.add(id);
 		}
 		return temp;
@@ -228,13 +227,41 @@ public class Pot implements Serializable{
 		return this.participants;
 	}
 	
+	/**
+	 * transfers money of particpants to from mainPot
+	 * @param mainPot
+	 */
+	public void transfer(Pot mainPot) {
+		mainPot.take(this.amount);
+		this.setPlayerAmount(getOwner(), this.amount);
+		mainPot.removeParticipants(getOwner());
+		this.addList(mainPot.getMainParticipants());
+		ArrayList<Integer> mainParticipants = mainPot.getMainParticipants();
+		for(int i=0; i<mainParticipants.size();i++) {
+			int tempId = mainParticipants.get(i);
+			if(mainPot.getPlayerAmount(tempId)>=this.amount) {
+				mainPot.setPlayerAmount(tempId, mainPot.getPlayerAmount(tempId)-this.amount);
+				mainPot.take(this.amount);
+				this.setPlayerAmount(tempId, this.amount);
+				this.addTotal(this.amount);
+			} else {
+				mainPot.setPlayerAmount(tempId, 0);
+				mainPot.take(mainPot.getPlayerAmount(tempId));
+				this.setPlayerAmount(tempId, mainPot.getPlayerAmount(tempId));
+				this.addTotal(this.amount);
+			}
+		}
+		
+	}
+	
 	
 	/**
 	 * add player id to participant list
 	 * @param id
 	 */
 	public void addParticipants(int id) {
-		this.participants.add(id);
+		if(!this.exist(id))
+			this.participants.add(id);
 	}
 	
 	/**
@@ -243,7 +270,7 @@ public class Pot implements Serializable{
 	public void removeParticipants(int id) {
 		for(int i =0; i<this.participants.size();i++) {
 			if(this.participants.get(i)==id){
-				this.participants.remove(id);
+				this.participants.remove(i);
 				i--;
 			}
 		}

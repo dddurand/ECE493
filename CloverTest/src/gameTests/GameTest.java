@@ -346,5 +346,124 @@ public class GameTest extends AndroidTestCase  {
 		}
 	}
 	
+	public void testALLIN() {
+		BlockingQueue<GameState> blockingQueue = new LinkedBlockingQueue<GameState>();
+		LinkedBlockingDeque<GameAction> gameActionQueue = new LinkedBlockingDeque<GameAction>();
+		WatchDogTimer timer = new WatchDogTimer(gameActionQueue, 90);
+		GameMechanics gameMechanics = new GameMechanics(0, 10, blockingQueue, timer, null);
+		
+		Player myPlayer1 = new Player(0, "testname1", 230);
+		Player myPlayer2 = new Player(1, "testname2", 200);
+		Player myPlayer3 = new Player(2, "testname3", 120);
+		
+		GameAction gameAction = new GameAction(myPlayer1, true);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
+		gameMechanics.processGameAction(gameAction);
+		
+		gameAction = new GameAction(myPlayer2, true);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
+		gameMechanics.processGameAction(gameAction);
+		
+		gameAction = new GameAction(myPlayer3, true);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
+		gameMechanics.processGameAction(gameAction);
+		
+		gameAction = new GameAction(PokerAction.STARTTABLE);
+		gameAction.setPosition(GameMechanics.SERVER_POSITION);
+		gameMechanics.processGameAction(gameAction);
+		
+		//get ride of start game
+		try {
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			fail();
+		}
+		
+		gameAction = new GameAction(2, PokerAction.BET, 115);
+		gameMechanics.processGameAction(gameAction);
+		try{
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			if(state==null)
+				fail();
+			ArrayList<Player> players = state.getPlayers();
+			assertTrue(players.get(2).getActive()==1);
+			assertTrue(state.getLastPokerGameAction().getAction().equals(PokerAction.BET));
+			//assertTrue(state.getMainPot().getTotal()==130);
+			//assertTrue(state.getPlayer().getId()==2);
+		} catch (Exception e) {
+			fail();
+		}
+		
+		gameAction = new GameAction(0, PokerAction.CALL, 110);
+		gameMechanics.processGameAction(gameAction);
+		try{
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			//assertTrue(state.getPlayer().getId()==2);
+		} catch (Exception e) {
+			fail();
+		}
+		
+		gameAction = new GameAction(1, PokerAction.CALL, 120);
+		gameMechanics.processGameAction(gameAction);
+		try{
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			//assertTrue(state.getPlayer().getId()==2);
+		} catch (Exception e) {
+			fail();
+		}
+		
+		gameAction = new GameAction(0, PokerAction.CHECK);
+		gameMechanics.processGameAction(gameAction);
+		try{
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			//assertTrue(state.getPlayer().getId()==2);
+		} catch (Exception e) {
+			fail();
+		}
+		
+		gameAction = new GameAction(1, PokerAction.CHECK);
+		gameMechanics.processGameAction(gameAction);
+		try{
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			//assertTrue(state.getPlayer().getId()==2);
+		} catch (Exception e) {
+			fail();
+		}
+		gameAction = new GameAction(0, PokerAction.CHECK);
+		gameMechanics.processGameAction(gameAction);
+		try{
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			//assertTrue(state.getPlayer().getId()==2);
+		} catch (Exception e) {
+			fail();
+		}
+		
+		gameAction = new GameAction(1, PokerAction.CHECK);
+		gameMechanics.processGameAction(gameAction);
+		try{
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			blockingQueue.poll(1, TimeUnit.SECONDS);
+			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			//assertTrue(state.getPlayer().getId()==2);
+		} catch (Exception e) {
+			fail();
+		}
+		
+	}
+	
 
 }
