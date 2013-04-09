@@ -181,6 +181,7 @@ public class DiscoverableList {
 		BlueAdapt.startDiscovery();
 		// Register the BroadcastReceiver
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 		c.registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 	}
 	

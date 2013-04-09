@@ -24,6 +24,7 @@ public class Pot implements Serializable{
 	private Player[] winners = new Player[0];
 	private int[] losers = null;
 	public static int MAIN_POT = -1;
+	int owner;
 	
 	
 	public Pot(int owner, int amount) {
@@ -34,6 +35,7 @@ public class Pot implements Serializable{
 			this.amount = amount;
 		//}
 	}
+	
 	
 	
 	
