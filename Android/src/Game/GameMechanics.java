@@ -545,6 +545,7 @@ public class GameMechanics {
 
 	}
 
+
 	/**
 	 * determine the winner between all the hands
 	 * @return player array of winners 
@@ -735,6 +736,9 @@ public class GameMechanics {
 			if(checkForFolds()){
 				isAllFolded = true;
 				noBets=true;
+				if(this.currentSidePots.size()==0) {
+					endGame();
+				}
 				return;
 			}
 		} else {
@@ -876,6 +880,7 @@ public class GameMechanics {
 			this.currentSidePots.get(i).setWinners(new Player[] {this.playerList.get(player)});
 		}
 		this.playerList.get(player).addMoney(this.mainPot.getTotal());
+		this.mainPot.setWinners(new Player[] {this.playerList.get(player)});
 	}
 
 	/**
@@ -964,16 +969,6 @@ public class GameMechanics {
 		this.mainPot.setPlayerAmount(bigBlind, this.tempBets[bigBlind]);
 		this.mainPot.addTotal(this.tempBets[bigBlind]);
 
-	}
-
-	public String getcommunityCards() {
-		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString();
-	}
-	public String getcommunityCards2() {
-		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString();
-	}
-	public String getcommunityCards3() {
-		return this.communityCards[0].toString() +" "+ this.communityCards[1].toString() +" "+this.communityCards[2].toString() +" "+this.communityCards[3].toString()+" "+ this.communityCards[4].toString();
 	}
 
 }
