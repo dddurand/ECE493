@@ -18,9 +18,11 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
+import application.PokerApplication;
 
 /**
  * Listens on socket for clients then populates listview with them and enables start button
@@ -33,6 +35,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private String NAME = "BluetoothPoker";
 		private DiscoverableList mdiscoverableList;
 		private Activity mActivity;
+		private PokerApplication pokerApp;
 		private BluetoothAdapter mBluetoothAdapter;
 		private ArrayAdapter<String> mArrayAdapter;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
@@ -53,6 +56,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	        mUuid.add(UUID.fromString("624c879f-62f5-4c9e-93d3-de8366837c2e"));
 	        mUuid.add(UUID.fromString("4d07c239-4760-4f09-8751-762d8a1b4cf3"));
 	        this.mActivity = mActivity;
+	        pokerApp = (PokerApplication)this.mActivity.getApplication();
 	        this.mdiscoverableList = mDiscoverableList;
 	        this.mBluetoothAdapter = mBluetoothAdapter;
 	        this.mArrayAdapter = mArrayAdapter;
@@ -64,8 +68,14 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	        try {
 	            // MY_UUID is the app's UUID string, also used by the client code
 	            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, mUuid.get(pos));
-	        } catch (IOException e) { }
+	        } catch (IOException e) {
+	        	
+	        	Log.e("listenUsingRfcommWithServiceRecord", "?", e);
+	        	
+	        }
 	        mmServerSocket = tmp;
+	        
+	        
 	    }
 		@Override
 		protected BluetoothSocket doInBackground(String... params) {
@@ -98,6 +108,8 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	                		this.streamOut = streamOut;
 	                		this.streamIn = streamIn;
 							mmServerSocket.close();
+							
+							this.pokerApp.addSocket(this.blueSocket);
 							
 							return socket;
 	                	}
@@ -138,7 +150,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 				this.streamOut.writeObject(this.startMsg);
 				this.streamOut.flush();
 			} catch (IOException e) {
-				Toast.makeText(mActivity, "Error sending start", Toast.LENGTH_SHORT);
+				Toast.makeText(mActivity, "Error sending start", Toast.LENGTH_SHORT).show();
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -147,10 +159,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		protected void onPostExecute(BluetoothSocket params) {
 			try {
 				mmServerSocket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (Exception e) {}
 			//this.mdiscoverableList.connected(params);
 			//TODO
 			//connected(socket, socket.getRemoteDevice());
@@ -162,6 +171,6 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	    public void cancel() {
 	        try {
 	            mmServerSocket.close();
-	        } catch (IOException e) { }
+	        } catch (Exception e) { }
 	    }
 	}

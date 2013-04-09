@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
@@ -24,7 +23,7 @@ import com.example.bluetoothpoker.R;
 import dataModels.Account;
 import database.PreferenceConstants;
 
-public class OfflineMode extends Fragment implements OnClickListener,TextWatcher, BalanceUpdatable {
+public class OfflineMode extends Fragment implements OnClickListener, BalanceUpdatable {
 	
 	private View view;
 	private PokerApplication application;
@@ -54,8 +53,6 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		offlineUsername = (EditText) view.findViewById(R.id.offlineUsernameTextField);
 		offlineBalance = (TextView) view.findViewById(R.id.fundsAmountTextview);
 		
-		offlineUsername.addTextChangedListener(this);
-		
 		preferences = this.getActivity().getSharedPreferences(PokerApplication.PREFS_NAME, Context.MODE_PRIVATE);
 		this.application = (PokerApplication) this.getActivity().getApplication();
 		account = application.getAccount();
@@ -66,17 +63,11 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		
 		return view;
 	}
-	
-	@Override
-	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		
-		//arg0 provides the current string
-		System.out.println("Change: "+arg0.toString());
-		
-	}
 
 	@Override
 	public void onClick(View v) {
+		
+		String name = offlineUsername.getText().toString();
 		
 		switch(v.getId()) {
 
@@ -86,11 +77,31 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 			break;
 			
 		case R.id.joinTableButton:
+			
+			if(name.isEmpty())
+			{
+				Toast.makeText(this.getActivity(), R.string.empty_name, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
+			if(this.account.getBalance() <= 0)
+			{
+				Toast.makeText(this.getActivity(), R.string.zero_balance, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
 			updateOfflineUsername();
 			((MainScreen) getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
 			
 		case R.id.createTableButton:
+			
+			if(name.isEmpty())
+			{
+				Toast.makeText(this.getActivity(), R.string.empty_name, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
 			updateOfflineUsername();
 			((MainScreen) getActivity()).switchFragment(MainScreen.CREATE_TABLE_SCREEN);
 			break;
@@ -104,19 +115,6 @@ public class OfflineMode extends Fragment implements OnClickListener,TextWatcher
 		Editor editor = preferences.edit();
 		editor.putString(PreferenceConstants.OFFLINE_USER_NAME, offlineUsername.getText().toString());
 		editor.commit();
-	}
-	
-	@Override
-	public void afterTextChanged(Editable arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-			int arg3) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/**

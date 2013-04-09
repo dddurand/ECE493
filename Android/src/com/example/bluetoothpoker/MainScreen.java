@@ -2,6 +2,8 @@ package com.example.bluetoothpoker;
 
 import java.util.concurrent.Semaphore;
 
+import bluetooth.DiscoverableList;
+
 import networking.ServerCodes;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -207,6 +209,7 @@ public class MainScreen extends Activity {
 					break;
 					
 				case MainScreen.JOIN_TABLE_SCREEN:
+					DiscoverableList.closeBluetoothSockets(this);
 					if (online)
 						currentScreen=MainScreen.ONLINE_MODE;
 					else currentScreen=MainScreen.OFFLINE_SCREEN;
@@ -219,6 +222,7 @@ public class MainScreen extends Activity {
 					break;
 					
 				case MainScreen.WAIT_CLIENT:
+					DiscoverableList.closeBluetoothSockets(this);
 					currentScreen=MainScreen.CREATE_TABLE_SCREEN;
 					break;
 					

@@ -14,10 +14,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import application.PokerApplication;
 import bluetooth.DiscoverableList;
 import bluetooth.DiscoverableList.BluetoothInitializeException;
 
 import com.example.bluetoothpoker.R;
+
+import dataModels.Account;
 
 public class JoinTable extends Fragment implements OnClickListener, OnItemClickListener {
 	
@@ -28,6 +31,7 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 	private DiscoverableList mDiscoverableList;
 	private String address=null;
 	private String info=null;
+	private Account account;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +49,9 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 		Button refreshButton = (Button) view.findViewById(R.id.refreshButton);
 		joinButton.setOnClickListener(this);
 		refreshButton.setOnClickListener(this);
+		
+		PokerApplication app = (PokerApplication)this.getActivity().getApplication();
+		this.account = app.getAccount();
 		
 		return view;
 	}
@@ -67,6 +74,13 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void onDetach() {
+		if(mDiscoverableList != null)
+			mDiscoverableList.killThreads();
+		super.onDetach();
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -74,6 +88,13 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 		switch (v.getId()){
 		
 		case R.id.joinButton:
+			
+			if(this.account.getBalance() <= 0)
+			{
+				Toast.makeText(this.getActivity(), R.string.zero_balance, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
 			if(address==null){
 				Toast.makeText(getActivity(), "Please select a device", Toast.LENGTH_SHORT).show();
 			} else {

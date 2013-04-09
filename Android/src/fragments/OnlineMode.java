@@ -184,6 +184,13 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		switch (v.getId()){
 		
 		case R.id.onlineModeJoinTable:
+			
+			if(this.account.getBalance() <= 0)
+			{
+				Toast.makeText(this.getActivity(), R.string.zero_balance, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
 			((MainScreen)getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
 			

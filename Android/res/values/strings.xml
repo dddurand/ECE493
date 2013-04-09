@@ -98,5 +98,8 @@
 	 <string name="player_folded">folded</string>
 	 <string name="player_raised">raised for $</string>
 	 <string name="player_reraise">reraised for $</string>
+	 <string name="empty_table_name">Table Name Cannot Be Empty</string>
+	 <string name="empty_name">Name Cannot Be Empty</string>
+	 <string name="zero_balance">Cannot Proceed With No Balance</string>
     
 </resources>

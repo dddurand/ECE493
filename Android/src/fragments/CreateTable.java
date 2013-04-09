@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import application.PokerApplication;
 
 import com.example.bluetoothpoker.MainScreen;
@@ -57,6 +58,19 @@ public class CreateTable extends Fragment implements OnClickListener {
 	public void onClick(View arg0) {
 		//bluetooth stuff here
 		String tableName = tableNameText.getText().toString();
+		
+		if(tableName.isEmpty())
+		{
+			Toast.makeText(this.getActivity(), R.string.empty_table_name, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
+		if(this.account.getBalance() <= 0)
+		{
+			Toast.makeText(this.getActivity(), R.string.zero_balance, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		Intent intent = new Intent();
 		intent.putExtra(CreateTable.TITLE_HOLDER,tableName);
 		MainScreen ms = (MainScreen)getActivity();

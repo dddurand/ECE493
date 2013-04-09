@@ -305,7 +305,7 @@ public class Login extends Fragment implements OnClickListener {
 		
 		/*****Offline mode button action***/
 		case R.id.offlineButton:
-			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "OfflinePlayer");
+			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "");
 			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
 			account = new Account(offlineUsername, balance);
 			this.application.setAccount(account);

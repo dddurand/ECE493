@@ -41,6 +41,7 @@ import fragments.JoinTable;
 		private BluetoothAdapter mBluetoothAdapter;
 		private DiscoverableList mDiscoverableList;
 		Activity mActivity;
+		private PokerApplication pokerApp;
 		PokerApplication application;
 		Account account;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
@@ -68,6 +69,7 @@ import fragments.JoinTable;
 	        mText = (TextView)mActivity.findViewById(R.id.waiting_message);
 	        this.mBluetoothAdapter = mBluetoothAdapter;
 	        this.mActivity = mActivity;
+	        this.pokerApp = (PokerApplication)this.mActivity.getApplication();
 	        this.mDiscoverableList = mDiscoverableList;
 	        // Use a temporary object that is later assigned to mmSocket,
 	        // because mmSocket is final
@@ -119,6 +121,9 @@ import fragments.JoinTable;
 	        	// Connect the device through the socket. This will block
 	            // until it succeeds or throws an exception
 	            //mmSocket.connect();
+	        	
+	        	this.pokerApp.addSocket(mmSocket);
+	        	
 	            publishProgress("wait");
 	            OutputStream tmpOut = mmSocket.getOutputStream();
 		        ObjectOutputStream streamOut = new ObjectOutputStream(tmpOut);

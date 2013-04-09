@@ -197,6 +197,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 	    }
 	}
 	
+	@Override
+	protected void onDestroy() {
+		DiscoverableList.closeBluetoothSockets(this);
+		super.onDestroy();
+	}
+	
 	/**
 	 * For loading up the menus, depending if it's a server or a client
 	 */
@@ -640,6 +646,12 @@ public class PlayingArea extends Activity implements OnClickListener {
 		/*
 		 * Update Account
 		 */
+		
+		if(data.getLastPokerGameAction().getAction() == PokerAction.ENDGAME)
+		{
+			updateWinners(data);
+		}
+		
 		updateAccount(data);
 		
 		/*
@@ -647,6 +659,38 @@ public class PlayingArea extends Activity implements OnClickListener {
 		 */
 		storeGameState(data);
 	}
+	
+	private void updateWinners(GameState data)
+	{
+		clearAll();
+		cancelProgressBarTimer();
+		Pot pot = data.getMainPot();
+		ArrayList<Pot> sidePots = data.getSidePots();
+		Player winners[];
+		
+		winners = pot.getWinners();
+
+		for(Player player : winners)
+		{
+			if(player==null) continue;
+			int winnerPosition = getDisplayOffset(player.getId());
+			this.setActivePlayerBackground(winnerPosition);
+		}
+		
+		for(Pot sidePot : sidePots)
+		{
+			winners = sidePot.getWinners();
+
+			for(Player player : winners)
+			{
+				if(player==null) continue;
+				int winnerPosition = getDisplayOffset(player.getId());
+				this.setActivePlayerBackground(winnerPosition);
+			}
+		}
+		
+	}
+	
 	
 	private void updateLastActionLabel(GameState data)
 	{
@@ -710,8 +754,6 @@ public class PlayingArea extends Activity implements OnClickListener {
 		default:
 			break;
 		}
-		
-		int currentDisplayTurn = getDisplayOffset(data.getCurrentPlayerTurn());
 		
 	}
 	

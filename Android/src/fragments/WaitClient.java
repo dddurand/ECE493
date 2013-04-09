@@ -40,6 +40,9 @@ public class WaitClient extends Fragment implements OnClickListener {
 	private Vector<ServerThread> mserver = new Vector<ServerThread>();
 	ArrayAdapter<String> mArrayAdapter;
 	String title = "untitle";
+	
+	private DiscoverableList mDiscoverableList;
+	
 	public void setTitle (String title) {
 		this.title = title;
 	}
@@ -57,7 +60,7 @@ public class WaitClient extends Fragment implements OnClickListener {
 
 		ListView mListView = (ListView) view.findViewById(R.id.waiting_client);
 		mListView.setAdapter(mArrayAdapter);
-		DiscoverableList mDiscoverableList = new DiscoverableList(mArrayAdapter, null);
+		mDiscoverableList = new DiscoverableList(mArrayAdapter, this.getActivity());
 		if(!mDiscoverableList.checkBluetooth()) {
 			Toast.makeText(getActivity(), "Error Bluetooth not supported", Toast.LENGTH_SHORT).show();
 			return null;
@@ -68,6 +71,7 @@ public class WaitClient extends Fragment implements OnClickListener {
 			for (int i=0; i<DiscoverableList.MAX_CONNECTION;i++) {
 				this.mserver.add(mDiscoverableList.startServer(startTableButton,i));
 			}
+			
 		} catch (BluetoothInitializeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,6 +81,13 @@ public class WaitClient extends Fragment implements OnClickListener {
 //		joinTableButton.setOnClickListener(this);
 //		offlineModeButton.setOnClickListener(this);
 		return view;
+	}
+	
+	@Override
+	public void onDetach() {
+		if(mDiscoverableList != null)
+			this.mDiscoverableList.killThreads();
+		super.onDetach();
 	}
 	
 	/**
@@ -99,6 +110,7 @@ public class WaitClient extends Fragment implements OnClickListener {
 		Intent intent = new Intent(getActivity(), PlayingArea.class);
 		ObjectOutputStream[] outStream = new ObjectOutputStream[DiscoverableList.MAX_CONNECTION];
 		ObjectInputStream[] inStream = new ObjectInputStream[DiscoverableList.MAX_CONNECTION];
+		
 		int test = mArrayAdapter.getCount();
 		ArrayList<Player> otherPlayer = new ArrayList<Player>();
 		for(int i =0; i<mArrayAdapter.getCount(); i++) {
@@ -113,6 +125,8 @@ public class WaitClient extends Fragment implements OnClickListener {
 		}
 		intent.putExtra(DiscoverableList.IS_CLIENT, false);
 		intent.putExtra(DiscoverableList.PLAYER_HOLDER, otherPlayer);
+		
+		this.mDiscoverableList.killThreads();
 		
 		//BluetoothSocket blueSocket[] = {mserver.getSocket()};
 		//ObjectOutputStream outStream[] = {mserver.getOutStream()};

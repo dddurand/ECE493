@@ -35,6 +35,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
+import application.PokerApplication;
 
 /**
  * with help from http://developer.android.com/guide/topics/connectivity/bluetooth.html#DiscoveringDevices
@@ -84,7 +85,7 @@ public class DiscoverableList {
         //mHandler.obtainMessage(BluetoothChat.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
     
-    private void addSocket(BluetoothSocket socket) {
+    public void addSocket(BluetoothSocket socket) {
     	mSockets.add(socket);
     }
     
@@ -119,6 +120,8 @@ public class DiscoverableList {
 	        		Toast.makeText(mActivity, "WE GOT SOMETHING ELSE", Toast.LENGTH_SHORT).show();
 	        		break;
 	        	}
+
+	        	
 	        }
 	    }
 	    
@@ -197,8 +200,24 @@ public class DiscoverableList {
 		}
 		for (int i=0; i<this.connectedThreads.size();i++) {
 			connectedThreads.get(i).cancel();
-		}
+		}	
 	}
+	
+	public static void closeBluetoothSockets(Activity ac)
+	{
+		PokerApplication pokerApp = (PokerApplication)ac.getApplication();
+		Vector<BluetoothSocket> mSockets = pokerApp.getSockets();
+		for(BluetoothSocket socket : mSockets)
+		{
+			try{
+				socket.close();
+			}catch(Exception e){}
+		}
+		
+		mSockets.clear();
+		
+	}
+	
 	public void sendStart() {
 		try {
 			byte[] msg = "GO!".getBytes("UTF-8");

@@ -2,6 +2,7 @@ package application;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Vector;
 import java.util.concurrent.Semaphore;
 
 import android.app.Application;
@@ -28,6 +29,8 @@ public class PokerApplication extends Application {
 	private BluetoothSocket blueSocket[]=null;
 	private ObjectOutputStream outStream[]=null;
 	private ObjectInputStream inStream[]=null;
+	
+	private Vector<BluetoothSocket> sockets = new Vector<BluetoothSocket>();
 	
 	public ObjectOutputStream[] getOutStream() {
 		return outStream;
@@ -132,4 +135,17 @@ public class PokerApplication extends Application {
 	public void setDataSource(DatabaseDataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+	
+	public void addSocket(BluetoothSocket socket)
+	{
+		sockets.add(socket);
+	}
+	
+	/**
+	 * @return the sockets
+	 */
+	public Vector<BluetoothSocket> getSockets() {
+		return sockets;
+	}
+	
 }
