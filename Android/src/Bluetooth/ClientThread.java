@@ -16,6 +16,7 @@ import com.example.bluetoothpoker.R;
 import dataModels.Account;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -200,6 +201,9 @@ import fragments.JoinTable;
 				PokerApplication pokerApplication = (PokerApplication)mActivity.getApplication();
 				pokerApplication.setInStream(inStream);
 				pokerApplication.setOutStream(outStream);
+				
+				//Show previous screen
+				showPreviousScreen();
 				mActivity.startActivity(intent);
 				//mDiscoverableList.connected(mmSocket);
 			} else {
@@ -212,5 +216,23 @@ import fragments.JoinTable;
 				Toast.makeText(mActivity, "Connection failed", Toast.LENGTH_SHORT).show();
 				//mActivity.setContentView(R.layout.activity_main);
 			}
+		}
+		
+		/**
+		 * Executed when the fragment is paused. Only happens when the user joins a game.
+		 * This is where it will remove itself from the back stack so it won't be displayed when
+		 * the user comes back from the playing area.
+		 */
+		public void showPreviousScreen(){
+			//Get Fragment Manager
+			FragmentManager fm = mActivity.getFragmentManager();
+			//Get the last screen in the back stack
+			fm.popBackStack();fm.popBackStack();
+			//Tell the main screen we changed the screens
+//			((MainScreen)mActivity).setScreen(MainScreen.CREATE_TABLE_SCREEN);
+			PokerApplication app = (PokerApplication)mActivity.getApplication();
+			if (app.getAccount().isOnline()) ((MainScreen)mActivity).setScreen(MainScreen.ONLINE_MODE);
+			else ((MainScreen)mActivity).setScreen(MainScreen.OFFLINE_SCREEN);
+			
 		}
 	}

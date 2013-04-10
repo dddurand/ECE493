@@ -29,28 +29,28 @@ public class WaitingServer extends Fragment implements OnClickListener {
 		
 	}
 	
-	@Override
-	public void onPause(){
-		super.onPause();
-		//Get Fragment Manager
-		FragmentManager fm = getActivity().getFragmentManager();
-		//Get the last screen in the back stack
-		
-		
-		//get the type of account
-		PokerApplication app = (PokerApplication) (getActivity().getApplication());
-		if (app.getAccount().isOnline())
-		{
-			fm.popBackStack();fm.popBackStack();
-			//Tell the main screen we changed the screens
-			((MainScreen)getActivity()).setScreen(MainScreen.ONLINE_MODE);
-			
-		}
-		else {
-			fm.popBackStack();fm.popBackStack();
-			((MainScreen)getActivity()).setScreen(MainScreen.OFFLINE_SCREEN);
-		}
-		
-	}
+//	@Override
+//	public void onPause(){
+//		super.onPause();
+//		//Get Fragment Manager
+//		FragmentManager fm = getActivity().getFragmentManager();
+//		//Get the last screen in the back stack
+//		
+//		
+//		//get the type of account
+//		PokerApplication app = (PokerApplication) (getActivity().getApplication());
+//		if (app.getAccount().isOnline())
+//		{
+//			fm.popBackStack();fm.popBackStack();
+//			//Tell the main screen we changed the screens
+//			((MainScreen)getActivity()).setScreen(MainScreen.ONLINE_MODE);
+//			
+//		}
+//		else {
+//			fm.popBackStack();fm.popBackStack();
+//			((MainScreen)getActivity()).setScreen(MainScreen.OFFLINE_SCREEN);
+//		}
+//		
+//	}
 
 }
