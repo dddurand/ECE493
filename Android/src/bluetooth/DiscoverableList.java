@@ -38,7 +38,7 @@ import android.widget.Toast;
 import application.PokerApplication;
 
 /**
- * with help from http://developer.android.com/guide/topics/connectivity/bluetooth.html#DiscoveringDevices
+ * with with help from http://developer.android.com/guide/topics/connectivity/bluetooth.html#DiscoveringDevices
  * @author Lawton
  *
  */
