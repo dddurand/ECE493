@@ -99,6 +99,7 @@ public class DiscoverableList {
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			
 	        String action = intent.getAction();
 	        // When discovery finds a device
 	        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -110,16 +111,10 @@ public class DiscoverableList {
 	        if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 	        	//TODO if discoverable set to off
 	        }
-	        if(BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-	        	switch(BlueAdapt.getState()) {
-	        	case BluetoothAdapter.STATE_DISCONNECTED:
-	        	case BluetoothAdapter.STATE_DISCONNECTING:
-	        		Toast.makeText(mActivity, "WE GOT A DISCONNECT!", Toast.LENGTH_SHORT).show();
-	        		break;
-	        	default:
-	        		Toast.makeText(mActivity, "WE GOT SOMETHING ELSE", Toast.LENGTH_SHORT).show();
-	        		break;
-	        	}
+	        if(BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+	        	BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+	        		//Toast.makeText(mActivity, "WE GOT A DISCONNECT!", Toast.LENGTH_SHORT).show();
+
 
 	        	
 	        }
@@ -151,6 +146,9 @@ public class DiscoverableList {
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, WAIT_TIME);
 		c.startActivity(discoverableIntent);
+		
+		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+		c.registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 	}
 	
 	
@@ -181,7 +179,7 @@ public class DiscoverableList {
 		BlueAdapt.startDiscovery();
 		// Register the BroadcastReceiver
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+		filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 		c.registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 	}
 	
@@ -192,6 +190,8 @@ public class DiscoverableList {
 	}
 	
 	public void killThreads() {
+		BlueAdapt.cancelDiscovery();
+		this.mActivity.unregisterReceiver(mReceiver);
 		// TODO Auto-generated method stub
 		for (int i=0; i<this.clientThreads.size();i++) {
 			clientThreads.get(i).cancel();

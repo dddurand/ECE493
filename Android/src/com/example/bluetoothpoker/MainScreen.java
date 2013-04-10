@@ -106,6 +106,10 @@ public class MainScreen extends Activity {
 	public void setScreen(int newScreen){
 		currentScreen = newScreen;
 	}
+	
+	public int getScreen() {
+		return currentScreen;
+	}
 
 	/**
 	 * Method for changing the fragment in the main screen. Fragment changed to specified code.
@@ -227,6 +231,7 @@ public class MainScreen extends Activity {
 					break;
 					
 				case MainScreen.WAIT_SERVER:
+					DiscoverableList.closeBluetoothSockets(this);
 					if (online)
 						currentScreen=MainScreen.ONLINE_MODE;
 					else currentScreen=MainScreen.OFFLINE_SCREEN;

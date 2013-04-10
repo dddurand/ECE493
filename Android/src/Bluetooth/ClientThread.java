@@ -51,6 +51,7 @@ import fragments.JoinTable;
 		private ObjectOutputStream[] outStream = new ObjectOutputStream[1];
 		private ObjectInputStream[] inStream = new ObjectInputStream[1];
 		private int pos;
+		private boolean canceled =false;
 		/**
 		 * Basic constructor that creates socket from bluetooth device
 		 * @param mBluetoothAdapter
@@ -81,6 +82,7 @@ import fragments.JoinTable;
 	 
 	    /** Will cancel an in-progress connection, and close the socket */
 	    public void cancel() {
+	        canceled = true;
 	        try {
 	        	if(mmSocket!=null) {
 	        		mmSocket.close();
@@ -201,10 +203,13 @@ import fragments.JoinTable;
 				mActivity.startActivity(intent);
 				//mDiscoverableList.connected(mmSocket);
 			} else {
-				cancel();
+				MainScreen ms = (MainScreen)mActivity;
+				if (ms.getScreen()==MainScreen.WAIT_SERVER) {
+					cancel();
+					mActivity.onBackPressed();
+				}
 				//Bad connection
 				Toast.makeText(mActivity, "Connection failed", Toast.LENGTH_SHORT).show();
-				mActivity.onBackPressed();
 				//mActivity.setContentView(R.layout.activity_main);
 			}
 		}
