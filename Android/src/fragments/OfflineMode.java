@@ -65,6 +65,12 @@ public class OfflineMode extends Fragment implements OnClickListener, BalanceUpd
 	}
 
 	@Override
+	public void onResume() {
+		updateBalance();
+		super.onResume();
+	}
+	
+	@Override
 	public void onClick(View v) {
 		
 		String name = offlineUsername.getText().toString();

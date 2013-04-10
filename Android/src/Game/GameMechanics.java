@@ -508,7 +508,7 @@ public class GameMechanics {
 				if(player == null) continue;
 	
 				if (player.getActive()!=Player.FOLDED) {
-					currentPlayer.add(player.getId(), player);
+					currentPlayer.add(player);
 				}
 			}
 			for (int i = 0; i<this.currentSidePots.size();i++) {
@@ -540,6 +540,8 @@ public class GameMechanics {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {}
 
+		currentTurn = -1;
+		
 		if(!lastGame)
 			this.startGame();
 

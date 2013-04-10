@@ -296,6 +296,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		for(Player player: players)
 		{
+			if(player == null) continue;
 			if(player.getId() == this.myPositionAtTable && player.getUsername().equals(this.account.getUsername()))
 			{
 				this.account.setBalance(player.getAmountMoney());

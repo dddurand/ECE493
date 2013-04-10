@@ -343,5 +343,11 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		balanceLabel.setText(balance);
 	}
 	
+	@Override
+	public void onResume() {
+		updateBalance();
+		super.onResume();
+	}
+	
 
 }

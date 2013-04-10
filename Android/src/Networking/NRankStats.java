@@ -25,7 +25,7 @@ import dataModels.RankingStatistics.RankingStatisticRequest;
 
 public class NRankStats extends AsyncTask<RankingStatisticRequest,Integer, RankingStatistics> {
 
-	private int TIMEOUT_MILLISEC = 10000;
+	private int TIMEOUT_MILLISEC = 30000;
 	private String serverUrl="http://labtest.ece.ualberta.ca/rankstatistics";
 	
 	protected HttpParams httpParams;
