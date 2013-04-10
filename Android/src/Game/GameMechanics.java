@@ -278,7 +278,10 @@ public class GameMechanics {
 			for(int i = 0; i < playerList.size(); i++)
 			{
 				Player temp = playerList.get(i);
-				if(temp == null) continue;
+				if(temp == null){
+					playersData.add(null);
+					continue;
+				}
 
 				Player limitedPlayerData = new Player(temp.getId(), temp.getUsername(), temp.getAmountMoney());
 				
@@ -505,20 +508,22 @@ public class GameMechanics {
 				if(player == null) continue;
 	
 				if (player.getActive()!=Player.FOLDED) {
-					currentPlayer.add(player);
+					currentPlayer.add(player.getId(), player);
 				}
 			}
 			for (int i = 0; i<this.currentSidePots.size();i++) {
-				Player[] winners = determineWinners();
+				//Arra
+				Player[] winners = determineWinners(currentPlayer);
 				this.currentSidePots.get(i).setWinners(winners);
 				for(int j=0; j<winners.length; j++) {
 					System.out.println("Players" +winners[j] + "Won");
 					winners[j].addMoney(this.currentSidePots.get(i).getTotal()/winners.length);
 				}
+				currentPlayer.remove(this.currentSidePots.get(i).getOwner());
 				/*WTF - why is this player folding? - ASK LAWTON*/
 				//this.playerList.get(i).setActive(0);
 			}
-			Player[] winners = determineWinners();
+			Player[] winners = determineWinners(currentPlayer);
 			this.mainPot.setWinners(winners);
 			for(int j=0; j<winners.length; j++) {
 				System.out.println("Players" +winners[j].getId() + "Won");
@@ -544,12 +549,12 @@ public class GameMechanics {
 	 * determine the winner between all the hands
 	 * @return player array of winners 
 	 */
-	private Player[] determineWinners() {
+	private Player[] determineWinners(ArrayList<Player> currentPlayer) {
 		int rank[] = {11,11,11,11,11,11,11};
 		int highcard[] = {-1,-1,-1,-1,-1,-1,-1};
-		for (int i=0; i<this.playerList.size();i++) {
+		for (int i=0; i<currentPlayer.size();i++) {
 
-			Player CPlayer = this.playerList.get(i);
+			Player CPlayer = currentPlayer.get(i);
 			if(CPlayer == null) continue;
 
 			Card hand[] = {CPlayer.getCard(0),CPlayer.getCard(1), this.communityCards[0], this.communityCards[1], this.communityCards[2], this.communityCards[3], this.communityCards[4]};
@@ -688,18 +693,18 @@ public class GameMechanics {
 		for(int i=0; i<rank.length;i++) {
 			if(rank[i]<max) {
 				BestPlayers = new ArrayList<Player>();
-				BestPlayers.add(this.playerList.get(i));
+				BestPlayers.add(currentPlayer.get(i));
 				curHigh = highcard[i];
 				max=rank[i];
 				tie =false;
 			} else if(rank[i]==max) {
 				if(highcard[i]>curHigh) {
 					BestPlayers = new ArrayList<Player>();
-					BestPlayers.add(this.playerList.get(i));
+					BestPlayers.add(currentPlayer.get(i));
 					curHigh = highcard[i];
 					tie=false;
 				} else if(highcard[i]==curHigh) {
-					BestPlayers.add(this.playerList.get(i));
+					BestPlayers.add(currentPlayer.get(i));
 					tie=true;
 				}
 			}

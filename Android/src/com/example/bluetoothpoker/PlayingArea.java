@@ -1031,8 +1031,8 @@ public class PlayingArea extends Activity implements OnClickListener {
 		    foldButton.setEnabled(true);
 		    raiseButton.setEnabled(true);
 			
-		    raiseState = PokerAction.CALL;
-			checkCallState = PokerAction.CHECK;
+		    raiseState = PokerAction.RAISE;
+			checkCallState = PokerAction.BET;
 		}
 		else if(myBetAmount == potAmount)
 		{
