@@ -327,6 +327,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	{
 		if(!this.account.isOnline()) return;//offline account
 		GameAction gameAction = state.getLastPokerGameAction();
+		if(gameAction == null) return;//offline account
 		int playerPosition = gameAction.getPosition();
 		//If other players action (or not server action) ignore.
 		if(playerPosition != myPositionAtTable && playerPosition != GameMechanics.SERVER_POSITION) return;
