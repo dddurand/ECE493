@@ -191,7 +191,11 @@ public class DiscoverableList {
 	
 	public void killThreads() {
 		BlueAdapt.cancelDiscovery();
+		
+		try{
 		this.mActivity.unregisterReceiver(mReceiver);
+		}catch(Exception e){}
+		
 		// TODO Auto-generated method stub
 		for (int i=0; i<this.clientThreads.size();i++) {
 			clientThreads.get(i).cancel();
