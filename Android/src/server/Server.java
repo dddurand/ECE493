@@ -33,6 +33,7 @@ public class Server implements PlayerTaskListener {
 	private Activity activity;
 	private Hashtable<Integer, ServerClientListener> playerListenerTasks;
 	
+	private GameMechanics gameEngine;
 	private Player serverPlayer;
 	
 	/**
@@ -61,7 +62,7 @@ public class Server implements PlayerTaskListener {
 		
 		WatchDogTimer playTimer = new WatchDogTimer(gameActionQueue, 10);
 		
-		GameMechanics gameEngine = new GameMechanics( 0, 30, gameBroadCastQueue, playTimer, this);
+		gameEngine = new GameMechanics( 0, 30, gameBroadCastQueue, playTimer, this);
 		
 		gameEngineTask = new PokerEngineTask(gameActionQueue, gameEngine);
 		gameBroadCaster = new ServerBroadCaster(gameBroadCastQueue, activity);
@@ -190,6 +191,8 @@ public class Server implements PlayerTaskListener {
 	 */
 	public void close()
 	{
+		this.gameEngine.terminate();
+		
 		for(Integer playerID : playerListenerTasks.keySet())
 		{
 			ServerClientListener task  = this.playerListenerTasks.get(playerID);
@@ -198,9 +201,7 @@ public class Server implements PlayerTaskListener {
 			task.cancel();
 		}	
 		
-		gameBroadCaster.cancel();
-		
-		
+		gameBroadCaster.cancel();	
 	}
 	
 
