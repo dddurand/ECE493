@@ -296,6 +296,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		for(Player player: players)
 		{
+			if(player == null) continue;
 			if(player.getId() == this.myPositionAtTable && player.getUsername().equals(this.account.getUsername()))
 			{
 				this.account.setBalance(player.getAmountMoney());
@@ -327,6 +328,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	{
 		if(!this.account.isOnline()) return;//offline account
 		GameAction gameAction = state.getLastPokerGameAction();
+		if(gameAction == null) return;//offline account
 		int playerPosition = gameAction.getPosition();
 		//If other players action (or not server action) ignore.
 		if(playerPosition != myPositionAtTable && playerPosition != GameMechanics.SERVER_POSITION) return;

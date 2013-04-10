@@ -276,6 +276,8 @@ public final class R {
         public static final int currentFundsString=0x7f04000e;
         public static final int current_balance_prefix=0x7f04002a;
         public static final int dayLabel=0x7f040014;
+        public static final int empty_name=0x7f04005d;
+        public static final int empty_table_name=0x7f04005c;
         public static final int fundsDialogMessage=0x7f04000c;
         public static final int game_end_msg=0x7f040055;
         public static final int game_start_msg=0x7f040056;
@@ -343,6 +345,7 @@ public final class R {
         public static final int weekLabel=0x7f040015;
         public static final int winPercentage=0x7f040048;
         public static final int yearLabel=0x7f040017;
+        public static final int zero_balance=0x7f04005e;
     }
     public static final class style {
         /** 
