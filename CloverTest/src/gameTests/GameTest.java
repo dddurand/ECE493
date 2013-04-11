@@ -107,8 +107,8 @@ public class GameTest extends AndroidTestCase  {
 			assertTrue(state.getLastPokerGameAction().getAction().equals(PokerAction.STARTGAME));
 			ArrayList<Player> players = state.getPlayers();
 			
-			assertTrue(players.get(0).getUsername().equals("testname1"));
-			assertTrue(players.get(1).getUsername().equals("testname2"));
+			assertTrue(players.get(1).getUsername().equals("testname1"));
+			assertTrue(players.get(2).getUsername().equals("testname2"));
 			
 		} catch (InterruptedException e) {
 			fail();
@@ -340,6 +340,9 @@ public class GameTest extends AndroidTestCase  {
 			ArrayList<Player> players = state.getPlayers();
 			assertTrue(players.get(1).getActive()==2);
 			assertTrue(state.getLastPokerGameAction().getAction().equals(PokerAction.CHECK));
+			
+			GameState stateEnd  = blockingQueue.poll(2, TimeUnit.SECONDS);
+			assertTrue(stateEnd.getLastPokerGameAction().getAction().equals(PokerAction.ENDGAME));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -403,6 +406,7 @@ public class GameTest extends AndroidTestCase  {
 		try{
 			blockingQueue.poll(1, TimeUnit.SECONDS);
 			blockingQueue.poll(1, TimeUnit.SECONDS);
+			@SuppressWarnings("unused")
 			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
 			//assertTrue(state.getPlayer().getId()==2);
 		} catch (Exception e) {
@@ -414,6 +418,7 @@ public class GameTest extends AndroidTestCase  {
 		try{
 			blockingQueue.poll(1, TimeUnit.SECONDS);
 			blockingQueue.poll(1, TimeUnit.SECONDS);
+			@SuppressWarnings("unused")
 			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
 			//assertTrue(state.getPlayer().getId()==2);
 		} catch (Exception e) {
@@ -425,6 +430,7 @@ public class GameTest extends AndroidTestCase  {
 		try{
 			blockingQueue.poll(1, TimeUnit.SECONDS);
 			blockingQueue.poll(1, TimeUnit.SECONDS);
+			@SuppressWarnings("unused")
 			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
 			//assertTrue(state.getPlayer().getId()==2);
 		} catch (Exception e) {
@@ -436,6 +442,7 @@ public class GameTest extends AndroidTestCase  {
 		try{
 			blockingQueue.poll(1, TimeUnit.SECONDS);
 			blockingQueue.poll(1, TimeUnit.SECONDS);
+			@SuppressWarnings("unused")
 			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
 			//assertTrue(state.getPlayer().getId()==2);
 		} catch (Exception e) {
@@ -446,6 +453,7 @@ public class GameTest extends AndroidTestCase  {
 		try{
 			blockingQueue.poll(1, TimeUnit.SECONDS);
 			blockingQueue.poll(1, TimeUnit.SECONDS);
+			@SuppressWarnings("unused")
 			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
 			//assertTrue(state.getPlayer().getId()==2);
 		} catch (Exception e) {
@@ -458,6 +466,7 @@ public class GameTest extends AndroidTestCase  {
 		try{
 			blockingQueue.poll(1, TimeUnit.SECONDS);
 			blockingQueue.poll(1, TimeUnit.SECONDS);
+			@SuppressWarnings("unused")
 			GameState state  = blockingQueue.poll(2, TimeUnit.SECONDS);
 			//assertTrue(state.getPlayer().getId()==2);
 		} catch (Exception e) {

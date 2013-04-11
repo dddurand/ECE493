@@ -32,7 +32,6 @@ public class ClientListenerCasterTest  extends ActivityUnitTestCase<PlayAreaMock
 			
 		PipedInputStream keepInStream = new PipedInputStream(1000);
 		
-		@SuppressWarnings("resource")
 		PipedOutputStream sendOutStream = new PipedOutputStream(keepInStream);
 		
 		final ObjectOutputStream bOut = new ObjectOutputStream(sendOutStream);
@@ -145,7 +144,6 @@ public class ClientListenerCasterTest  extends ActivityUnitTestCase<PlayAreaMock
 		
 		PipedOutputStream sendOutStream = new PipedOutputStream(keepInStream);
 		
-		@SuppressWarnings("resource")
 		final ObjectOutputStream bOut = new ObjectOutputStream(sendOutStream);
 		bOut.flush();
 		sendOutStream.flush();

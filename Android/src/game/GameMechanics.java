@@ -538,6 +538,10 @@ public class GameMechanics {
 			}
 		}
 		
+		//@TODO
+		//ADDED LATE
+		updateState(true);
+		
 		isAllFolded = false;
 		lastPokerGameAction = new GameAction(PokerAction.ENDGAME);
 		lastPokerGameAction.setPosition(SERVER_POSITION);

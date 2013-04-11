@@ -39,7 +39,6 @@ public class ClientTest extends ActivityUnitTestCase<PlayAreaMock> {
 		this.activity = this.getActivity();
 	}
 	
-	@SuppressWarnings("resource")
 	public void testBlueToothClient()
 	{
 		
