@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.R;
 
 import fragments.JoinTable;
@@ -70,15 +71,33 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, mUuid.get(pos));
 	        } catch (IOException e) {
 	        	
-	        	Log.e("listenUsingRfcommWithServiceRecord", "?", e);
+	        	//Log.e("listenUsingRfcommWithServiceRecord", "?", e);
+	        	
+	        	MainScreen ac = (MainScreen) this.mActivity;
+	        	
+	        	if(ac.getScreen() == MainScreen.WAIT_CLIENT)
+	        	{
+	        		Toast.makeText(this.mActivity, "Android Bluetooth System Failure", Toast.LENGTH_LONG).show();
+	        		ac.onBackPressed();
+	        	}
+	        	
+	        	mmServerSocket = null;
+	        	return;
 	        	
 	        }
+	        
 	        mmServerSocket = tmp;
 	        
 	        
 	    }
 		@Override
 		protected BluetoothSocket doInBackground(String... params) {
+			
+			if(mmServerSocket == null)
+			{
+				return null;
+			}
+			
 			BluetoothSocket socket = null;
 			BluetoothDevice bdev = null;
 	        // Keep listening until exception occurs or a socket is returned
