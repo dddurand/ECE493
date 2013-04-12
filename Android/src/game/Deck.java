@@ -3,6 +3,7 @@ package game;
 /**
  * Class to hold 52 cards to symbolize the deck
  * @author Lawton
+ * @SRS 3.2.1.9
  *
  */
 public class Deck {

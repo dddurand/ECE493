@@ -24,7 +24,7 @@ import com.example.bluetoothpoker.MainScreen;
 /**
  * Listens on socket for clients then populates listview with them and enables start button
  * @author Lawton
- *
+ *	@SRS 3.2.1.7
  */
 public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private final BluetoothServerSocket mmServerSocket;
