@@ -12,6 +12,7 @@ import android.content.Context;
  * The object takes in a JSON object and parses out all the stats
  * present in the json response.
  * 
+ * @SRS 3.2.1.10
  * @author dddurand
  *
  */

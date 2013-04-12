@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +38,12 @@ import dataModels.Account;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
+/**
+ * @SRS 3.2.1.3
+ * 
+ * @author dddurand
+ *
+ */
 public class OnlineMode extends Fragment implements OnClickListener, BalanceUpdatable {
 	
 	private View view;
@@ -86,103 +91,14 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 		
 		return view;
 	}
+	
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		test();
-		super.onActivityCreated(savedInstanceState);
-	}
-	
-	public void test()
-	{
-		
-		/**
-		 * Stats Testing
-		 */
-//		PersonalStatisticRequest personalStats = new PersonalStatisticRequest(TimeFrame.ALL, this.account);
-//		NPersonalStats personalStatsTask = new NPersonalStats(this.getActivity());
-//		try {
-//			PersonalStatistics stat = personalStatsTask.execute(personalStats).get();
-//			ArrayList<SimpleStatistic> stats = stat.getAllStatistics();
-//
-//			int test = 0;test++;
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//				}
-//		
-//		CommuntyStatisticRequest commStats = new CommuntyStatisticRequest(TimeFrame.ALL, this.account);
-//		NCommunityStats communityStatsTask = new NCommunityStats(this.getActivity());
-//		try {
-//			CommunityStatistics stat = communityStatsTask.execute(commStats).get();
-//			ArrayList<SimpleStatistic> stats = stat.getAllStatistics();
-//
-//			int test = 0;test++;
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		RankingStatisticRequest rankStats = new RankingStatisticRequest(TimeFrame.ALL, this.account, 0, 1000, RankType.NET_MONEY);
-//		NRankStats rankStatsTask = new NRankStats();
-//		try {
-//			RankingStatistics stat = rankStatsTask.execute(rankStats).get();
-//			ArrayList<SimpleRankStatistic> stats = stat.getAllStatistics();
-//
-//			@SuppressWarnings("unused")
-//			int test = 0;
-//			test++;
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		/**
-		 * Statistic collection testing
-		 */
-//		String UUID = "123456789";
-//		int id = dbInterface.addGame(UUID, account);
-//		
-//		int id2 = dbInterface.addGame(UUID, account);
-//		
-//		ArrayList<GameJson> games = dbInterface.getGames(account);
-//		
-//		Card hand[] = new Card[] {new Card(2,2),new Card(2,2)};
-//		Card comm[] = new Card[] {};
-//		
-//		
-//		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
-//		
-//		GameJson game = dbInterface.getGame(UUID, account);
-//		
-//		dbInterface.addGameAction(id, 0, 500, 50, hand, comm, PokerAction.CALL);
-//		
-//		game = dbInterface.getGame(UUID, account);
-//		
-//		dbInterface.removeGame(UUID, account);
-//		
-//		game = dbInterface.getGame(UUID, account);
-//		
-//		games = dbInterface.getGames(account);
-//		
-//		games.size();
-		
-	}
-	
 	@Override
 	public void onClick(View v) {
 		
 		switch (v.getId()){
 		
+		//@SRS 3.2.1.3.1
 		case R.id.onlineModeJoinTable:
 			
 			if(this.account.getBalance() <= 0)
@@ -193,12 +109,14 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 			
 			((MainScreen)getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
-			
+		
+		//@SRS 3.2.1.3.2
 		case R.id.onlineModeCreateTable:
 			((MainScreen)getActivity()).switchFragment(MainScreen.CREATE_TABLE_SCREEN);
 			break;
 		
 		/************************************Logout Button*********************************/
+		////@SRS 3.2.1.3.5
 		case R.id.logoutButton:
 			try {
 				if (isConnectedInternet()) sendLogoutRequest();
@@ -215,11 +133,13 @@ public class OnlineMode extends Fragment implements OnClickListener, BalanceUpda
 			break;
 			
 		/**************************************Add funds button******************************/
+		////@SRS 3.2.1.3.4
 		case R.id.addFundsButtonOnline:
 			this.showAmountDialog("How much do you want to add to your balance?");
 			break;
 			
 		/******************************START THE NEW ACTIVITY FOR THE STATS***************************/
+			//@SRS 3.2.1.3.3
 		case R.id.statsButtonOnlineMode:
 			Intent i = new Intent(getActivity(),Stats.class);
 			startActivity(i);

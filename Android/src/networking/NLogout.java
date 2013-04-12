@@ -21,6 +21,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import fragments.OnlineMode;
 
+/**
+ * @SRS 3.2.2.7
+ */
 public class NLogout extends AsyncTask<JSONObject,Integer,JSONObject>{
 	
 	private int TIMEOUT_MILLISEC = 10000; //5 seconds

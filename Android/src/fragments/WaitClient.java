@@ -1,10 +1,24 @@
 package fragments;
+import game.Player;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import game.Player;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+import application.PokerApplication;
 import bluetooth.DiscoverableList;
 import bluetooth.DiscoverableList.BluetoothInitializeException;
 import bluetooth.ServerThread;
@@ -12,22 +26,6 @@ import bluetooth.ServerThread;
 import com.example.bluetoothpoker.MainScreen;
 import com.example.bluetoothpoker.PlayingArea;
 import com.example.bluetoothpoker.R;
-
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.Toast;
-import application.PokerApplication;
 
 /**
  * Fragment that is shown while the table waits to be populated
@@ -111,7 +109,6 @@ public class WaitClient extends Fragment implements OnClickListener {
 		ObjectOutputStream[] outStream = new ObjectOutputStream[DiscoverableList.MAX_CONNECTION];
 		ObjectInputStream[] inStream = new ObjectInputStream[DiscoverableList.MAX_CONNECTION];
 		
-		int test = mArrayAdapter.getCount();
 		ArrayList<Player> otherPlayer = new ArrayList<Player>();
 		for(int i =0; i<mArrayAdapter.getCount(); i++) {
 			String msg = (String)mArrayAdapter.getItem(i);

@@ -5,7 +5,7 @@ package dataModels;
  * This represents an user, their rank value, and associated rank position,
  * in the context of being in a ranked order based on rankValue.
  * 
- * 
+ * @SRS 3.2.1.10.2
  * @author dddurand
  *
  */

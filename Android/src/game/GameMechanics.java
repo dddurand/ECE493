@@ -9,13 +9,12 @@ import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
-import android.util.Log;
-
 import server.GameAction;
+import server.GameAction.PokerAction;
 import server.GameState;
 import server.Server;
 import server.WatchDogTimer;
-import server.GameAction.PokerAction;
+import android.util.Log;
 
 /**
  * Game mechanics used for all of the game logic

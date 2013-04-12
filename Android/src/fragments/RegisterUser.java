@@ -32,6 +32,12 @@ import dataModels.Account;
 import dataModels.MoneyGenerated;
 import database.DatabaseDataSource;
 
+/**
+ * @SRS 3.2.1.1
+ * 
+ * @author dddurand
+ *
+ */
 @SuppressLint("ValidFragment")
 public class RegisterUser extends Fragment implements OnClickListener {
 	
@@ -45,6 +51,10 @@ public class RegisterUser extends Fragment implements OnClickListener {
 		this.codes = codes;
 	}
 	
+	/**
+	 * On Creation of fragment
+	 * 
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

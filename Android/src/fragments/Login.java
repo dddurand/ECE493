@@ -39,7 +39,10 @@ import dataModels.MoneyGenerated;
 import database.DatabaseDataSource;
 import database.PreferenceConstants;
 
-
+/**
+ * @SRS 3.2.1.2
+ * A fragment that is used for login.
+ */
 public class Login extends Fragment implements OnClickListener {
 	
 	private View view;
@@ -68,11 +71,10 @@ public class Login extends Fragment implements OnClickListener {
 	public void setServerCodes(ServerCodes codes){
 		this.serverCodes = codes;
 	}
-	
-//	public Login(ServerCodes codes){
-//		this.serverCodes = codes;
-//	}
 
+	/**
+	 * Called on creation
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -110,6 +112,9 @@ public class Login extends Fragment implements OnClickListener {
 	}
 	
 
+	/**
+	 * Called on resume of application
+	 */
 	@Override
 	public void onResume() {
 		boolean isRememberedAccount = preferences.getBoolean(PreferenceConstants.IS_REMEMBERED_ACCOUNT, false);
@@ -143,6 +148,16 @@ public class Login extends Fragment implements OnClickListener {
 		super.onResume();
 	}
 	
+	/**
+	 * Sends a login request to the web service
+	 * 
+	 * @param userString
+	 * @param passwordString
+	 * @throws JSONException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws ConnectTimeoutException
+	 */
 	private void sendLoginRequest(String userString, String passwordString) throws JSONException, InterruptedException, ExecutionException, ConnectTimeoutException {
 		
 		//Create JSON Object
@@ -194,6 +209,12 @@ public class Login extends Fragment implements OnClickListener {
 		account.setPassword("");
 	}
 	
+	/**
+	 * Callback on successful login
+	 * 
+	 * @param response
+	 * @throws JSONException
+	 */
 	private void processSuccessfulLogin(JSONObject response) throws JSONException
 	{
 		//Clear Label
@@ -247,6 +268,11 @@ public class Login extends Fragment implements OnClickListener {
 		((MainScreen) getActivity()).switchFragment(MainScreen.ONLINE_MODE);
 	}
 	
+	/**
+	 * Displays error on login failure
+	 * 
+	 * @param s
+	 */
 	private void showLoginError(String s){
 		//Get label first
 		TextView label = (TextView)view.findViewById(R.id.loginErrorLabel);
@@ -279,6 +305,7 @@ public class Login extends Fragment implements OnClickListener {
 	 * Updates the checkboxes if the user selected the remember me check box.
 	 * If it's selected, then it disables and checks the remember username only check box.
 	 * Otherwise, it enables it and unchecks it.
+	 * @SRS 3.2.1.2.5
 	 * @param rememberAccount
 	 */
 	private void updateCheckBoxes(boolean rememberAccount){
@@ -304,6 +331,7 @@ public class Login extends Fragment implements OnClickListener {
 		switch(v.getId()) {
 		
 		/*****Offline mode button action***/
+		//@SRS 3.2.1.2.3
 		case R.id.offlineButton:
 			String offlineUsername = preferences.getString(PreferenceConstants.OFFLINE_USER_NAME, "");
 			int balance = preferences.getInt(PreferenceConstants.OFFLINE_BALANCE, 0);
@@ -315,11 +343,13 @@ public class Login extends Fragment implements OnClickListener {
 			break;
 		
 		/*****Register button action***/
+		//@SRS 3.2.1.2.2
 		case R.id.registerButton:
 			((MainScreen) getActivity()).switchFragment(MainScreen.REGISTER_SCREEN);
 			break;
 			
 		/*****Login Button******/	
+		//@SRS 3.2.1.2.1
 		case R.id.loginButton:
 			try {
 				//Clear Label
@@ -362,6 +392,7 @@ public class Login extends Fragment implements OnClickListener {
 			
 			/********Check Boxes*********/
 		case R.id.remember_me_checkbox:
+			//@SRS 3.2.1.2.4
 			updateCheckBoxes(rememberMeCheckBox.isChecked());
 			break;
 		}

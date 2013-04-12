@@ -1,6 +1,5 @@
 package misc;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.ImageButton;
@@ -14,6 +13,7 @@ import com.example.bluetoothpoker.R;
 public class RaiseDialog extends Dialog {
 	
 	private TextView amountLabel;
+	@SuppressWarnings("unused")
 	private int min, max;
 	private ImageButton okButton, cancelButton;
 	private SeekBar sb;

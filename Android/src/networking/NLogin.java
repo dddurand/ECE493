@@ -21,6 +21,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import fragments.Login;
 
+/**
+ * Interface to web service for login
+ * 
+ * @SRS 3.2.1.2
+ * @author dddurand
+ *
+ */
 public class NLogin extends AsyncTask<JSONObject,Integer,JSONObject> {
 	
 	private int TIMEOUT_MILLISEC = 10000; //10 seconds

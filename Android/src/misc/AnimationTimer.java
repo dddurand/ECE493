@@ -14,7 +14,9 @@ import com.example.bluetoothpoker.PlayingArea;
  */
 public class AnimationTimer extends CountDownTimer {
 	
+	@SuppressWarnings("unused")
 	private PlayingArea parent;
+	@SuppressWarnings("unused")
 	private int pos;
 	private ProgressBar pb;
 	

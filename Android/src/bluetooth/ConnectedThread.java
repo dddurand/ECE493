@@ -4,12 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import fragments.JoinTable;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 /**
  * Used for established connections continually listening for new messages
@@ -20,6 +17,7 @@ public class ConnectedThread extends AsyncTask<String, String, Void> {
 		    private final BluetoothSocket mmSocket;
 		    private final InputStream mmInStream;
 		    private final OutputStream mmOutStream;
+			@SuppressWarnings("unused")
 			private Activity mActivity;
 		 
 		   public ConnectedThread(BluetoothSocket socket, Activity mActivity) {

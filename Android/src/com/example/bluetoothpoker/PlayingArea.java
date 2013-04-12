@@ -62,6 +62,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private PlayerFragment[] playerObjects;
 	private final int maxPlayers = 6;
 	private FragmentManager fm;
+	@SuppressWarnings("unused")
 	private int current = 0;
 	private TextView actionLabel;
 	
@@ -99,6 +100,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	private Client client;
 	
 	/** Called when the activity is first created. */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -324,6 +326,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 	 * 
 	 * @param state
 	 */
+	@SuppressWarnings("unused")
 	private void storeGameState(GameState state)
 	{
 		if(!this.account.isOnline()) return;//offline account

@@ -22,6 +22,7 @@ import database.PreferenceConstants;
 /**
  * The dialog that allows a user to add money to their account.
  * 
+ * @SRS 3.2.1.4
  * @author dddurand
  *
  */

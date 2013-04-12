@@ -29,21 +29,36 @@ public class PokerApplication extends Application {
 	private BluetoothSocket blueSocket[]=null;
 	private ObjectOutputStream outStream[]=null;
 	private ObjectInputStream inStream[]=null;
-	
 	private Vector<BluetoothSocket> sockets = new Vector<BluetoothSocket>();
 	
+	/**
+	 * Get the array of output streams
+	 * @return
+	 */
 	public ObjectOutputStream[] getOutStream() {
 		return outStream;
 	}
 
+	/**
+	 * Sets the array of output streams
+	 * @param outStream
+	 */
 	public void setOutStream(ObjectOutputStream outStream[]) {
 		this.outStream = outStream;
 	}	
 	
+	/**
+	 * Get input streams
+	 * @return
+	 */
 	public ObjectInputStream[] getInStream() {
 		return inStream;
 	}
 
+	/**
+	 * Sets input streams
+	 * @param inStream
+	 */
 	public void setInStream(ObjectInputStream[] inStream) {
 		this.inStream = inStream;
 	}

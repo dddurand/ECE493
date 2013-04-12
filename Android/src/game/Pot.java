@@ -64,6 +64,7 @@ public class Pot implements Serializable{
 		this.winners = winners;
 		Arrays.sort(winners, new PlayerComparator());
 		losers = new int[participants.size()-winners.length];
+		@SuppressWarnings("unused")
 		int j =0,k=0;
 		for(int i=0; i<participants.size(); i++) {
 			if(participants.get(i)==null) 
@@ -347,6 +348,7 @@ public class Pot implements Serializable{
 	 * @param out
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unchecked")
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
 		this.amount = in.readInt();

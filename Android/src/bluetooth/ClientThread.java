@@ -8,13 +8,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
-
-import com.example.bluetoothpoker.MainScreen;
-import com.example.bluetoothpoker.PlayingArea;
-import com.example.bluetoothpoker.R;
-
-import dataModels.Account;
-
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
@@ -22,13 +15,15 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import application.PokerApplication;
 
+import com.example.bluetoothpoker.MainScreen;
+import com.example.bluetoothpoker.PlayingArea;
+import com.example.bluetoothpoker.R;
 
-import fragments.JoinTable;
+import dataModels.Account;
 /**
  * 
  * @author Lawton
@@ -38,8 +33,10 @@ import fragments.JoinTable;
 	    private BluetoothSocket mmSocket = null;
 	    private final BluetoothDevice mDevice;
 	    private ArrayList<UUID> mUuid = new ArrayList<UUID>();
+		@SuppressWarnings("unused")
 		private String NAME = "BluetoothPoker";
 		private BluetoothAdapter mBluetoothAdapter;
+		@SuppressWarnings("unused")
 		private DiscoverableList mDiscoverableList;
 		Activity mActivity;
 		private PokerApplication pokerApp;
@@ -48,10 +45,12 @@ import fragments.JoinTable;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
 		private final UUID ClienthandshakeUUID = UUID.fromString("c36d53be-a1a5-4563-807a-6465115d1199");
 		private final UUID startMsg = UUID.fromString("c860afe0-2877-4042-b618-721ab1609cb9");
+		@SuppressWarnings("unused")
 		private TextView mText;
 		private ObjectOutputStream[] outStream = new ObjectOutputStream[1];
 		private ObjectInputStream[] inStream = new ObjectInputStream[1];
 		private int pos;
+		@SuppressWarnings("unused")
 		private boolean canceled =false;
 		/**
 		 * Basic constructor that creates socket from bluetooth device
@@ -60,7 +59,8 @@ import fragments.JoinTable;
 		 * @param mActivity
 		 * @param mDiscoverabelList
 		 */
-	    public ClientThread(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device, Activity mActivity, DiscoverableList mDiscoverableList) {
+	    @SuppressWarnings("unused")
+		public ClientThread(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device, Activity mActivity, DiscoverableList mDiscoverableList) {
 	    	mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
 	        mUuid.add(UUID.fromString("296fa800-fe63-49f5-aa21-f7c405d70cff"));
 	        mUuid.add(UUID.fromString("5d9c5a66-6daa-4e83-97b9-11f89af27fca"));

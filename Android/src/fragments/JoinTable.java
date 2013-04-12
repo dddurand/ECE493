@@ -11,8 +11,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import application.PokerApplication;
 import bluetooth.DiscoverableList;
@@ -22,11 +20,17 @@ import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
 
+/**
+ * @SRS 3.2.1.6
+ *
+ */
 public class JoinTable extends Fragment implements OnClickListener, OnItemClickListener {
 	
 	private View view;
 	private ListView list;
+	@SuppressWarnings("unused")
 	private int selectedPos = -1;
+	@SuppressWarnings("unused")
 	private String tableName;
 	private DiscoverableList mDiscoverableList;
 	private String address=null;
@@ -56,6 +60,7 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 		return view;
 	}
 	
+	//@SRS 3.2.1.6.1
 	private void refreshOpenTables(){
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
@@ -82,6 +87,7 @@ public class JoinTable extends Fragment implements OnClickListener, OnItemClickL
 		super.onDetach();
 	}
 
+	//@SRS 3.2.1.6.2
 	@Override
 	public void onClick(View v) {
 		

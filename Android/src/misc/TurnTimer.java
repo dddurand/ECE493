@@ -10,6 +10,7 @@ public class TurnTimer extends CountDownTimer {
 	
 	private int pos;
 	public ProgressBar pb;
+	@SuppressWarnings("unused")
 	private PlayingArea parent;
 
 	/**

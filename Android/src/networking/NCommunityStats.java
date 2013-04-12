@@ -24,6 +24,10 @@ import com.example.bluetoothpoker.Stats;
 import dataModels.CommunityStatistics;
 import dataModels.CommunityStatistics.CommuntyStatisticRequest;
 
+/**
+ * @SRS 3.2.1.10.3
+ *
+ */
 public class NCommunityStats extends AsyncTask<CommuntyStatisticRequest,Integer, CommunityStatistics> {
 
 	private int TIMEOUT_MILLISEC = 10000;

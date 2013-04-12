@@ -1,40 +1,23 @@
 package bluetooth;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.UUID;
 import java.util.Vector;
 
-import fragments.JoinTable;
-
-
 import android.app.Activity;
-import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BlurMaskFilter;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
 import application.PokerApplication;
 
 /**
@@ -60,8 +43,10 @@ public class DiscoverableList {
 	public static final String IS_CLIENT = "4d3b1623-8bfd-40f4-be5a-1c084b8c8e0a";
 	public static int MAX_CONNECTION=5;
 	//private ConnectedThread mConnection;
+	@SuppressWarnings("unused")
 	private int mState;
 	private Activity mActivity;
+	@SuppressWarnings("unused")
 	private int mType =0;
 
 	public static final int TYPE_NONE=0;
@@ -79,7 +64,8 @@ public class DiscoverableList {
     		connectedThreads.get(i).write(msg);
     	}
     }
-    private synchronized void setState(int state) {
+    @SuppressWarnings("unused")
+	private synchronized void setState(int state) {
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
         //mHandler.obtainMessage(BluetoothChat.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
@@ -97,6 +83,7 @@ public class DiscoverableList {
 		mArrayAdapter=arrayAdapter;
 	}
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@SuppressWarnings("unused")
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			
@@ -232,6 +219,7 @@ public class DiscoverableList {
 			e.printStackTrace();
 		}
 	}
+	@SuppressWarnings("serial")
 	public class BluetoothInitializeException extends Exception {
 		public BluetoothInitializeException() {
 			super("The bluetooth adapter was not set. Must call checkBluetooth before calling enableBluetooth.");

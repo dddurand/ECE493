@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 import application.PokerApplication;
 
@@ -21,10 +20,15 @@ import com.example.bluetoothpoker.R;
 
 import dataModels.Account;
 
+/**
+ * @SRS 3.2.1.7
+ *
+ */
 public class CreateTable extends Fragment implements OnClickListener {
 	
 	private View view;
 	private PokerApplication application;
+	@SuppressWarnings("unused")
 	private SharedPreferences preferences;
 	private Account account;
 	private EditText tableNameText;
@@ -54,6 +58,7 @@ public class CreateTable extends Fragment implements OnClickListener {
 		return view;
 	}
 
+	//@SRS 3.2.1.7.1
 	@Override
 	public void onClick(View arg0) {
 		//bluetooth stuff here

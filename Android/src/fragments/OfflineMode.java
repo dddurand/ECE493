@@ -23,6 +23,11 @@ import com.example.bluetoothpoker.R;
 import dataModels.Account;
 import database.PreferenceConstants;
 
+/**
+ * @SRS 3.2.1.5
+ * @author dddurand
+ *
+ */
 public class OfflineMode extends Fragment implements OnClickListener, BalanceUpdatable {
 	
 	private View view;
@@ -78,10 +83,12 @@ public class OfflineMode extends Fragment implements OnClickListener, BalanceUpd
 		switch(v.getId()) {
 
 		/*****Add funds button***/
+		//@SRS 3.2.1.5.3
 		case R.id.addFundsButton:
 			this.showAmountDialog("How much do you want to add to your balance?");
 			break;
-			
+		
+		//@SRS 3.2.1.5.1
 		case R.id.joinTableButton:
 			
 			if(name.isEmpty())
@@ -99,7 +106,8 @@ public class OfflineMode extends Fragment implements OnClickListener, BalanceUpd
 			updateOfflineUsername();
 			((MainScreen) getActivity()).switchFragment(MainScreen.JOIN_TABLE_SCREEN);
 			break;
-			
+		
+		//@SRS 3.2.1.5.2
 		case R.id.createTableButton:
 			
 			if(name.isEmpty())
@@ -116,6 +124,9 @@ public class OfflineMode extends Fragment implements OnClickListener, BalanceUpd
 		
 	}
 
+	/**
+	 * Updates username label
+	 */
 	private void updateOfflineUsername()
 	{
 		Editor editor = preferences.edit();
@@ -131,6 +142,9 @@ public class OfflineMode extends Fragment implements OnClickListener, BalanceUpd
 		dialog.show();
 	}
 
+	/**
+	 * Updates balance label
+	 */
 	@Override
 	public void updateBalance() {
 		Account account = application.getAccount();

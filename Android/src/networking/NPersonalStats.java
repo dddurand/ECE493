@@ -24,6 +24,12 @@ import android.os.AsyncTask;
 import dataModels.PersonalStatistics;
 import dataModels.PersonalStatistics.PersonalStatisticRequest;
 
+/**
+ * @SRS 3.2.1.10.1 
+ * 
+ * @author dddurand
+ *
+ */
 public class NPersonalStats extends AsyncTask<PersonalStatisticRequest,Integer, PersonalStatistics> {
 	
 	private int TIMEOUT_MILLISEC = 10000;

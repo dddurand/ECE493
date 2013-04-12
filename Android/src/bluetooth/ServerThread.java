@@ -8,22 +8,18 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.example.bluetoothpoker.MainScreen;
-import com.example.bluetoothpoker.R;
-
-import fragments.JoinTable;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 import application.PokerApplication;
+
+import com.example.bluetoothpoker.MainScreen;
 
 /**
  * Listens on socket for clients then populates listview with them and enables start button
@@ -34,9 +30,11 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private final BluetoothServerSocket mmServerSocket;
 		private ArrayList<UUID> mUuid = new ArrayList<UUID>();
 		private String NAME = "BluetoothPoker";
+		@SuppressWarnings("unused")
 		private DiscoverableList mdiscoverableList;
 		private Activity mActivity;
 		private PokerApplication pokerApp;
+		@SuppressWarnings("unused")
 		private BluetoothAdapter mBluetoothAdapter;
 		private ArrayAdapter<String> mArrayAdapter;
 		private final UUID ServerhandshakeUUID = UUID.fromString("b98acff1-8557-4225-89aa-66f200a21765");
@@ -50,6 +48,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 		private int pos;
 		
 		
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ServerThread(BluetoothAdapter mBluetoothAdapter, ArrayAdapter mArrayAdapter, Activity mActivity, DiscoverableList mDiscoverableList, Button startButton, int pos) {
 			mUuid.add(UUID.fromString("5bfeffb9-3fa3-4336-9e77-88620230d3bc"));
 	        mUuid.add(UUID.fromString("296fa800-fe63-49f5-aa21-f7c405d70cff"));
@@ -90,6 +89,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	        
 	        
 	    }
+		@SuppressWarnings("unused")
 		@Override
 		protected BluetoothSocket doInBackground(String... params) {
 			

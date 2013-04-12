@@ -11,6 +11,7 @@ import com.example.bluetoothpoker.R;
 public class GenericTextWatcher implements TextWatcher {
 	
 	private View view;
+	@SuppressWarnings("unused")
 	private int id;
 	public static boolean passwordsMatch = false;
 	public static boolean usernameAvailable = false;
@@ -40,6 +41,7 @@ public class GenericTextWatcher implements TextWatcher {
 	}
 	
 	//Sets username icon to green mark if username is not taken.
+	@SuppressWarnings("unused")
 	private void updateUsernameIcon(CharSequence text){
 		//get imageview from view
 		ImageView icon = (ImageView) view.findViewById(R.id.validUsernameIcon);

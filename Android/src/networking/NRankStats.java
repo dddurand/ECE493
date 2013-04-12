@@ -23,6 +23,12 @@ import com.example.bluetoothpoker.Stats;
 import dataModels.RankingStatistics;
 import dataModels.RankingStatistics.RankingStatisticRequest;
 
+/**
+ * @SRS 3.2.1.10.2
+ * 
+ * @author dddurand
+ *
+ */
 public class NRankStats extends AsyncTask<RankingStatisticRequest,Integer, RankingStatistics> {
 
 	private int TIMEOUT_MILLISEC = 30000;

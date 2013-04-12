@@ -18,6 +18,13 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
+/**
+ * Interface for register web service
+ * 
+ * @SRS 3.2.1.3
+ * @author dddurand
+ *
+ */
 public class NRegister extends AsyncTask<JSONObject,Integer,JSONObject> {
 	
 	private int TIMEOUT_MILLISEC = 10000;

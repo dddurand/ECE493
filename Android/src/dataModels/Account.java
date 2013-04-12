@@ -7,6 +7,7 @@ import org.json.JSONObject;
  * This class acts as a data representation of an user account. 
  * This includes online and offline accounts.
  * 
+ * @SRS 3.2.1.1
  * @author dddurand
  *
  */
