@@ -608,160 +608,60 @@ public class GameMechanics {
 	private Player[] determineWinners(ArrayList<Player> currentPlayer) {
 		int rank[] = {11,11,11,11,11,11,11};
 		int highcard[] = {-1,-1,-1,-1,-1,-1,-1};
+		int highph[] = {-1,-1,-1,-1,-1,-1,-1};
+		
+		int commCnt = 0;
+		for(;commCnt < 5;commCnt++)
+			if(this.communityCards[commCnt] == null) break;
+		
 		for (int i=0; i<currentPlayer.size();i++) {
 
 			Player CPlayer = currentPlayer.get(i);
 			if(CPlayer == null) continue;
 
 			Card hand[] = {CPlayer.getCard(0),CPlayer.getCard(1), this.communityCards[0], this.communityCards[1], this.communityCards[2], this.communityCards[3], this.communityCards[4]};
-			Comparator rankcompare = new Card.RankComparator();
-			Comparator suitcompare = new Card.SuitComparator();
-			if (CPlayer.getActive()!=Player.FOLDED) {
-				boolean flush = false;
-				boolean straight = false;
-				boolean fullhouse = false;
-				int count=0;
-				int suit=-1;
-				Card st_hand[];
-				Card tempHand[] = new Card[7];
-				Arrays.sort(hand, suitcompare);
-				//flush
-				for(int j= 0; j<hand.length && 7-j>=5-count;j++) {
-					if (hand[j].getSuit()!=suit) {
-						if(count>=5) {
-							flush =true;
-							break;
-						}else {
-							count =1;
-							suit = hand[j].getSuit();
-							tempHand[0] = hand[j];
-						}
-					} else {
-						tempHand[count] = hand[j];
-						count++;
-					}
-				}
-				if(flush) {
-					st_hand = new Card[count];
-					for(int k=0; k<count; k++)
-						st_hand[k]=tempHand[k];
-				} else{
-					st_hand = hand;
-				}
+			
+			ArrayList<ArrayList<Card>> possibleCombos = new ArrayList<ArrayList<Card>>();
+			test(0, Math.min(5, commCnt + 2), Math.min(7, commCnt + 2), new ArrayList<Card>(), possibleCombos, hand);
+			
+			int values[] = getMaxRank(CPlayer.getActive(), possibleCombos);
 
-				//straight
-				count =0;
-				Arrays.sort(st_hand, rankcompare);
-				int next=-1;
-				int last=-1;
-				int straighthigh=-1;
-				for(int j=st_hand.length-1; j>=0;j--) {
-					Card tempCard = st_hand[j];
-					if(tempCard.getRank()==next) {
-						count++;
-						next = tempCard.getRank()-1;
-						last = tempCard.getRank();
-						if(count==5 ||(next==-1&& count==4&& st_hand[st_hand.length-1].getRank()==12)) {
-							straight=true;
-							break;
-						}
-
-					} else if(tempCard.getRank()==last){
-						continue;
-					} else {
-						straighthigh = tempCard.getRank();
-						count = 1;
-					}
-				}
-				if(flush&&straight) {
-					rank[i]=1;
-					continue;
-				} 
-
-				//pairs
-				int pairs =0;
-				boolean triple=false;
-				count =0;
-				last =-1;
-				Arrays.sort(hand, rankcompare);
-				for(int j=hand.length-1; j>=0;j--) {
-					Card tempCard = hand[j];
-					if (last ==tempCard.getRank()) {
-						count++;
-						continue;
-					} else if(count==4) {
-						highcard[i]=hand[hand.length-1].getRank();
-						break;
-					} else if(count==3) {
-						if(triple||pairs!=0){
-							fullhouse=true;
-						}else {
-							highcard[i]=tempCard.getRank();
-						}
-						triple =true;
-					} else if(count==2){
-						pairs++;
-						highcard[i]=tempCard.getRank();
-					}
-					count=1;
-					last =tempCard.getRank();
-				}
-
-				Arrays.sort(hand, rankcompare);
-				System.out.println("HERE IS THERE HAND:");
-				for(int k=0; k<hand.length;k++) {	
-					System.out.print(hand[k]);
-				}
-				//make ranks
-				if(count==4) {
-					rank[i]=2;
-				} else if(fullhouse) {
-					rank[i]=3;
-				} else if(flush){
-					rank[i]=4;
-					highcard[i]=st_hand[st_hand.length-1].getRank();
-				} else if (straight) {
-					rank[i]=5;
-					highcard[i] = straighthigh;
-				} else if(triple) {
-					rank[i]=6;
-					highcard[i]=hand[hand.length-1].getRank();
-				} else if(pairs>1) {
-					rank[i]=7;
-					highcard[i]=hand[hand.length-1].getRank();
-				} else if(pairs==1) {
-					rank[i]=8;
-					highcard[i]=hand[hand.length-1].getRank();
-				} else {
-					rank[i]=9;
-					highcard[i]=hand[hand.length-1].getRank();
-				}
-				System.out.println("\n HERE IS THE RANK" + rank[i]);
-
-			}
+			rank[i] = values[0];
+			highph[i] = values[1];
+			highcard[i] = values[2];
+			
 		}
 		int max=10;
 		boolean tie=false;
 		ArrayList<Player> BestPlayers = new ArrayList<Player>();
 
-		//Player[] BestPlayer = new Player[1];
-		int curHigh =-1;
-		for(int i=0; i<rank.length;i++) {
-			if(rank[i]<max) {
+		// Player[] BestPlayer = new Player[1];
+		int curHighCard = -1;
+		int curHighPH = -1;
+		for (int i = 0; i < rank.length; i++) {
+			if (rank[i] < max) {
 				BestPlayers = new ArrayList<Player>();
 				BestPlayers.add(currentPlayer.get(i));
-				curHigh = highcard[i];
-				max=rank[i];
-				tie =false;
-			} else if(rank[i]==max) {
-				if(highcard[i]>curHigh) {
+				curHighCard = highcard[i];
+				curHighPH = highph[i];
+				max = rank[i];
+				tie = false;
+			} else if (rank[i] == max) {
+				if (highph[i] > curHighPH) {
 					BestPlayers = new ArrayList<Player>();
 					BestPlayers.add(currentPlayer.get(i));
-					curHigh = highcard[i];
-					tie=false;
-				} else if(highcard[i]==curHigh) {
-					BestPlayers.add(currentPlayer.get(i));
-					tie=true;
+					curHighCard = highcard[i];
+					tie = false;
+				} else if (highph[i] == curHighPH) {
+					if (highcard[i] > curHighCard) {
+						BestPlayers = new ArrayList<Player>();
+						BestPlayers.add(currentPlayer.get(i));
+						curHighCard = highcard[i];
+						tie = false;
+					} else if (highcard[i] == curHighCard) {
+						BestPlayers.add(currentPlayer.get(i));
+						tie = true;
+					}
 				}
 			}
 		}
@@ -772,6 +672,200 @@ public class GameMechanics {
 			BestPlayer[i]=BestPlayers.get(i);
 		}
 		return BestPlayer;
+	}
+	
+	private int[] getMaxRank(int active, ArrayList<ArrayList<Card>> possibleHands)
+	{
+		int rank = 11;
+		int pH = -1;
+		int highcard = -1;
+		
+		for(ArrayList<Card> handx : possibleHands){
+		Card hand[] = handx.toArray(new Card[0]);
+		int tempRank = 11;
+		int tempHC = -1;
+		int tempPh = -1;
+		
+		Comparator rankcompare = new Card.RankComparator();
+		Comparator suitcompare = new Card.SuitComparator();
+		if (active!=Player.FOLDED) {
+			boolean flush = false;
+			boolean straight = false;
+			boolean fullhouse = false;
+			int count=0;
+			int suit=-1;
+			Card st_hand[];
+			Card tempHand[] = new Card[5];
+			Arrays.sort(hand, suitcompare);
+			//flush
+			for(int j= 0; j<hand.length && 5-j>=5-count;j++) {
+				if (hand[j].getSuit()!=suit) {
+					if(count>=5) {
+						flush =true;
+						break;
+					}else {
+						count =1;
+						suit = hand[j].getSuit();
+						tempHand[0] = hand[j];
+					}
+				} else {
+					tempHand[count] = hand[j];
+					count++;
+				}
+			}
+			if(flush) {
+				st_hand = new Card[count];
+				for(int k=0; k<count; k++)
+					st_hand[k]=tempHand[k];
+			} else{
+				st_hand = hand;
+			}
+
+			//straight
+			count =0;
+			Arrays.sort(st_hand, rankcompare);
+			int next=-1;
+			int last=-1;
+			int straighthigh=-1;
+			for(int j=st_hand.length-1; j>=0;j--) {
+				Card tempCard = st_hand[j];
+				if(tempCard.getRank()==next) {
+					count++;
+					next = tempCard.getRank()-1;
+					last = tempCard.getRank();
+					if(count==5 ||(next==-1&& count==4&& st_hand[st_hand.length-1].getRank()==12)) {
+						straight=true;
+						break;
+					}
+
+				} else if(tempCard.getRank()==last){
+					continue;
+				} else {
+					straighthigh = tempCard.getRank();
+					count = 1;
+				}
+			}
+			if(flush&&straight) {
+				tempRank=1;
+				break;
+			} 
+
+			//pairs
+			int pairs =0;
+			boolean triple=false;
+			int high = -1;
+			count =0;
+			last =-1;
+			Arrays.sort(hand, rankcompare);
+			for(int j=hand.length-1; j>=0;j--) {
+				Card tempCard = hand[j];
+				if (last ==tempCard.getRank()) {
+					count++;
+					continue;
+				} else if(count==4) {
+					high = last;
+					break;
+				} else if(count==3) {
+					if(triple||pairs!=0){
+						fullhouse=true;
+						high = last;
+					}else {
+						high = last;
+					}
+					triple =true;
+				} else if(count==2){
+					pairs++;
+					if(high < last) high = last;
+				}
+				count=1;
+				last =tempCard.getRank();
+			}
+
+			Arrays.sort(hand, rankcompare);
+			tempHC=st_hand[st_hand.length-1].getRank();
+
+			for(int k=0; k<hand.length;k++) {	
+				System.out.print(hand[k]);
+			}
+			//make ranks
+			if(count==4) {
+				tempRank=2;
+				tempPh=st_hand[st_hand.length-1].getRank();
+			} else if(fullhouse) {
+				tempRank=3;
+				tempPh=st_hand[st_hand.length-1].getRank();
+			} else if(flush){
+				tempRank=4;
+				tempPh=st_hand[st_hand.length-1].getRank();
+			} else if (straight) {
+				tempRank=5;
+				tempPh = straighthigh;
+			} else if(triple) {
+				tempRank=6;
+				tempPh=high;
+			} else if(pairs>1) {
+				tempRank=7;
+				tempPh=high;
+			} else if(pairs==1) {
+				tempRank=8;
+				tempPh=high;
+			} else {
+				tempRank=9;
+				tempPh=hand[hand.length-1].getRank();
+			}
+
+		}
+		
+		if(tempRank < rank)
+		{
+			rank = tempRank;
+			highcard = tempHC;
+			pH = tempPh;
+		}
+		
+		if(tempRank == rank)
+		{
+			
+			if(pH < tempPh)
+			{
+				pH = tempPh;
+				highcard = tempHC;	
+			}
+			
+			if(pH == tempPh)
+			{
+				if(highcard < tempHC)
+					highcard = tempHC;	
+			}
+			
+			
+			
+			
+			
+		}
+	}
+		return new int[] {rank, pH, highcard};
+}
+	
+	
+	private void test(int depth, int n, int k, ArrayList<Card> hand, ArrayList<ArrayList<Card>> handSets, Card[] allCards)
+	{
+		if(n == 0 && k == 0)
+		{
+			handSets.add(hand);
+			return;
+		}
+		else if(n>k) return;
+		
+		if(k > 0)
+		{
+			ArrayList<Card> newHand = new ArrayList<Card>(hand);
+			newHand.add(allCards[depth]);
+			test(depth + 1, n-1, k-1, newHand, handSets, allCards);
+		}
+		
+		test(depth + 1, n, k-1, hand, handSets, allCards);
+		
 	}
 
 	private void placeBet(int bet)
