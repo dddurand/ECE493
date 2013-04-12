@@ -622,7 +622,7 @@ public class GameMechanics {
 			Card hand[] = {CPlayer.getCard(0),CPlayer.getCard(1), this.communityCards[0], this.communityCards[1], this.communityCards[2], this.communityCards[3], this.communityCards[4]};
 			
 			ArrayList<ArrayList<Card>> possibleCombos = new ArrayList<ArrayList<Card>>();
-			test(0, Math.min(5, commCnt + 2), Math.min(7, commCnt + 2), new ArrayList<Card>(), possibleCombos, hand);
+			buildCardVariations(0, Math.min(5, commCnt + 2), Math.min(7, commCnt + 2), new ArrayList<Card>(), possibleCombos, hand);
 			
 			int values[] = getMaxRank(CPlayer.getActive(), possibleCombos);
 
@@ -848,7 +848,7 @@ public class GameMechanics {
 }
 	
 	
-	private void test(int depth, int n, int k, ArrayList<Card> hand, ArrayList<ArrayList<Card>> handSets, Card[] allCards)
+	private void buildCardVariations(int depth, int n, int k, ArrayList<Card> hand, ArrayList<ArrayList<Card>> handSets, Card[] allCards)
 	{
 		if(n == 0 && k == 0)
 		{
@@ -861,10 +861,10 @@ public class GameMechanics {
 		{
 			ArrayList<Card> newHand = new ArrayList<Card>(hand);
 			newHand.add(allCards[depth]);
-			test(depth + 1, n-1, k-1, newHand, handSets, allCards);
+			buildCardVariations(depth + 1, n-1, k-1, newHand, handSets, allCards);
 		}
 		
-		test(depth + 1, n, k-1, hand, handSets, allCards);
+		buildCardVariations(depth + 1, n, k-1, hand, handSets, allCards);
 		
 	}
 
