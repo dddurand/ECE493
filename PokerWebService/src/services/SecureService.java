@@ -16,6 +16,7 @@ import database.DatabaseInterface.DatabaseInterfaceException;
  * authentication, the work done by the service is determined by the the delegate
  * provided at creation.
  * 
+ * @SRS 3.2.2.1, 3.2.2.2, 3.2.2.7
  * @author dddurand
  *
  */

@@ -15,6 +15,15 @@ import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
 import database.ResponseObject;
 
+/**
+ * This delegate ranking the creation of the ranking statistics from the
+ * data contained in the database.
+ * 
+ * @SRS 3.2.2.4
+ * 
+ * @author dddurand
+ *
+ */
 public class RankingStatisticsDelegate extends ServiceDelegate{
 
 	public RankingStatisticsDelegate(Gson gson, DatabaseInterface dbInterface) {

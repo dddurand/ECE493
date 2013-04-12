@@ -2,6 +2,12 @@ package dataModels;
 
 import java.util.ArrayList;
 
+/**
+ * @SRS 3.2.2.4
+ * 
+ * @author dddurand
+ *
+ */
 public class RankingStatistics {
 		
 		private ArrayList<RankedDataRow> rankedData;

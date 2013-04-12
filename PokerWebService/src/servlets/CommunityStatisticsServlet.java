@@ -20,6 +20,8 @@ import database.ResponseObject;
 /**
  * This servlet provided an auth'd user with a set of personal statistics based
  * on the game data they have uplaoded.
+ * 
+ * @SRS 3.2.2.5
  */
 @WebServlet("/CommunityStatisticsServlet")
 public class CommunityStatisticsServlet extends ConfigHttpServlet {

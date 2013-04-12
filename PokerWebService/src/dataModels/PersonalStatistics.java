@@ -11,6 +11,7 @@ import database.DatabaseInterface.NumerableActionOperation;
 /**
  * A data model that holds and facilitates the generation of the personal statistics.
  * 
+ * @SRS 3.2.2.6
  * @author dddurand
  *
  */

@@ -17,6 +17,7 @@ import dataModels.RankingStatistics;
 /**
  * The object used to generate the JSON response from a webservice call.
  * 
+ * @SRS 3.2.2.1 -> 3.2.2.8
  * @author dddurand
  *
  */

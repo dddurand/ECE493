@@ -148,6 +148,7 @@ public class MockDbInterface extends DatabaseInterface {
 	
 		}
 
+		@SuppressWarnings("unused")
 		private boolean actionExists(int gameID, int accountID, int position) throws DatabaseInterfaceException
 		{
 			if(this.throwException) throw new DatabaseInterfaceException();
@@ -159,6 +160,7 @@ public class MockDbInterface extends DatabaseInterface {
 			
 		}
 		
+		@SuppressWarnings("unused")
 		private boolean optimalityExists(int gameID, int accountID) throws DatabaseInterfaceException
 		{
 			if(this.throwException) throw new DatabaseInterfaceException();
@@ -169,6 +171,7 @@ public class MockDbInterface extends DatabaseInterface {
 			
 		}
 		
+		@SuppressWarnings("unused")
 		private void saveGameAction(Account account, int gameID, int position, GameAction action) throws DatabaseInterfaceException
 		{
 			if(this.throwException) throw new DatabaseInterfaceException();
@@ -182,10 +185,12 @@ public class MockDbInterface extends DatabaseInterface {
 		{
 			if(this.throwException) throw new DatabaseInterfaceException();
 			
+			@SuppressWarnings("unused")
 			MiscGameData data = this.miscData.put(account.getUsername(), misc);
 			
 		}
 		
+		@SuppressWarnings("unused")
 		private int getGameDatabaseID(Game game) throws DatabaseInterfaceException
 		{
 			if(this.throwException) throw new DatabaseInterfaceException();
@@ -207,6 +212,7 @@ public class MockDbInterface extends DatabaseInterface {
 		 * @return
 		 * @throws DatabaseInterfaceException
 		 */
+		@SuppressWarnings("unused")
 		private int saveGameGetID(Account account, Game game) throws DatabaseInterfaceException
 		{
 			if(this.throwException) throw new DatabaseInterfaceException();

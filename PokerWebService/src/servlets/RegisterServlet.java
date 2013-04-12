@@ -26,6 +26,9 @@ import database.ResponseObject;
  * 
  * Input: {"username":"asdf","password":"asdf"}
  * Output: {"Success":"TRUE","Message":"TRUE","AuthenticationToken":"019f27e2-61b5-4046-a9c7-ecbb3c10295f"}
+ * 
+ * @SRS 3.2.2.2
+ * 
  */
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends ConfigHttpServlet {

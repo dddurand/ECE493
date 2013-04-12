@@ -15,6 +15,7 @@ import database.ResponseObject;
  * This delegate facilitates the creation of the personal statistics from the
  * data contained in the database.
  * 
+ * @SRS 3.2.2.6
  * @author dddurand
  *
  */

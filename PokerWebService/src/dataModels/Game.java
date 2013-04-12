@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Data model for a set of game data
- * 
+ * @SRS 3.2.2.3 -> 3.2.2.6
  * @author dddurand
  *
  */

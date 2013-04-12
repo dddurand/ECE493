@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * The current knowledge of the player is also present for that action,
  * including pot, hand, and community cards.
  * 
+ * @SRS 3.2.2.3 -> 3.2.2.6
  * @author dddurand
  *
  */

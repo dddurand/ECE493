@@ -1,14 +1,10 @@
 package services;
 
-import java.util.UUID;
-
 import javax.servlet.ServletException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 
-import dataModels.Account;
 import database.DatabaseInterface;
 import database.DatabaseInterface.DatabaseInterfaceException;
 import database.DatabaseTest;
@@ -29,6 +25,7 @@ import database.ResponseObject;
 public class AuthenticationService {
 
 	private DatabaseInterface dbInterface;
+	@SuppressWarnings("unused")
 	private Gson gson;
 	
 	/**

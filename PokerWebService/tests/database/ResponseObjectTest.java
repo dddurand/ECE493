@@ -96,6 +96,7 @@ public class ResponseObjectTest {
 			
 			ResponseObject response = new ResponseObject(success, message, code);
 			
+			@SuppressWarnings("unused")
 			MockDbInterface db;
 			try {
 				db = new MockDbInterface(false);
@@ -128,10 +129,12 @@ public class ResponseObjectTest {
 			
 			ResponseObject response = new ResponseObject(success, message, code);
 			
+			@SuppressWarnings("unused")
 			MockDbInterface db;
 			try {
 				db = new MockDbInterface(false);
 
+				@SuppressWarnings("unused")
 				RankingStatistics stats = new RankingStatistics();
 				
 				response.setUploadGameSuccess(test);
@@ -158,6 +161,7 @@ public class ResponseObjectTest {
 			
 			ResponseObject response = new ResponseObject(success, message, code);
 			
+			@SuppressWarnings("unused")
 			MockDbInterface db;
 			try {
 				db = new MockDbInterface(false);
@@ -182,6 +186,7 @@ public class ResponseObjectTest {
 			
 			ResponseObject response = new ResponseObject(success, message, code);
 			
+			@SuppressWarnings("unused")
 			MockDbInterface db;
 			try {
 				db = new MockDbInterface(false);
@@ -210,6 +215,7 @@ public class ResponseObjectTest {
 			
 			ResponseObject response = new ResponseObject(success, message, code);
 			
+			@SuppressWarnings("unused")
 			MockDbInterface db;
 			try {
 				db = new MockDbInterface(false);
@@ -233,6 +239,7 @@ public class ResponseObjectTest {
 			
 			ResponseObject response = new ResponseObject(success, message, code);
 			
+			@SuppressWarnings("unused")
 			MockDbInterface db;
 			try {
 				db = new MockDbInterface(false);

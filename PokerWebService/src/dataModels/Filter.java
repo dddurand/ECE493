@@ -14,6 +14,7 @@ import com.google.gson.JsonParseException;
  * It can accept DAY, WEEK, MONTH, YEAR for "timeframe", with all other inputs being considered all. 
  * Detects skip, max parameters, and rank type (for rank statistics).
  * 
+ * @SRS 3.2.2.3 -> 3.2.2.6
  * @author dddurand
  *
  */

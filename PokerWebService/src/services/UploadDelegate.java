@@ -21,6 +21,7 @@ import database.ResponseObject;
 /**
  * This delegate deals with processing and storing the provided game data into the database.
  * 
+ * @SRS 3.2.2.3->3.2.2.6
  * @author dddurand
  *
  */

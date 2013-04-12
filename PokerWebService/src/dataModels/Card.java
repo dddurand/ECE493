@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * This class also contains a variety of utility function for dealing
  * with card hands & collections.
  * 
+ * @SRS 3.2.2.3 -> 3.2.2.6
  * @author dddurand
  *
  */

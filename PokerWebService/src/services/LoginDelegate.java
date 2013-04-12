@@ -17,6 +17,8 @@ import database.DatabaseInterface.DatabaseInterfaceException;
  * 
  * @author dddurand
  *
+ * @SRS 3.2.2.1
+ *
  */
 public class LoginDelegate extends ServiceDelegate{
 

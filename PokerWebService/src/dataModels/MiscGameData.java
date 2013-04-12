@@ -5,6 +5,7 @@ package dataModels;
  * 
  * @author dddurand
  *
+ * @SRS 3.2.2.3 -> 3.2.2.6
  */
 public class MiscGameData {
 

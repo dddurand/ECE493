@@ -15,6 +15,7 @@ import database.DatabaseInterface.DatabaseInterfaceException;
  * These delegate objects act as the backbone of a service, and provide their main
  * functionality. Any custom additions needed by GSON objects should be added in the factory.
  * 
+ * @SRS 3.2.2.1 -> 3.2.2.8
  * @author dddurand
  *
  */

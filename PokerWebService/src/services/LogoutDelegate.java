@@ -14,6 +14,8 @@ import database.ResponseObject;
  * The ServiceDelegate extension that deals with the process of logging out a user,
  * through the invalidation/removal of the current authentication token for the account.
  * 
+ * @SRS 3.2.2.7.1
+ * 
  * @author dddurand
  *
  */

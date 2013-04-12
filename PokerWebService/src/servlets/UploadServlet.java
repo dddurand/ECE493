@@ -18,6 +18,9 @@ import database.DatabaseInterface.DatabaseInterfaceException;
 
 /**
  * Servlet implementation class UploadServlet
+ * 
+ * @SRS 3.2.2.3 -> 3.2.2.6
+ * 
  */
 @WebServlet("/UploadServlet")
 public class UploadServlet extends ConfigHttpServlet {

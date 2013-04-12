@@ -5,7 +5,7 @@ import util.PasswordUtil;
 /**
  * Data model for a user account.
  * 
- * 
+ * @SRS 3.2.2.1 -> 3.2.2.8
  * @author dddurand
  *
  */

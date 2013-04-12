@@ -19,6 +19,9 @@ import database.DatabaseInterface.DatabaseInterfaceException;
 /**
  * This servlet provided an auth'd user with a set of personal statistics based
  * on the game data they have uplaoded.
+ * 
+ * @SRS 3.2.2.6
+ * 
  */
 @WebServlet("/PersonalStatisticsServlet")
 public class PersonalStatisticsServlet extends ConfigHttpServlet {

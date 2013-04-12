@@ -31,6 +31,8 @@ import dataModels.MiscGameData;
  * The main interface to the external database.
  * Each connection retrieves a unique connection to the database.
  * 
+ * 
+ * @SRS 3.2.2.1 -> 3.2.2.8
  * @author dddurand
  *
  */

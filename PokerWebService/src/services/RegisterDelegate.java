@@ -14,6 +14,8 @@ import database.ResponseObject;
  * 
  * @author dddurand
  *
+ * @SRS 3.2.2.2
+ *
  */
 public class RegisterDelegate extends ServiceDelegate{
 

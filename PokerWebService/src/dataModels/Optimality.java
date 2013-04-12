@@ -6,6 +6,12 @@ import java.util.Hashtable;
 import util.PokerHandRanker;
 import dataModels.GameAction.PokerAction;
 
+/**
+ * @SRS 3.2.2.8
+ * 
+ * @author dddurand
+ *
+ */
 public class Optimality {
 
 	
@@ -200,7 +206,12 @@ public class Optimality {
     	dealtHandEVs.put("32 s", -0.15 );
 	}
 	
-	
+	/**
+	 * Calculates the optimality rating for a given game
+	 * 
+	 * @param game
+	 * @return
+	 */
 	public double getOptimalRatingForGame(Game game)
 	{
 		ArrayList<Double> opValues = new ArrayList<Double>();
@@ -257,6 +268,12 @@ public class Optimality {
 		
 	}
 	
+	/**
+	 * Rating for the case of two cards only - no community cards
+	 * 
+	 * @param hand
+	 * @return
+	 */
 	public double preFlopOptimalityRating(ArrayList<Card> hand)
 	{
 		double EV = this.getPreFlopEV(hand);
@@ -269,6 +286,12 @@ public class Optimality {
 		
 	}
 	
+	/**
+	 * Rating for the case of two cards only - no community cards
+	 * 
+	 * @param hand
+	 * @return
+	 */
 	public double getPreFlopEV(ArrayList<Card> hand)
 	{
 		if(hand == null || hand.size() != 2)
@@ -301,6 +324,15 @@ public class Optimality {
 		
 	}
 	
+	/**
+	 * Gets the average EV for when the next card is added to the community.
+	 * 
+	 * @param pot
+	 * @param bet
+	 * @param comm
+	 * @param hand
+	 * @return
+	 */
 	public static double getNextCardFutureRankings(int pot, int bet, int comm[], int hand[])
 	{
 		int commLength = comm.length;
@@ -346,6 +378,15 @@ public class Optimality {
 				return ev;
 	}
 	
+	/**
+	 * Checks if the EV is positive
+	 * 
+	 * @param pot
+	 * @param bet
+	 * @param handCards
+	 * @param commCards
+	 * @return
+	 */
 	public boolean isPositiveEV(int pot, int bet, ArrayList<Card> handCards, ArrayList<Card> commCards)
 	{
 		
@@ -358,6 +399,15 @@ public class Optimality {
 		
 	}
 	
+	/**
+	 * Gets the total EV for a given hand and context
+	 * 
+	 * @param pot
+	 * @param bet
+	 * @param handCards
+	 * @param commCards
+	 * @return
+	 */
 	public double getTotalEv(int pot, int bet, ArrayList<Card> handCards, ArrayList<Card> commCards)
 	{
 		
@@ -395,6 +445,15 @@ public class Optimality {
 		
 	}
 	
+	/**
+	 * Gets the EV for a particular hand
+	 * 
+	 * @param pot
+	 * @param bet
+	 * @param comm
+	 * @param hand
+	 * @return
+	 */
 	private static double getHandEV(int pot, int bet, int comm[], int hand[])
 	{
 		double ev = 0;

@@ -26,7 +26,7 @@ import dataModels.Card.Suit;
  * http://pokerai.org/pf3/viewtopic.php?f=3&t=4388
  * https://gist.github.com/eluctari/832122
  *   
- * 
+ * @SRS 3.2.2.8
  * @author dddurand
  *
  */

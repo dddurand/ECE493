@@ -15,6 +15,7 @@ import util.ServletConfiguration;
  * An extension to httpServlet that makes the object load its context
  * into ServletConfiguration in order to load the context parameters.
  * 
+ * @SRS 3.2.2.1->3.2.2.8
  * @author dddurand
  *
  */

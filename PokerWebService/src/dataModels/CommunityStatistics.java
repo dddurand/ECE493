@@ -9,6 +9,7 @@ import database.DatabaseInterface.NumerableActionOperation;
 /**
  * A data model that holds and facilitates the generation of the community statistics.
  * 
+ * @SRS 3.2.2.5
  * @author dddurand
  *
  */

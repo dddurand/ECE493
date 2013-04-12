@@ -17,6 +17,7 @@ import dataModels.GameAction.PokerAction;
  * This class also contains the code to convert the JSON provided to the webservice, into
  * the UploadData model.
  * 
+ * @SRS 3.2.2.3 -> 3.2.2.6
  * @author dddurand
  *
  */

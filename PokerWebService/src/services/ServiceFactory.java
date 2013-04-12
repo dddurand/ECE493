@@ -23,6 +23,7 @@ import servlets.UploadServlet;
  * A class that acts as a factory of SecureService objects. The factory builds
  * the service object absed on the servlet that has been provided to the factory.
  * 
+ * @SRS 3.2.2.1->3.2.2.8
  * @author dddurand
  *
  */

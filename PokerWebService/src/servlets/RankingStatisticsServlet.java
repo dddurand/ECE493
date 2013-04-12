@@ -19,6 +19,8 @@ import database.DatabaseInterface.DatabaseInterfaceException;
 /**
  * This servlet returns a ranked list of users based on a provided ranking type, skip, max, and timeframe.
  * 
+ * @SRS 3.2.2.4
+ * 
  */
 @WebServlet("/RankingStatisticsServlet")
 public class RankingStatisticsServlet extends ConfigHttpServlet {

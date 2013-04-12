@@ -15,6 +15,7 @@ import database.ResponseObject;
  * This delegate facilitates the creation of the community statistics from the
  * data contained in the database.
  * 
+ * @SRS 3.2.2.5
  * @author dddurand
  *
  */

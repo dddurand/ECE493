@@ -24,6 +24,8 @@ import database.ResponseObject;
  * and invalidates the authentication token. This effectively
  * logs out the user. An error occurs if the username/auth token is invalid.
  * 
+ * @SRS 3.2.2.7.1
+ * 
  */
 @WebServlet("/LogoutServlet")
 public class LogoutServlet extends ConfigHttpServlet {
