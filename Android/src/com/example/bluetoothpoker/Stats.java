@@ -1,5 +1,11 @@
 package com.example.bluetoothpoker;
 
+/**
+ * Statistics Screen
+ * @SRS 3.2.1.10
+ * @author kennethrodas
+ */
+
 import java.util.ArrayList;
 
 import misc.CustomAdapter;

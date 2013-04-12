@@ -7,6 +7,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+/**
+ * Fragment displayed when a client is waiting for the server's response when
+ * joining a game.
+ */
+
 import com.example.bluetoothpoker.R;
 
 public class WaitingServer extends Fragment implements OnClickListener {
