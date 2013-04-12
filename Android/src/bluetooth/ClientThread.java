@@ -28,6 +28,7 @@ import dataModels.Account;
  * 
  * @author Lawton
  *	waits on socket until interrupt or the server accepts connection
+ *	@SRS 3.2.1.6
  */
 	public class ClientThread extends AsyncTask<String, String, String>{
 	    private BluetoothSocket mmSocket = null;

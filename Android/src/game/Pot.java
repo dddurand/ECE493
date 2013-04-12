@@ -10,6 +10,7 @@ import java.util.Hashtable;
 /**
  * Class to hold pot objects in poker game
  * @author Lawton
+ * @SRS 3.2.1.9
  *
  */
 public class Pot implements Serializable{

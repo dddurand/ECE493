@@ -23,7 +23,7 @@ import application.PokerApplication;
 /**
  * with with help from http://developer.android.com/guide/topics/connectivity/bluetooth.html#DiscoveringDevices
  * @author Lawton
- *
+ * @SRS 3.2.1.6/ 3.2.1.7
  */
 public class DiscoverableList {
 	
@@ -37,7 +37,6 @@ public class DiscoverableList {
 	private Vector<BluetoothSocket> mSockets = new Vector<BluetoothSocket>();
 	private Vector<ServerThread> serverThreads = new Vector<ServerThread>();
 	private Vector<ClientThread> clientThreads = new Vector<ClientThread>();
-	private Vector<ConnectedThread> connectedThreads = new Vector<ConnectedThread>();
 	public static final String PLAYER_HOLDER ="1f3d5846-83e5-4502-a998-c2c936e756f6";
 	public static final String SOCKET_HOLDER ="dcff30c6-0de7-4345-a3a1-a7fcf77d6b7f";
 	public static final String IS_CLIENT = "4d3b1623-8bfd-40f4-be5a-1c084b8c8e0a";
@@ -59,11 +58,6 @@ public class DiscoverableList {
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 	
     
-    public void writeAll(byte[] msg) {
-    	for(int i=0; i<connectedThreads.size();i++) {
-    		connectedThreads.get(i).write(msg);
-    	}
-    }
     @SuppressWarnings("unused")
 	private synchronized void setState(int state) {
         mState = state;
@@ -190,9 +184,6 @@ public class DiscoverableList {
 		for (int i=0; i<this.serverThreads.size();i++) {
 			serverThreads.get(i).cancel();
 		}
-		for (int i=0; i<this.connectedThreads.size();i++) {
-			connectedThreads.get(i).cancel();
-		}	
 	}
 	
 	public static void closeBluetoothSockets(Activity ac)
@@ -210,31 +201,11 @@ public class DiscoverableList {
 		
 	}
 	
-	public void sendStart() {
-		try {
-			byte[] msg = "GO!".getBytes("UTF-8");
-			writeAll(msg);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	@SuppressWarnings("serial")
 	public class BluetoothInitializeException extends Exception {
 		public BluetoothInitializeException() {
 			super("The bluetooth adapter was not set. Must call checkBluetooth before calling enableBluetooth.");
 		}
-	}
-	public void connected(BluetoothSocket socket) {
-		// TODO Auto-generated method stub
-		//mArrayAdapter.add(remoteDevice.getName() + "\n" + remoteDevice.getAddress());
-		//mArrayAdapter.notifyDataSetChanged();
-		ConnectedThread connection = new ConnectedThread(socket, mActivity);
-		this.connectedThreads.add(connection);
-		connection.execute();
-		addSocket(socket);
-		
-		
 	}
 	 // The on-click listener for all devices in the ListViews
     public OnItemClickListener mDeviceClickListener = new OnItemClickListener() {

@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * Simple card class that is used to hold rank and suit
  * @author Lawton
- *
+ * @SRS 3.2.1.9
  */
 public class Card implements Serializable {
 	/**

@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * object to hold player information
  * @author Lawton
+ * @SRS 3.2.1.9
  *
  */
 public class Player implements Serializable{
