@@ -563,7 +563,8 @@ public class GameMechanics {
 					System.out.println("Players" +winners[j] + "Won");
 					winners[j].addMoney(this.currentSidePots.get(i).getTotal()/winners.length);
 				}
-				currentPlayer.remove(this.currentSidePots.get(i).getOwner());
+				//currentPlayer.remove(this.currentSidePots.get(i).getOwner());
+				this.removeId(currentPlayer, this.currentSidePots.get(i).getOwner());
 				/*WTF - why is this player folding? - ASK LAWTON*/
 				//this.playerList.get(i).setActive(0);
 			}
@@ -598,6 +599,15 @@ public class GameMechanics {
 		if(!lastGame)
 			this.startGame();
 
+	}
+	
+	private void removeId(ArrayList<Player> currentPlayer, int Id) {
+		for(int i =0; i<currentPlayer.size();i++) {
+			if(currentPlayer.get(i).getId()==Id) {
+				currentPlayer.remove(i);
+				break;
+			}
+		}
 	}
 
 
@@ -904,7 +914,7 @@ public class GameMechanics {
 				if(bet>=amountOwing) {
 					bet-=amountOwing;
 					sidePot.addTotal(amountOwing);
-					sidePot.setPlayerAmount(positionOfCurrentPlayer, amountOwing);
+					sidePot.setPlayerAmount(positionOfCurrentPlayer, sidePot.getAmount());
 					//sidePot.addParticipants(this.playerList.get(positionOfCurrentPlayer).getId());
 				} else {
 					//sidePot.setAmount(sidePot.getAmount()-bet);
@@ -926,7 +936,7 @@ public class GameMechanics {
 				if(this.playerList.get(positionOfCurrentPlayer).getAmountMoney()==0) {
 					this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), totalbet));
 					this.currentSidePots.get(this.currentSidePots.size()-1).transfer(this.mainPot);
-					this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+					this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);		
 					if(checkForFolds()){
 						isAllFolded = true;
 						noBets=true;
@@ -1098,7 +1108,7 @@ public class GameMechanics {
 			p.setActive(Player.ALL_IN);
 			this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), tempBets[smallBlind]));
 			this.currentSidePots.get(this.currentSidePots.size()-1).transfer(this.mainPot);
-			this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+			this.playerList.get(smallBlind).setActive(Player.ALL_IN);
 			if(checkForFolds()){
 				isAllFolded = true;
 				noBets=true;
@@ -1123,7 +1133,7 @@ public class GameMechanics {
 			p.setActive(Player.ALL_IN);
 			this.currentSidePots.add(new Pot(this.playerList.get(positionOfCurrentPlayer).getId(), tempBets[bigBlind]));
 			this.currentSidePots.get(this.currentSidePots.size()-1).transfer(this.mainPot);
-			this.playerList.get(positionOfCurrentPlayer).setActive(Player.ALL_IN);
+			this.playerList.get(bigBlind).setActive(Player.ALL_IN);
 			if(checkForFolds()){
 				isAllFolded = true;
 				noBets=true;

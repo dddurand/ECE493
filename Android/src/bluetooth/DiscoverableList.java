@@ -1,7 +1,6 @@
 package bluetooth;
 
 
-import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
 import android.app.Activity;

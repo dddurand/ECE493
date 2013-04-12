@@ -948,7 +948,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		case R.id.raiseButton:
 //			action = new GameAction(this.myPositionAtTable,raiseState,0);
 //			actionQueue.add(action);
-			this.showRaiseDialog(this.minimumBet + 1, this.account.getBalance());
+			this.showRaiseDialog(this.minimumBet, this.account.getBalance());
 			break;
 		
 		}
@@ -1031,7 +1031,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 			callCheckButton.setEnabled(true);
 			callCheckButton.setText("All IN");
 			
-			this.minimumBet = this.account.getBalance()-1;
+			this.minimumBet = this.account.getBalance();
 			
 		    foldButton.setEnabled(true);
 		    raiseButton.setEnabled(true);

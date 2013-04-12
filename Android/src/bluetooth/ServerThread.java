@@ -79,7 +79,7 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	        		Toast.makeText(this.mActivity, "Android Bluetooth System Failure", Toast.LENGTH_LONG).show();
 	        		
 	        		//Only seems to work for 4.2.2
-	        		ac.onBackPressed();
+	        		//ac.onBackPressed();
 	        	}
 	        	
 	        	mmServerSocket = null;
