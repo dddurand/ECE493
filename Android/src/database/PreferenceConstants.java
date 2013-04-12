@@ -3,6 +3,7 @@ package database;
 /**
  * The file contains all the possible shared preferences constant keys.
  * 
+ * @SRS 3.2.1.1
  * @author dddurand
  *
  */

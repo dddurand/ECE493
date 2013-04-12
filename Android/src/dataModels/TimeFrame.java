@@ -3,6 +3,7 @@ package dataModels;
 /**
  * TimeFrame enum of all possible timeframes the object supports.
  * 
+ * @SRS 3.2.1.10.1->3.2.1.10.3
  * @author dddurand
  *
  */

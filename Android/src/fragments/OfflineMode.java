@@ -129,8 +129,10 @@ public class OfflineMode extends Fragment implements OnClickListener, BalanceUpd
 	 */
 	private void updateOfflineUsername()
 	{
+		String username = offlineUsername.getText().toString();
+		account.setUsername(username);
 		Editor editor = preferences.edit();
-		editor.putString(PreferenceConstants.OFFLINE_USER_NAME, offlineUsername.getText().toString());
+		editor.putString(PreferenceConstants.OFFLINE_USER_NAME, username);
 		editor.commit();
 	}
 	

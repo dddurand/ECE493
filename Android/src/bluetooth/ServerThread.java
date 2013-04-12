@@ -77,6 +77,8 @@ public class ServerThread extends AsyncTask<String, holder, BluetoothSocket>{
 	        	if(ac.getScreen() == MainScreen.WAIT_CLIENT)
 	        	{
 	        		Toast.makeText(this.mActivity, "Android Bluetooth System Failure", Toast.LENGTH_LONG).show();
+	        		
+	        		//Only seems to work for 4.2.2
 	        		ac.onBackPressed();
 	        	}
 	        	

@@ -675,6 +675,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		
 		winners = pot.getWinners();
 
+		if(pot.getTotal() > 0)
 		for(Player player : winners)
 		{
 			if(player==null) continue;
@@ -685,7 +686,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 		for(Pot sidePot : sidePots)
 		{
 			winners = sidePot.getWinners();
-
+			if(sidePot.getTotal() > 0)
 			for(Player player : winners)
 			{
 				if(player==null) continue;

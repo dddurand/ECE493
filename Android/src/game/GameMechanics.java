@@ -142,6 +142,7 @@ public class GameMechanics {
 			case TIMEOUT:
 				this.lastPokerGameAction = new GameAction(positionOfCurrentPlayer, PokerAction.FOLD);
 				lastPokerGameAction.setPlayer(this.playerList.get(positionOfCurrentPlayer));
+				if(terminateSignaled) return;
 				this.processBet(ACTION_FOLD);
 				break;
 
@@ -369,7 +370,7 @@ public class GameMechanics {
 
 		this.gameUUID = UUID.randomUUID();
 		gameUpdateCount = 0;
-
+		
 		for(Player player : this.playerList)
 		{
 			if(player == null) continue;
@@ -384,11 +385,14 @@ public class GameMechanics {
 		
 		for(Player player : this.outGoingList)
 		{
+			if(player.getId() == 0) this.terminateSignaled = true;
 			//Not sure if this is correct just reseting to null not removing
 			this.playerList.set(player.getId(),null);
 		}
 		this.outGoingList.clear();
 
+		if(this.terminateSignaled) return;
+		
 		newGameReset();
 		if(this.getValidPlayerCount() == 1) 
 			{
