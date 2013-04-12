@@ -674,7 +674,7 @@ public class GameMechanics {
 		return BestPlayer;
 	}
 	
-	private int[] getMaxRank(int active, ArrayList<ArrayList<Card>> possibleHands)
+	public int[] getMaxRank(int active, ArrayList<ArrayList<Card>> possibleHands)
 	{
 		int rank = 11;
 		int pH = -1;
@@ -692,25 +692,27 @@ public class GameMechanics {
 			boolean flush = false;
 			boolean straight = false;
 			boolean fullhouse = false;
-			int count=0;
-			int suit=-1;
+			int count=1;
+			int suit=hand[0].getSuit();
 			Card st_hand[];
 			Card tempHand[] = new Card[5];
 			Arrays.sort(hand, suitcompare);
 			//flush
 			for(int j= 0; j<hand.length && 5-j>=5-count;j++) {
-				if (hand[j].getSuit()!=suit) {
+				if (hand[j].getSuit()==suit) {
 					if(count>=5) {
 						flush =true;
+						tempHand[count-1] = hand[j];
 						break;
-					}else {
-						count =1;
-						suit = hand[j].getSuit();
-						tempHand[0] = hand[j];
+					} else {
+						tempHand[count-1] = hand[j];
+						count++;
 					}
 				} else {
-					tempHand[count] = hand[j];
-					count++;
+					count =1;
+					suit = hand[j].getSuit();
+					tempHand[0] = hand[j];
+					
 				}
 			}
 			if(flush) {
@@ -722,9 +724,9 @@ public class GameMechanics {
 			}
 
 			//straight
-			count =0;
+			count=1;
 			Arrays.sort(st_hand, rankcompare);
-			int next=-1;
+			int next=st_hand[st_hand.length-1].getRank();
 			int last=-1;
 			int straighthigh=-1;
 			for(int j=st_hand.length-1; j>=0;j--) {
@@ -746,7 +748,9 @@ public class GameMechanics {
 				}
 			}
 			if(flush&&straight) {
-				tempRank=1;
+				rank = 1;
+				pH = st_hand[st_hand.length-1].getRank();
+				highcard = st_hand[st_hand.length-1].getRank();
 				break;
 			} 
 
@@ -755,11 +759,12 @@ public class GameMechanics {
 			boolean triple=false;
 			int high = -1;
 			count =0;
-			last =-1;
+			last = -1;
 			Arrays.sort(hand, rankcompare);
 			for(int j=hand.length-1; j>=0;j--) {
-				Card tempCard = hand[j];
-				if (last ==tempCard.getRank()) {
+				Card tempCard = hand[j];			
+				if(last == tempCard.getRank() && j == 0) count++;	
+				if (last == tempCard.getRank() && j > 0) {
 					count++;
 					continue;
 				} else if(count==4) {
@@ -782,7 +787,7 @@ public class GameMechanics {
 			}
 
 			Arrays.sort(hand, rankcompare);
-			tempHC=st_hand[st_hand.length-1].getRank();
+			tempHC=hand[hand.length-1].getRank();
 
 			for(int k=0; k<hand.length;k++) {	
 				System.out.print(hand[k]);
@@ -790,16 +795,16 @@ public class GameMechanics {
 			//make ranks
 			if(count==4) {
 				tempRank=2;
-				tempPh=st_hand[st_hand.length-1].getRank();
+				tempPh=high;
 			} else if(fullhouse) {
 				tempRank=3;
-				tempPh=st_hand[st_hand.length-1].getRank();
+				tempPh=hand[hand.length-1].getRank();
 			} else if(flush){
 				tempRank=4;
-				tempPh=st_hand[st_hand.length-1].getRank();
+				tempPh=hand[hand.length-1].getRank();
 			} else if (straight) {
 				tempRank=5;
-				tempPh = straighthigh;
+				tempPh = hand[hand.length-1].getRank();
 			} else if(triple) {
 				tempRank=6;
 				tempPh=high;
@@ -823,7 +828,7 @@ public class GameMechanics {
 			pH = tempPh;
 		}
 		
-		if(tempRank == rank)
+		else if(tempRank == rank)
 		{
 			
 			if(pH < tempPh)
@@ -832,7 +837,7 @@ public class GameMechanics {
 				highcard = tempHC;	
 			}
 			
-			if(pH == tempPh)
+			else if(pH == tempPh)
 			{
 				if(highcard < tempHC)
 					highcard = tempHC;	
