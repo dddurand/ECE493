@@ -2,6 +2,11 @@ package com.example.bluetoothpoker;
 
 import java.util.concurrent.Semaphore;
 
+/**
+ * Main Activity for pre-game screens
+ * @SRS 3.2.1
+ */
+
 import bluetooth.DiscoverableList;
 
 import networking.ServerCodes;

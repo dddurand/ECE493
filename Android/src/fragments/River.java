@@ -9,6 +9,13 @@ import android.widget.ImageView;
 
 import com.example.bluetoothpoker.R;
 
+/**
+ * Fragment used for displaying the river in the playing area
+ * @SRS 3.2.1.9
+ * @author kennethrodas
+ *
+ */
+
 public class River extends Fragment {
 	
 	private View view;

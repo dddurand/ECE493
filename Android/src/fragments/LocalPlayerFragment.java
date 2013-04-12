@@ -1,5 +1,10 @@
 package fragments;
 
+/**
+ * Fragment for the local player. Shown when the game starts
+ * @SRS 3.2.1.9
+ */
+
 import com.example.bluetoothpoker.R;
 
 import android.app.Fragment;

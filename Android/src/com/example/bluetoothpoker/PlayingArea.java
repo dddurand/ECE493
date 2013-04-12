@@ -1,5 +1,10 @@
 package com.example.bluetoothpoker;
 
+/**
+ * @SRS 3.2.1.9
+ * @author kennethrodas
+ */
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

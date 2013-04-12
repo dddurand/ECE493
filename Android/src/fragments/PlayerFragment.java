@@ -10,6 +10,13 @@ import android.widget.TextView;
 
 import com.example.bluetoothpoker.R;
 
+/**
+ * Fragment used for displaying other users connected in the same table
+ * @SRS 3.2.1.9
+ * @author kennethrodas
+ *
+ */
+
 public class PlayerFragment extends Fragment {
 	
 	private View view;
