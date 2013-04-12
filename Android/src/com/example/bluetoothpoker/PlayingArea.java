@@ -1027,7 +1027,7 @@ public class PlayingArea extends Activity implements OnClickListener {
 			callCheckButton.setEnabled(true);
 			callCheckButton.setText("All IN");
 			
-			this.minimumBet = this.account.getBalance();
+			this.minimumBet = this.account.getBalance()-1;
 			
 		    foldButton.setEnabled(true);
 		    raiseButton.setEnabled(true);

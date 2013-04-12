@@ -3,6 +3,8 @@ package game;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
 /**
@@ -60,6 +62,7 @@ public class Pot implements Serializable{
 	 */
 	public void setWinners(Player[] winners) {
 		this.winners = winners;
+		Arrays.sort(winners, new PlayerComparator());
 		losers = new int[participants.size()-winners.length];
 		int j =0,k=0;
 		for(int i=0; i<participants.size(); i++) {
@@ -67,7 +70,7 @@ public class Pot implements Serializable{
 			{
 				continue;
 			}
-			if(winners.length > j && participants.get(i)==winners[j].getId()) {
+			if(existIn(winners, participants.get(i))) {
 				j++;
 			} else {
 				losers[k]=participants.get(i);
@@ -75,6 +78,15 @@ public class Pot implements Serializable{
 			}
 		}
 		
+	}
+	
+	private boolean existIn(Player[] winners, int Id) {
+		for(int i=0; i<winners.length;i++) {
+			if(winners[i].getId()==Id) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 
@@ -345,6 +357,21 @@ public class Pot implements Serializable{
 	}
 	
 	
+public static class PlayerComparator implements Comparator<Object>{
+	public int compare(Object player1, Object player2) throws ClassCastException{
+		// verify two Card objects are passed in
+		if (!((player1 instanceof Player) && (player2 instanceof Player))){
+			throw new ClassCastException("A Player object was expected.  Parameter 1 class: " + player1.getClass() 
+					+ " Parameter 2 class: " + player2.getClass());
+		}
 
+		int rank1 = ((Player)player1).getId();
+		int rank2 = ((Player)player2).getId();
+
+		return rank1 - rank2;
+	}
+}
 	
 }
+
+

@@ -487,6 +487,40 @@ public class GameMechanics {
 		}
 
 	}
+	
+	private void simulateGame() {
+		noBets = false;
+		
+		for (; this.currentTurn<=8; this.currentTurn++) {
+				if (this.currentTurn%2 == 1){
+				} else if(this.currentTurn ==2) {
+					this.communityCards[0] = this.myDeck.getCard();
+					this.communityCards[1] = this.myDeck.getCard();
+					this.communityCards[2] = this.myDeck.getCard();
+		
+					//Display something
+					this.currentTurn++;
+		
+				} else if (this.currentTurn ==4) {
+					this.communityCards[3] = this.myDeck.getCard();
+		
+					//Display something
+					this.currentTurn++;
+		
+				} else if (this.currentTurn == 6) {
+					this.communityCards[4] = this.myDeck.getCard();
+		
+					//Display something
+					this.currentTurn++;
+		
+				} else {
+					System.out.println("End Game");
+					this.currentTurn = 0;
+					this.endGame();
+					break;
+				}
+			}
+	}
 	/**
 	 * finish the game and give the winner their money
 	 */
@@ -829,25 +863,23 @@ public class GameMechanics {
 			this.mainPot.removeParticipants(this.positionOfCurrentPlayer);
 		}
 
-		if(isAllFolded)
+		if(isAllFolded && this.currentSidePots.size()==0)
 		{
 			
 			this.nextTurn();
-			if(isAllFolded)
+			if(isAllFolded && this.currentSidePots.size()==0)
 				this.processBet(0);
 			return;
 		}
 
 		this.placeBet(bet);
 		int next = this.getNextPositionTurn();
-
-		if(isAllFolded && this.currentSidePots.size()!=0)
-		{
-			this.processBet(0);
-			return;
-		}
 		
 		if(postStart) return;
+		
+
+		
+		
 		
 		/*If we have already seen a this person bet, and the above 
 		 * !this.mainPot.checkPlayersBet()&&!noBets evaluated false
@@ -859,6 +891,7 @@ public class GameMechanics {
 		{
 			if(this.mainPot.checkPlayersBet() || noBets)
 			{
+				
 				this.nextTurn();
 				if(this.lastPokerGameAction.getAction() == PokerAction.ENDGAME || 
 				   this.lastPokerGameAction.getAction() == PokerAction.STARTGAME) return;
@@ -870,6 +903,13 @@ public class GameMechanics {
 			playerBetsInARound.add(this.positionOfCurrentPlayer);
 		}
 
+		if(this.positionOfCurrentPlayer==next) {
+			if(isAllFolded && this.currentSidePots.size()!=0)
+			{
+				simulateGame();
+				return;
+			}
+		}
 		this.positionOfCurrentPlayer = next;
 		this.updateState();
 		this.playTimer.startTimer();
